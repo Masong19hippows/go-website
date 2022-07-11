@@ -1,12 +1,12 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"io"
 	"log"
 	"net/http"
 	"net/smtp"
-	"os"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -81,13 +81,12 @@ func sendEmail(c *gin.Context) {
 
 func main() {
 
-	port := "80"
-	if len(os.Args) > 1 {
-		port = os.Args[1]
-	}
+	port := flag.Int("port", 80, "Select the port that you wish the server to run on")
+	flag.Parse()
+	fmt.Println("Using port", *port)
 
 	router := gin.Default()
-
+	gin.SetMode(gin.ReleaseMode)
 	router.NoMethod(SendError(Response{Status: http.StatusMethodNotAllowed, Error: []string{"File Not Found on Server"}}))
 	router.NoRoute(SendError(Response{Status: http.StatusNotFound, Error: []string{"File Not Found on Server"}}))
 
@@ -97,7 +96,7 @@ func main() {
 	router.StaticFile("/index.css", "assets/index.css")
 	router.StaticFS("/images", http.Dir("./assets/images/"))
 
-	err := router.Run(":" + port)
+	err := router.Run(":" + strconv.Itoa(*port))
 	if err != nil {
 		fmt.Println(err)
 	}
