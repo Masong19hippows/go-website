@@ -50,8 +50,8 @@ func sendEmail(c *gin.Context) {
 	email := c.PostForm("Email")
 	name := c.PostForm("Name")
 	message := c.PostForm("Message")
-	username := "garten323"
-	appPassword := "nope"
+	username := "noreplymasongarten"
+	appPassword := "None"
 	smtpHost := "smtp.gmail.com"
 
 	from := email
