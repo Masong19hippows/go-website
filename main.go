@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"net/smtp"
+	"os"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -80,6 +81,11 @@ func sendEmail(c *gin.Context) {
 
 func main() {
 
+	port := "80"
+	if len(os.Args) > 1 {
+		port = os.Args[1]
+	}
+
 	router := gin.Default()
 
 	router.NoMethod(SendError(Response{Status: http.StatusMethodNotAllowed, Error: []string{"File Not Found on Server"}}))
@@ -91,7 +97,7 @@ func main() {
 	router.StaticFile("/index.css", "assets/index.css")
 	router.StaticFS("/images", http.Dir("./assets/images/"))
 
-	err := router.Run(":80")
+	err := router.Run(":" + port)
 	if err != nil {
 		fmt.Println(err)
 	}
