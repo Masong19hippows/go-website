@@ -93,19 +93,20 @@ func proxy(c *gin.Context) {
 	}
 
 	proxy := httputil.NewSingleHostReverseProxy(remote)
+
+	fmt.Println(c.Request.Header)
+	fmt.Println(remote.Host)
+	fmt.Println(remote.Scheme)
+	fmt.Println(c.Param("proxyPath"))
+
 	//Define the director func
 	//This is a good place to log, for example
 	proxy.Director = func(req *http.Request) {
 		req.Header = c.Request.Header
-		fmt.Println(req.Header)
 		req.Host = remote.Host
-		fmt.Println(req.Host)
 		req.URL.Scheme = remote.Scheme
-		fmt.Println(req.URL.Scheme)
 		req.URL.Host = remote.Host
-		fmt.Println(req.URL.Host)
 		req.URL.Path = c.Param("proxyPath")
-		fmt.Println(req.URL.Path)
 	}
 
 	proxy.ServeHTTP(c.Writer, c.Request)
