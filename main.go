@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -96,10 +97,15 @@ func proxy(c *gin.Context) {
 	//This is a good place to log, for example
 	proxy.Director = func(req *http.Request) {
 		req.Header = c.Request.Header
+		fmt.Println(req.Header)
 		req.Host = remote.Host
+		fmt.Println(req.Host)
 		req.URL.Scheme = remote.Scheme
+		fmt.Println(req.URL.Scheme)
 		req.URL.Host = remote.Host
+		fmt.Println(req.URL.Host)
 		req.URL.Path = c.Param("proxyPath")
+		fmt.Println(req.URL.Path)
 	}
 
 	proxy.ServeHTTP(c.Writer, c.Request)
