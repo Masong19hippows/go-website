@@ -123,7 +123,7 @@ func main() {
 	gin.SetMode(gin.ReleaseMode)
 	router.NoMethod(SendError(Response{Status: http.StatusMethodNotAllowed, Error: []string{"File Not Found on Server"}}))
 	router.NoRoute(SendError(Response{Status: http.StatusNotFound, Error: []string{"File Not Found on Server"}}))
-	router.Any("/octo", proxy)
+	router.Any("/octo/", proxy)
 
 	router.StaticFile("/", "assets/index.html")
 	router.POST("/send_email", sendEmail(*password))
