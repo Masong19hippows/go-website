@@ -103,9 +103,9 @@ func proxy(c *gin.Context) {
 	//This is a good place to log, for example
 	proxy.Director = func(req *http.Request) {
 		req.Header = c.Request.Header
-		req.Host = remote.Host
+		req.Host = "/octo/" + remote.Host
 		req.URL.Scheme = remote.Scheme
-		req.URL.Host = remote.Host
+		req.URL.Host = "/octo/" + remote.Host
 		req.URL.Path = c.Param("proxyPath")
 	}
 
