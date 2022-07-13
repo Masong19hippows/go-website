@@ -78,10 +78,10 @@ func sendEmail(password string) gin.HandlerFunc {
 				e = "Bad App Password/ App Username"
 			}
 			log.Println(err)
-			c.Data(http.StatusOK, "text/html; charset=utf-8", []byte("<html><script> alert('Failed to send email. Error: "+e+"'); </script> </html>"))
+			c.Data(http.StatusOK, "text/html; charset=utf-8", []byte("<html><script> window.alert('Failed to Send Email. Error: "+e+"'); window.location.href='/'; </script> </html>"))
 		} else {
 			log.Println("Mail sent successfully!")
-			c.Status(http.StatusNoContent)
+			c.Data(http.StatusOK, "text/html; charset=utf-8", []byte("<html><script> window.alert('Succesfully Sent Email'); window.location.href='/'; </script> </html>"))
 		}
 	}
 
