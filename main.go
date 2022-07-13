@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"net/http/httputil"
@@ -88,11 +89,13 @@ func sendEmail(password string) gin.HandlerFunc {
 }
 func proxy(c *gin.Context) {
 	remote, err := url.Parse("http://192.168.1.157:80")
+
 	if err != nil {
 		panic(err)
 	}
 
 	proxy := httputil.NewSingleHostReverseProxy(remote)
+	proxy.ModifyResponse = rewriteBody
 
 	fmt.Println(c.Request.Header)
 	fmt.Println(remote.Host)
@@ -110,6 +113,19 @@ func proxy(c *gin.Context) {
 	}
 
 	proxy.ServeHTTP(c.Writer, c.Request)
+}
+
+func rewriteBody(resp *http.Response) (err error) {
+	b, err := ioutil.ReadAll(resp.Body) //Read html
+	fmt.Println(b)
+	if err != nil {
+		return err
+	}
+	err = resp.Body.Close()
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func main() {
