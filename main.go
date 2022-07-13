@@ -97,11 +97,6 @@ func proxy(c *gin.Context) {
 	proxy := httputil.NewSingleHostReverseProxy(remote)
 	proxy.ModifyResponse = rewriteBody
 
-	fmt.Println(c.Request.Header)
-	fmt.Println(remote.Host)
-	fmt.Println(remote.Scheme)
-	fmt.Println(c.Param("proxyPath"))
-
 	//Define the director func
 	//This is a good place to log, for example
 	proxy.Director = func(req *http.Request) {
@@ -117,7 +112,7 @@ func proxy(c *gin.Context) {
 
 func rewriteBody(resp *http.Response) (err error) {
 	b, err := ioutil.ReadAll(resp.Body) //Read html
-	fmt.Println(b)
+	fmt.Println(string(b))
 	if err != nil {
 		return err
 	}
