@@ -103,10 +103,12 @@ func proxy(c *gin.Context) {
 func rewriteBody(resp *http.Response) (err error) {
 	b, err := ioutil.ReadAll(resp.Body) //Read html
 	if err != nil {
+		log.Println(err)
 		return err
 	}
 	err = resp.Body.Close()
 	if err != nil {
+		log.Println(err)
 		return err
 	}
 	b = bytes.Replace(b, []byte("href='/'"), []byte("href='/octo/'"), -1) // replace html
