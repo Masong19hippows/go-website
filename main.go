@@ -1,8 +1,8 @@
 package main
 
 import (
+	"bytes"
 	"flag"
-	"fmt"
 	"io"
 	"io/ioutil"
 	"log"
@@ -97,22 +97,11 @@ func proxy(c *gin.Context) {
 	proxy := httputil.NewSingleHostReverseProxy(remote)
 	proxy.ModifyResponse = rewriteBody
 
-	//Define the director func
-	//This is a good place to log, for example
-	proxy.Director = func(req *http.Request) {
-		req.Header = c.Request.Header
-		req.Host = "/octo/" + remote.Host
-		req.URL.Scheme = remote.Scheme
-		req.URL.Host = remote.Host
-		req.URL.Path = c.Param("proxyPath")
-	}
-
 	proxy.ServeHTTP(c.Writer, c.Request)
 }
 
 func rewriteBody(resp *http.Response) (err error) {
 	b, err := ioutil.ReadAll(resp.Body) //Read html
-	fmt.Println(string(b))
 	if err != nil {
 		return err
 	}
@@ -120,6 +109,11 @@ func rewriteBody(resp *http.Response) (err error) {
 	if err != nil {
 		return err
 	}
+	b = bytes.Replace(b, []byte("href='/'"), []byte("href='/octo/'"), -1) // replace html
+	body := ioutil.NopCloser(bytes.NewReader(b))
+	resp.Body = body
+	resp.ContentLength = int64(len(b))
+	resp.Header.Set("Content-Length", strconv.Itoa(len(b)))
 	return nil
 }
 
