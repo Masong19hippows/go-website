@@ -114,7 +114,7 @@ func proxy(c *gin.Context) {
 			log.Println(err)
 		}
 		fmt.Println(string(b))
-		b = bytes.Replace(b, []byte("href="), []byte("href=/octo"), -1) // replace html
+		b = bytes.Replace(b, []byte("href="), []byte("'href=\"/octo'"), -1) // replace html
 		fmt.Println(string(b))
 		body := ioutil.NopCloser(bytes.NewReader(b))
 		resp.Body = body
