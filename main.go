@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"flag"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"log"
@@ -89,36 +90,40 @@ func sendEmail(password string) gin.HandlerFunc {
 }
 func proxy(c *gin.Context) {
 	remote, err := url.Parse("http://192.168.1.157:80")
-
 	if err != nil {
 		panic(err)
 	}
 
 	proxy := httputil.NewSingleHostReverseProxy(remote)
-	proxy.ModifyResponse = rewriteBody
+
+	proxy.Director = func(req *http.Request) {
+		req.Header = c.Request.Header
+		fmt.Println(c.Request.Header)
+		req.Host = remote.Host
+		req.URL.Scheme = remote.Scheme
+		req.URL.Host = remote.Host
+		req.URL.Path = c.Param("octo")
+	}
+
+	proxy.ModifyResponse = func(resp *http.Response) (err error) {
+		b, err := ioutil.ReadAll(resp.Body) //Read html
+		if err != nil {
+			log.Println(err)
+		}
+		err = resp.Body.Close()
+		if err != nil {
+			log.Println(err)
+		}
+		b = bytes.Replace(b, []byte("href="), []byte("href=/octo/"), -1) // replace html
+		body := ioutil.NopCloser(bytes.NewReader(b))
+		resp.Body = body
+		resp.ContentLength = int64(len(b))
+		resp.Header.Set("Content-Length", strconv.Itoa(len(b)))
+		return nil
+	}
 
 	proxy.ServeHTTP(c.Writer, c.Request)
 }
-
-func rewriteBody(resp *http.Response) (err error) {
-	b, err := ioutil.ReadAll(resp.Body) //Read html
-	if err != nil {
-		log.Println(err)
-		return err
-	}
-	err = resp.Body.Close()
-	if err != nil {
-		log.Println(err)
-		return err
-	}
-	b = bytes.Replace(b, []byte("href='/'"), []byte("href='/octo/'"), -1) // replace html
-	body := ioutil.NopCloser(bytes.NewReader(b))
-	resp.Body = body
-	resp.ContentLength = int64(len(b))
-	resp.Header.Set("Content-Length", strconv.Itoa(len(b)))
-	return nil
-}
-
 func main() {
 
 	port := flag.Int("port", 80, "Select the port that you wish the server to run on")
@@ -130,7 +135,8 @@ func main() {
 	gin.SetMode(gin.ReleaseMode)
 	router.NoMethod(SendError(Response{Status: http.StatusMethodNotAllowed, Error: []string{"File Not Found on Server"}}))
 	router.NoRoute(SendError(Response{Status: http.StatusNotFound, Error: []string{"File Not Found on Server"}}))
-	router.Any("/octo/", proxy)
+	router.Any("/octo", proxy)
+	router.Any("/octo/:octo", proxy)
 
 	router.StaticFile("/", "assets/index.html")
 	router.POST("/send_email", sendEmail(*password))
