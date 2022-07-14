@@ -216,7 +216,6 @@ func main() {
 	router.NoMethod(SendError(Response{Status: http.StatusMethodNotAllowed, Error: []string{"File Not Found on Server"}}))
 	router.NoRoute(SendError(Response{Status: http.StatusNotFound, Error: []string{"File Not Found on Server"}}))
 	router.Any("/octo", proxy)
-	router.Any("/octo/:first", proxy)
 
 	router.Any("/octo/:first/:second/:third/:fourth/:fith", proxy)
 
