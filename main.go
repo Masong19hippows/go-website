@@ -3,7 +3,6 @@ package main
 import (
 	"bytes"
 	"flag"
-	"fmt"
 	"io"
 	"io/ioutil"
 	"log"
@@ -143,7 +142,7 @@ func proxy(c *gin.Context) {
 			return first + middle + last
 		}()
 
-		fmt.Println(req.URL.Path)
+		log.Printf("Trying to access %v on the proxy", req.URL.Path)
 
 	}
 
