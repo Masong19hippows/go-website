@@ -161,19 +161,14 @@ func proxy(c *gin.Context) {
 		body := ioutil.NopCloser(bytes.NewReader(b))
 		resp.Body = body
 
-		test, err := resp.Location()
-		if err != nil {
-			log.Println(err)
-		} else if test.String() != "" {
-			test1 := test.String()
-			test1 = strings.Replace(test1, "http://192.168.1.157:80/", "http://localhost:8081"+"/octo/", -1)
-			test1 = strings.Replace(test1, "http://192.168.1.157/", "http://localhost:8081"+"/octo/", -1)
-			resp.Header.Set("Location", test1)
-		}
-		if err != nil {
+		location, err := resp.Location()
+		if err == nil {
+			newLocation := location.String()
+			newLocation = strings.Replace(newLocation, "http://192.168.1.157:80/", "http://localhost:8081"+"/octo/", -1)
+			newLocation = strings.Replace(newLocation, "http://192.168.1.157/", "http://localhost:8081"+"/octo/", -1)
+			resp.Header.Set("Location", newLocation)
 			log.Printf("Response is redirecting to %v", string(b))
 		}
-
 		resp.ContentLength = int64(len(b))
 		resp.Header.Set("Content-Length", strconv.Itoa(len(b)))
 		return nil
