@@ -102,7 +102,7 @@ func proxy(c *gin.Context) {
 		req.Host = remote.Host
 		req.URL.Scheme = remote.Scheme
 		req.URL.Host = remote.Host
-		req.URL.Path = c.Param("octo") + c.Param("test") + c.Param("test1") + c.Param("test2")
+		req.URL.Path = c.Param("octo") + c.Param("test")
 		fmt.Println(req.URL.Path)
 	}
 
@@ -150,8 +150,6 @@ func main() {
 	router.Any("/octo", proxy)
 	router.Any("/octo/:octo", proxy)
 	router.Any("/octo/:octo/:test", proxy)
-	router.Any("/octo/:octo/:test/:test1", proxy)
-	router.Any("/octo/:octo/:test/:test1/:test2", proxy)
 
 	router.StaticFile("/", "assets/index.html")
 	router.POST("/send_email", sendEmail(*password))
