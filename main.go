@@ -89,8 +89,8 @@ func sendEmail(password string) gin.HandlerFunc {
 
 }
 func proxy(c *gin.Context) {
-	remote, err := url.Parse("http://192.168.1.157:80/")
-	// remote, err := url.Parse("http://localhost:8000")
+	// remote, err := url.Parse("http://192.168.1.157:80/")
+	remote, err := url.Parse("http://localhost:8000")
 	if err != nil {
 		panic(err)
 	}
@@ -102,8 +102,49 @@ func proxy(c *gin.Context) {
 		req.Host = remote.Host
 		req.URL.Scheme = remote.Scheme
 		req.URL.Host = remote.Host
-		req.URL.Path = c.Param("octo") + c.Param("test")
+		req.URL.Path = func() string {
+			var first string
+			var middle string
+			var last string
+
+			if c.Param("octo") == "" {
+				return "/"
+			}
+			if c.Param("octo")[0:1] != "/" {
+
+				first = "/" + c.Param("octo")
+			} else {
+				first = c.Param("octo")
+			}
+			if strings.Contains(first, ".") {
+				return first
+			}
+
+			if c.Param("test") == "" {
+				return first + "/"
+			}
+			if c.Param("test")[0:1] != "/" {
+				middle = "/" + c.Param("test")
+			} else {
+				middle = c.Param("test")
+			}
+			if strings.Contains(middle, ".") {
+				return first + middle
+			}
+
+			if c.Param("test1") == "" {
+				return first + middle + "/"
+			}
+			if c.Param("test1")[0:1] != "/" {
+				middle = "/" + c.Param("test1")
+			} else {
+				middle = c.Param("test1")
+			}
+			return first + middle + last
+		}()
+
 		fmt.Println(req.URL.Path)
+
 	}
 
 	proxy.ModifyResponse = func(resp *http.Response) (err error) {
@@ -115,8 +156,9 @@ func proxy(c *gin.Context) {
 		if err != nil {
 			log.Println(err)
 		}
-		b = bytes.Replace(b, []byte("href=\"http://192.168.1.157/"), []byte("href=\"/octo/"), -1) // replace html
-		fmt.Println(string(b))
+		b = bytes.Replace(b, []byte("href=\"https://"), []byte("bref=\""), -1) // replace html
+		b = bytes.Replace(b, []byte("href=\""), []byte("href=\"/octo/"), -1)   // replace html
+		b = bytes.Replace(b, []byte("bref=\""), []byte("href=\"https://"), -1) // replace html
 		body := ioutil.NopCloser(bytes.NewReader(b))
 		resp.Body = body
 
@@ -149,7 +191,8 @@ func main() {
 	router.NoMethod(SendError(Response{Status: http.StatusMethodNotAllowed, Error: []string{"File Not Found on Server"}}))
 	router.NoRoute(SendError(Response{Status: http.StatusNotFound, Error: []string{"File Not Found on Server"}}))
 	router.Any("/octo", proxy)
-	router.Any("/octo/:octo/:test", proxy)
+	router.Any("/octo/:octo", proxy)
+	router.Any("/octo/:octo/:test/:test1", proxy)
 
 	router.StaticFile("/", "assets/index.html")
 	router.POST("/send_email", sendEmail(*password))
