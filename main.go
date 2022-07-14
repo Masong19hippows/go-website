@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"flag"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"log"
@@ -108,6 +109,7 @@ func proxy(c *gin.Context) {
 			var fourth string
 			var fith string
 
+			fmt.Println("test")
 			if c.Param("first") == "" {
 				return "/"
 			}
@@ -165,10 +167,9 @@ func proxy(c *gin.Context) {
 			} else {
 				fith = c.Param("fith")
 			}
-			if strings.Contains(fith, ".") {
-				return first + second + third + fourth + fith
-			}
-			return "none"
+
+			return first + second + third + fourth + fith
+
 		}()
 
 		log.Printf("Trying to access %v on the proxy", req.URL.Path)
