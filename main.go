@@ -3,7 +3,6 @@ package main
 import (
 	"bytes"
 	"flag"
-	"fmt"
 	"io"
 	"io/ioutil"
 	"log"
@@ -171,7 +170,10 @@ func proxy(c *gin.Context) {
 			test1 = strings.Replace(test1, "http://192.168.1.157/", "http://localhost:8081"+"/octo/", -1)
 			resp.Header.Set("Location", test1)
 		}
-		fmt.Println(string(b))
+		if err != nil {
+			log.Printf("Response is redirecting to %v", string(b))
+		}
+
 		resp.ContentLength = int64(len(b))
 		resp.Header.Set("Content-Length", strconv.Itoa(len(b)))
 		return nil
