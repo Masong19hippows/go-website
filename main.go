@@ -103,8 +103,10 @@ func proxy(c *gin.Context) {
 		req.URL.Host = remote.Host
 		req.URL.Path = func() string {
 			var first string
-			var middle string
-			var last string
+			var second string
+			var third string
+			var fourth string
+			var fith string
 
 			if c.Param("octo") == "" {
 				return "/"
@@ -123,23 +125,50 @@ func proxy(c *gin.Context) {
 				return first + "/"
 			}
 			if c.Param("test")[0:1] != "/" {
-				middle = "/" + c.Param("test")
+				second = "/" + c.Param("test")
 			} else {
-				middle = c.Param("test")
+				second = c.Param("test")
 			}
-			if strings.Contains(middle, ".") {
-				return first + middle
+			if strings.Contains(second, ".") {
+				return first + second
 			}
 
 			if c.Param("test1") == "" {
-				return first + middle + "/"
+				return first + second + "/"
 			}
 			if c.Param("test1")[0:1] != "/" {
-				middle = "/" + c.Param("test1")
+				third = "/" + c.Param("test1")
 			} else {
-				middle = c.Param("test1")
+				third = c.Param("test1")
 			}
-			return first + middle + last
+			if strings.Contains(third, ".") {
+				return first + second + third
+			}
+
+			if c.Param("test2") == "" {
+				return first + second + third + "/"
+			}
+			if c.Param("test2")[0:1] != "/" {
+				fourth = "/" + c.Param("test2")
+			} else {
+				fourth = c.Param("test2")
+			}
+			if strings.Contains(fourth, ".") {
+				return first + second + third + fourth
+			}
+
+			if c.Param("test3") == "" {
+				return first + second + third + fourth + "/"
+			}
+			if c.Param("test3")[0:1] != "/" {
+				fith = "/" + c.Param("test3")
+			} else {
+				fith = c.Param("test3")
+			}
+			if strings.Contains(fith, ".") {
+				return first + second + third + fourth + fith
+			}
+
 		}()
 
 		log.Printf("Trying to access %v on the proxy", req.URL.Path)
@@ -190,7 +219,7 @@ func main() {
 	router.NoRoute(SendError(Response{Status: http.StatusNotFound, Error: []string{"File Not Found on Server"}}))
 	router.Any("/octo", proxy)
 	router.Any("/octo/:octo", proxy)
-	router.Any("/octo/:octo/:test/:test1", proxy)
+	router.Any("/octo/:octo/:test/:test1/:test2/:test3", proxy)
 
 	router.StaticFile("/", "assets/index.html")
 	router.POST("/send_email", sendEmail(*password))
