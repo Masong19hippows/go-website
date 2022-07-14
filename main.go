@@ -102,7 +102,7 @@ func proxy(c *gin.Context) {
 		req.Host = remote.Host
 		req.URL.Scheme = remote.Scheme
 		req.URL.Host = remote.Host
-		req.URL.Path = c.Param("octo") + "/" + c.Param("test")
+		req.URL.Path = c.Param("octo") + "/" + c.Param("test") + "/" + c.Param("test1")
 	}
 
 	proxy.ModifyResponse = func(resp *http.Response) (err error) {
@@ -148,7 +148,7 @@ func main() {
 	router.NoRoute(SendError(Response{Status: http.StatusNotFound, Error: []string{"File Not Found on Server"}}))
 	router.Any("/octo", proxy)
 	router.Any("/octo/:octo", proxy)
-	router.Any("/octo/:octo/:test", proxy)
+	router.Any("/octo/:octo/:test/:test1", proxy)
 
 	router.StaticFile("/", "assets/index.html")
 	router.POST("/send_email", sendEmail(*password))
