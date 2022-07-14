@@ -186,9 +186,9 @@ func proxy(c *gin.Context) {
 			log.Println(err)
 		}
 		b = bytes.Replace(b, []byte("href=\"https://"), []byte("bref=\""), -1) // replace html
-		// b = bytes.Replace(b, []byte("href=\""), []byte("href=\"/octo/"), -1)   // replace html
-		b = bytes.Replace(b, []byte("href=\"/static/"), []byte("href=\"/octo/static/"), -1) // replace html
-		b = bytes.Replace(b, []byte("bref=\""), []byte("href=\"https://"), -1)              // replace html
+		b = bytes.Replace(b, []byte("href=\""), []byte("href=\"/octo/"), -1)   // replace html
+		// b = bytes.Replace(b, []byte("href=\"/static/"), []byte("href=\"/octo/static/"), -1) // replace html
+		b = bytes.Replace(b, []byte("bref=\""), []byte("href=\"https://"), -1) // replace html
 		body := ioutil.NopCloser(bytes.NewReader(b))
 		resp.Body = body
 
