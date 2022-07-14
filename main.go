@@ -122,7 +122,7 @@ func proxy(c *gin.Context) {
 			}
 
 			if c.Param("second") == "" {
-				return first
+				return first + "/"
 			}
 			if c.Param("second")[0:1] != "/" {
 				second = "/" + c.Param("second")
@@ -216,7 +216,6 @@ func main() {
 	router.NoMethod(SendError(Response{Status: http.StatusMethodNotAllowed, Error: []string{"File Not Found on Server"}}))
 	router.NoRoute(SendError(Response{Status: http.StatusNotFound, Error: []string{"File Not Found on Server"}}))
 	router.Any("/octo", proxy)
-
 	router.Any("/octo/:first/:second/:third/:fourth/:fith", proxy)
 
 	router.StaticFile("/", "assets/index.html")
