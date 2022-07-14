@@ -126,7 +126,7 @@ func proxy(c *gin.Context) {
 			test1 = strings.Replace(test1, "http://192.168.1.157:80/", "http://"+resp.Request.Host+"/octo/", -1)
 			test1 = strings.Replace(test1, "http://192.168.1.157/", "http://"+resp.Request.Host+"/octo/", -1)
 			resp.Header.Set("Location", test1)
-			fmt.Println("http://" + resp.Request.Host + "/octo/")
+			fmt.Println("http://" + c.Request.RemoteAddr + "/octo/")
 		}
 
 		resp.ContentLength = int64(len(b))
