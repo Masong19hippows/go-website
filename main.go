@@ -122,7 +122,7 @@ func proxy(c *gin.Context) {
 			}
 
 			if c.Param("test") == "" {
-				return first + "/"
+				return first
 			}
 			if c.Param("test")[0:1] != "/" {
 				second = "/" + c.Param("test")
@@ -134,7 +134,7 @@ func proxy(c *gin.Context) {
 			}
 
 			if c.Param("test1") == "" {
-				return first + second + "/"
+				return first + second
 			}
 			if c.Param("test1")[0:1] != "/" {
 				third = "/" + c.Param("test1")
@@ -146,7 +146,7 @@ func proxy(c *gin.Context) {
 			}
 
 			if c.Param("test2") == "" {
-				return first + second + third + "/"
+				return first + second + third
 			}
 			if c.Param("test2")[0:1] != "/" {
 				fourth = "/" + c.Param("test2")
@@ -158,7 +158,7 @@ func proxy(c *gin.Context) {
 			}
 
 			if c.Param("test3") == "" {
-				return first + second + third + fourth + "/"
+				return first + second + third + fourth
 			}
 			if c.Param("test3")[0:1] != "/" {
 				fith = "/" + c.Param("test3")
