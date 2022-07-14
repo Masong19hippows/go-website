@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"flag"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"log"
@@ -172,6 +173,7 @@ func proxy(c *gin.Context) {
 		log.Printf("Trying to access %v on the proxy", req.URL.Path)
 
 	}
+	fmt.Println(c.FullPath())
 
 	proxy.ModifyResponse = func(resp *http.Response) (err error) {
 		b, err := ioutil.ReadAll(resp.Body) //Read html
