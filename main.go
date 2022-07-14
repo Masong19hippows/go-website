@@ -102,7 +102,7 @@ func proxy(c *gin.Context) {
 		req.Host = remote.Host
 		req.URL.Scheme = remote.Scheme
 		req.URL.Host = remote.Host
-		req.URL.Path = c.Param("octo") + "/" + c.Param("test") + "/" + c.Param("test1") + "/" + c.Param("test2")
+		req.URL.Path = c.Param("octo") + c.Param("test") + c.Param("test1") + c.Param("test2")
 		fmt.Println(req.URL.Path)
 	}
 
