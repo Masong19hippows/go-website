@@ -168,7 +168,7 @@ func proxy(c *gin.Context) {
 			if strings.Contains(fith, ".") {
 				return first + second + third + fourth + fith
 			}
-
+			return "none"
 		}()
 
 		log.Printf("Trying to access %v on the proxy", req.URL.Path)
