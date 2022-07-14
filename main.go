@@ -182,10 +182,10 @@ func proxy(c *gin.Context) {
 		if err != nil {
 			log.Println(err)
 		}
-		b = bytes.Replace(b, []byte("href=\"https://"), []byte("bref=\""), -1)                                                    // replace html
-		b = bytes.Replace(b, []byte("href=\"http://192.168.1.157/login/"), []byte("href=\"http://localhost:8081/octo/login"), -1) // replace html
-		b = bytes.Replace(b, []byte("href=\"/static/"), []byte("href=\"/octo/static/"), -1)                                       // replace html
-		b = bytes.Replace(b, []byte("bref=\""), []byte("href=\"https://"), -1)                                                    // replace html
+		b = bytes.Replace(b, []byte("href=\"https://"), []byte("bref=\""), -1)                                                     // replace html
+		b = bytes.Replace(b, []byte("href=\"http://192.168.1.157/login/"), []byte("href=\"http://localhost:8081/octo/login/"), -1) // replace html
+		b = bytes.Replace(b, []byte("href=\"/static/"), []byte("href=\"/octo/static/"), -1)                                        // replace html
+		b = bytes.Replace(b, []byte("bref=\""), []byte("href=\"https://"), -1)                                                     // replace html
 		body := ioutil.NopCloser(bytes.NewReader(b))
 		resp.Body = body
 
@@ -194,8 +194,8 @@ func proxy(c *gin.Context) {
 			newLocation := location.String()
 			newLocation = strings.Replace(newLocation, "http://192.168.1.157:80/", "http://localhost:8081"+"/octo/", -1)
 			newLocation = strings.Replace(newLocation, "http://192.168.1.157/", "http://localhost:8081"+"/octo/", -1)
-			resp.Header.Set("Location", newLocation)
-			log.Printf("Response is redirecting to %v", newLocation)
+			resp.Header.Set("location", newLocation)
+			log.Printf("Response is redirecting from %v and now to %v", location, newLocation)
 		}
 		resp.ContentLength = int64(len(b))
 		resp.Header.Set("Content-Length", strconv.Itoa(len(b)))
