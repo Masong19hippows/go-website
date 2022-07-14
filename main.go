@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"flag"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"log"
@@ -171,6 +172,7 @@ func proxy(c *gin.Context) {
 		// 	resp.Header.Set("Location", test1)
 		// }
 
+		fmt.Println(resp.Location())
 		resp.ContentLength = int64(len(b))
 		resp.Header.Set("Content-Length", strconv.Itoa(len(b)))
 		return nil
