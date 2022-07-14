@@ -193,8 +193,8 @@ func proxy(c *gin.Context) {
 		location, err := resp.Location()
 		if err == nil {
 			newLocation := location.String()
-			newLocation = strings.Replace(newLocation, "http://192.168.1.157:80/", "http://localhost:8081"+"/octo/", -1)
-			newLocation = strings.Replace(newLocation, "http://192.168.1.157/", "http://localhost:8081"+"/octo/", -1)
+			newLocation = strings.Replace(newLocation, "http://192.168.1.157:80/", "http://localhost:8081"+"/octo", -1)
+			newLocation = strings.Replace(newLocation, "http://192.168.1.157/", "http://localhost:8081"+"/octo", -1)
 			resp.Header.Set("Location", newLocation)
 			log.Printf("Response is redirecting to %v", newLocation)
 		}
