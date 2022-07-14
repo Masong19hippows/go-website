@@ -171,8 +171,7 @@ func proxy(c *gin.Context) {
 			test1 = strings.Replace(test1, "http://192.168.1.157/", "http://localhost:8081"+"/octo/", -1)
 			resp.Header.Set("Location", test1)
 		}
-
-		fmt.Println(resp.Location())
+		fmt.Println(string(b))
 		resp.ContentLength = int64(len(b))
 		resp.Header.Set("Content-Length", strconv.Itoa(len(b)))
 		return nil
