@@ -123,10 +123,10 @@ func proxy(c *gin.Context) {
 			log.Println(err)
 		} else if test.String() != "" {
 			test1 := test.String()
-			test1 = strings.Replace(test1, "http://192.168.1.157:80/", "http://"+resp.Request.Host+"/octo/", -1)
-			test1 = strings.Replace(test1, "http://192.168.1.157/", "http://"+resp.Request.Host+"/octo/", -1)
+			test1 = strings.Replace(test1, "http://192.168.1.157:80/", "http://"+c.Request.RemoteAddr+"/octo/", -1)
+			test1 = strings.Replace(test1, "http://192.168.1.157/", "http://"+c.Request.RemoteAddr+"/octo/", -1)
 			resp.Header.Set("Location", test1)
-			fmt.Println("http://" + c.Request.RemoteAddr + "/octo/")
+			fmt.Println("http://" + c.Request.RequestURI + "/octo/")
 		}
 
 		resp.ContentLength = int64(len(b))
