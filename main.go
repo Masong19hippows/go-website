@@ -108,62 +108,62 @@ func proxy(c *gin.Context) {
 			var fourth string
 			var fith string
 
-			if c.Param("octo") == "" {
+			if c.Param("first") == "" {
 				return "/"
 			}
-			if c.Param("octo")[0:1] != "/" {
+			if c.Param("first")[0:1] != "/" {
 
-				first = "/" + c.Param("octo")
+				first = "/" + c.Param("first")
 			} else {
-				first = c.Param("octo")
+				first = c.Param("first")
 			}
 			if strings.Contains(first, ".") {
 				return first
 			}
 
-			if c.Param("test") == "" {
+			if c.Param("second") == "" {
 				return first
 			}
-			if c.Param("test")[0:1] != "/" {
-				second = "/" + c.Param("test")
+			if c.Param("second")[0:1] != "/" {
+				second = "/" + c.Param("second")
 			} else {
-				second = c.Param("test")
+				second = c.Param("second")
 			}
 			if strings.Contains(second, ".") {
 				return first + second
 			}
 
-			if c.Param("test1") == "" {
+			if c.Param("third") == "" {
 				return first + second
 			}
-			if c.Param("test1")[0:1] != "/" {
-				third = "/" + c.Param("test1")
+			if c.Param("third")[0:1] != "/" {
+				third = "/" + c.Param("third")
 			} else {
-				third = c.Param("test1")
+				third = c.Param("third")
 			}
 			if strings.Contains(third, ".") {
 				return first + second + third
 			}
 
-			if c.Param("test2") == "" {
+			if c.Param("fourth") == "" {
 				return first + second + third
 			}
-			if c.Param("test2")[0:1] != "/" {
-				fourth = "/" + c.Param("test2")
+			if c.Param("fourth")[0:1] != "/" {
+				fourth = "/" + c.Param("fourth")
 			} else {
-				fourth = c.Param("test2")
+				fourth = c.Param("fourth")
 			}
 			if strings.Contains(fourth, ".") {
 				return first + second + third + fourth
 			}
 
-			if c.Param("test3") == "" {
+			if c.Param("fith") == "" {
 				return first + second + third + fourth
 			}
-			if c.Param("test3")[0:1] != "/" {
-				fith = "/" + c.Param("test3")
+			if c.Param("fith")[0:1] != "/" {
+				fith = "/" + c.Param("fith")
 			} else {
-				fith = c.Param("test3")
+				fith = c.Param("fith")
 			}
 			if strings.Contains(fith, ".") {
 				return first + second + third + fourth + fith
@@ -214,7 +214,6 @@ func main() {
 	log.Println("Using port", *port)
 
 	router := gin.Default()
-	gin.SetMode(gin.ReleaseMode)
 	router.NoMethod(SendError(Response{Status: http.StatusMethodNotAllowed, Error: []string{"File Not Found on Server"}}))
 	router.NoRoute(SendError(Response{Status: http.StatusNotFound, Error: []string{"File Not Found on Server"}}))
 	router.Any("/octo", proxy)
