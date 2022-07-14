@@ -101,7 +101,9 @@ func proxy(c *gin.Context) {
 		req.Header = c.Request.Header
 		req.Host = remote.Host
 		req.URL.Scheme = remote.Scheme
+		fmt.Println(req.URL.Scheme)
 		req.URL.Host = remote.Host
+		fmt.Println(req.URL.Host)
 		fmt.Println(c.Param("octo") + c.Param("test"))
 		req.URL.Path = c.Param("octo") + "/" + c.Param("test")
 	}
@@ -116,7 +118,6 @@ func proxy(c *gin.Context) {
 			log.Println(err)
 		}
 		b = bytes.Replace(b, []byte("href=\""), []byte("href=\"/octo"), -1) // replace html
-		b = bytes.Replace(b, []byte("/login"), []byte("/octo/login"), -1)   // replace html
 		fmt.Println(string(b))
 		body := ioutil.NopCloser(bytes.NewReader(b))
 		resp.Body = body
