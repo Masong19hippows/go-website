@@ -103,6 +103,7 @@ func proxy(c *gin.Context) {
 		req.URL.Scheme = remote.Scheme
 		req.URL.Host = remote.Host
 		req.URL.Path = c.Param("octo") + "/" + c.Param("test") + "/" + c.Param("test1") + "/" + c.Param("test2")
+		fmt.Println(req.URL.Path)
 	}
 
 	proxy.ModifyResponse = func(resp *http.Response) (err error) {
@@ -125,7 +126,6 @@ func proxy(c *gin.Context) {
 			test1 := test.String()
 			test1 = strings.Replace(test1, "http://192.168.1.157/", "/octo/", -1)
 			resp.Header.Set("Location", test1)
-			fmt.Println(test1)
 		}
 
 		resp.ContentLength = int64(len(b))
