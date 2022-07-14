@@ -124,6 +124,8 @@ func proxy(c *gin.Context) {
 			test1 = strings.Replace(test1, ":80:/", ":80/octo/", 2)
 			resp.Header.Set("location", test1)
 			fmt.Println(test1)
+		} else {
+			fmt.Println(err)
 		}
 		resp.ContentLength = int64(len(b))
 		resp.Header.Set("Content-Length", strconv.Itoa(len(b)))
