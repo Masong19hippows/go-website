@@ -121,7 +121,7 @@ func proxy(c *gin.Context) {
 		test, _ := resp.Location()
 
 		test1 := test.String()
-		test1 = strings.Replace(test1, ":80/", ":80/octo/", -01)
+		test1 = strings.Replace(test1, "http://192.168.1.157:80/", "http://localhost:80/octo/", -01)
 		resp.Header.Set("location", test1)
 		fmt.Println(test1)
 
