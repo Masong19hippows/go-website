@@ -99,6 +99,7 @@ func proxy(c *gin.Context) {
 
 	proxy.Director = func(req *http.Request) {
 		req.Header = c.Request.Header
+		fmt.Println(req.Header)
 		req.Host = remote.Host
 		req.URL.Scheme = remote.Scheme
 		req.URL.Host = remote.Host
