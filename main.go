@@ -89,7 +89,7 @@ func sendEmail(password string) gin.HandlerFunc {
 
 }
 func proxy(c *gin.Context) {
-	remote, err := url.Parse("http://192.168.1.157")
+	remote, err := url.Parse("http://192.168.1.157:80/")
 	// remote, err := url.Parse("http://localhost:8000")
 	if err != nil {
 		panic(err)
@@ -123,10 +123,10 @@ func proxy(c *gin.Context) {
 			log.Println(err)
 		} else if test.String() != "" {
 			test1 := test.String()
-			test1 = strings.Replace(test1, "http://192.168.1.157:80/", "http://"+c.Request.RemoteAddr+"/octo/", -1)
-			test1 = strings.Replace(test1, "http://192.168.1.157/", "http://"+c.Request.RemoteAddr+"/octo/", -1)
+			test1 = strings.Replace(test1, "http://192.168.1.157:80/", "http://localhost:8081"+"/octo/", -1)
+			test1 = strings.Replace(test1, "http://192.168.1.157/", "http://localhost:8081"+"/octo/", -1)
 			resp.Header.Set("Location", test1)
-			fmt.Println("http://" + c.Request.RequestURI + "/octo/")
+			fmt.Println(test1)
 		}
 
 		resp.ContentLength = int64(len(b))
