@@ -89,7 +89,7 @@ func sendEmail(password string) gin.HandlerFunc {
 
 }
 func proxy(c *gin.Context) {
-	remote, err := url.Parse("http://192.168.1.157:80")
+	remote, err := url.Parse("http://192.168.1.157")
 	// remote, err := url.Parse("http://localhost:8000")
 	if err != nil {
 		panic(err)
