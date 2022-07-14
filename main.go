@@ -167,7 +167,7 @@ func proxy(c *gin.Context) {
 			newLocation = strings.Replace(newLocation, "http://192.168.1.157:80/", "http://localhost:8081"+"/octo/", -1)
 			newLocation = strings.Replace(newLocation, "http://192.168.1.157/", "http://localhost:8081"+"/octo/", -1)
 			resp.Header.Set("Location", newLocation)
-			log.Printf("Response is redirecting to %v", string(b))
+			log.Printf("Response is redirecting to %v", newLocation)
 		}
 		resp.ContentLength = int64(len(b))
 		resp.Header.Set("Content-Length", strconv.Itoa(len(b)))
