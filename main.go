@@ -103,7 +103,7 @@ func proxy(c *gin.Context) {
 		req.URL.Scheme = remote.Scheme
 		req.URL.Host = remote.Host
 		req.URL.RawQuery = c.Request.URL.RawQuery
-		fmt.Println(req.URL.RawQuery)
+		fmt.Println(req.URL.RawPath)
 		req.URL.RawPath = func() string {
 			var first string
 			var second string
