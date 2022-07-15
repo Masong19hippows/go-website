@@ -103,6 +103,7 @@ func proxy(c *gin.Context) {
 		req.URL.Scheme = remote.Scheme
 		req.URL.Host = remote.Host
 		req.URL.RawQuery = c.Request.URL.RawQuery
+		fmt.Println(req.URL.RawPath)
 		req.URL.RawPath = func() string {
 			var first string
 			var second string
@@ -111,36 +112,30 @@ func proxy(c *gin.Context) {
 			var fith string
 
 			if c.Param("first") == "" {
-				fmt.Println(first)
 				return "/"
 			}
-			fmt.Println(first)
 			if c.Param("first")[0:1] != "/" {
 
 				first = "/" + c.Param("first")
 			} else {
 				first = c.Param("first")
 			}
-			fmt.Println(first)
 			if strings.Contains(first, ".") {
 				return first
 			}
-			fmt.Println(first)
+
 			if c.Param("second") == "" {
 				return first
 			}
-
-			fmt.Println(first)
 			if c.Param("second")[0:1] != "/" {
 				second = "/" + c.Param("second")
 			} else {
 				second = c.Param("second")
 			}
-			fmt.Println(first)
 			if strings.Contains(second, ".") {
 				return first + second
 			}
-			fmt.Println(first)
+
 			if c.Param("third") == "" {
 				return first + second
 			}
@@ -176,7 +171,7 @@ func proxy(c *gin.Context) {
 			return first + second + third + fourth + fith
 
 		}()
-
+		fmt.Println(req.URL.RawPath)
 		log.Printf("Trying to access %v on the proxy", req.URL.Path)
 
 	}
