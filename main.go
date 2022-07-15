@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"flag"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"log"
@@ -197,7 +198,8 @@ func proxy(c *gin.Context) {
 		b = bytes.Replace(b, []byte("href=\"https://"), []byte("bref=\""), -1)
 		b = bytes.Replace(b, []byte("href=\"/"), []byte("href=\"/octo/"), -1)
 		b = bytes.Replace(b, []byte("href=\""+remote.String()), []byte("href=\""+c.Request.URL.Scheme+"://"+c.Request.URL.Host+"octo/"), -1) // replace html
-		b = bytes.Replace(b, []byte("bref=\""), []byte("href=\"https://"), -1)                                                               // replace html
+		b = bytes.Replace(b, []byte("bref=\""), []byte("href=\"https://"), -1)
+		fmt.Println(string(b)) // replace html
 		body := ioutil.NopCloser(bytes.NewReader(b))
 		resp.Body = body
 
@@ -234,7 +236,6 @@ func main() {
 	router.Any("/octo/:first/:second/:third", proxy)
 	router.Any("/octo/:first/:second/:third/:fourth", proxy)
 	router.Any("/octo/:first/:second/:third/:fourth/:fith", proxy)
-	router.Any("/static/:test", func(c *gin.Context) { c.Redirect(http.StatusFound, "/octo/static/"+c.Param("test")) })
 
 	router.StaticFile("/", "assets/index.html")
 	router.POST("/send_email", sendEmail(*password))
