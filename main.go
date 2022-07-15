@@ -120,6 +120,7 @@ func proxy(c *gin.Context) {
 			} else {
 				first = c.Param("first")
 			}
+			fmt.Println(first)
 			if strings.Contains(first, ".") {
 				return first
 			}
@@ -132,6 +133,7 @@ func proxy(c *gin.Context) {
 			} else {
 				second = c.Param("second")
 			}
+			fmt.Println(second)
 			if strings.Contains(second, ".") {
 				return first + second
 			}
@@ -144,6 +146,7 @@ func proxy(c *gin.Context) {
 			} else {
 				third = c.Param("third")
 			}
+			fmt.Println(third)
 			if strings.Contains(third, ".") {
 				return first + second + third
 			}
