@@ -102,7 +102,7 @@ func proxy(c *gin.Context) {
 		req.Host = remote.Host
 		req.URL.Scheme = remote.Scheme
 		req.URL.Host = remote.Host
-		fmt.Println(c.Request.URL.Query())
+		fmt.Println(c.Request.URL)
 		req.URL.Path = func() string {
 			var first string
 			var second string
@@ -174,7 +174,6 @@ func proxy(c *gin.Context) {
 		log.Printf("Trying to access %v on the proxy", req.URL.Path)
 
 	}
-	fmt.Println(c.FullPath())
 
 	proxy.ModifyResponse = func(resp *http.Response) (err error) {
 		b, err := ioutil.ReadAll(resp.Body) //Read html
