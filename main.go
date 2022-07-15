@@ -3,7 +3,6 @@ package main
 import (
 	"bytes"
 	"flag"
-	"fmt"
 	"io"
 	"io/ioutil"
 	"log"
@@ -103,8 +102,7 @@ func proxy(c *gin.Context) {
 		req.URL.Scheme = remote.Scheme
 		req.URL.Host = remote.Host
 		req.URL.RawQuery = c.Request.URL.RawQuery
-		fmt.Println(req.URL.RawPath, "test")
-		req.URL.RawPath = func() string {
+		req.URL.Path = func() string {
 			var first string
 			var second string
 			var third string
@@ -171,7 +169,7 @@ func proxy(c *gin.Context) {
 			return first + second + third + fourth + fith
 
 		}()
-		req.URL.Path = req.URL.RawPath
+		req.URL.RawPath = req.URL.Path
 		log.Printf("Trying to access %v on the proxy", req.URL.RawPath)
 
 	}
