@@ -99,8 +99,6 @@ func proxy(c *gin.Context) {
 	proxy.Director = func(req *http.Request) {
 		req.Header = c.Request.Header
 		req.Host = remote.Host
-		req.URL.Scheme = remote.Scheme
-		req.URL.Host = remote.Host
 		req.URL.Path = func() string {
 			var first string
 			var second string
@@ -187,10 +185,10 @@ func proxy(c *gin.Context) {
 		if err != nil {
 			log.Println(err)
 		}
-		b = bytes.Replace(b, []byte("href=\"https://"), []byte("bref=\""), -1)                                                     // replace html
-		b = bytes.Replace(b, []byte("href=\"http://192.168.1.157/login/"), []byte("href=\"http://localhost:8081/octo/login/"), -1) // replace html
-		b = bytes.Replace(b, []byte("href=\"/static/"), []byte("href=\"/octo/static/"), -1)                                        // replace html
-		b = bytes.Replace(b, []byte("bref=\""), []byte("href=\"https://"), -1)                                                     // replace html
+		b = bytes.Replace(b, []byte("href=\"https://"), []byte("bref=\""), -1)                                                   // replace html
+		b = bytes.Replace(b, []byte("href=\"http://192.168.1.157/login"), []byte("href=\"http://localhost:8081/octo/login"), -1) // replace html
+		b = bytes.Replace(b, []byte("href=\"/static/"), []byte("href=\"/octo/static/"), -1)                                      // replace html
+		b = bytes.Replace(b, []byte("bref=\""), []byte("href=\"https://"), -1)                                                   // replace html
 		body := ioutil.NopCloser(bytes.NewReader(b))
 		resp.Body = body
 
