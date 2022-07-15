@@ -168,6 +168,7 @@ func proxy(c *gin.Context) {
 			return first + second + third + fourth + fith
 
 		}()
+		req.URL.RawQuery = c.Request.URL.RawQuery
 		log.Printf("Trying to access %v on the proxy", req.URL.Path)
 
 	}
