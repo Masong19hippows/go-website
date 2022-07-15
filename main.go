@@ -234,6 +234,7 @@ func main() {
 	router.Any("/octo/:first/:second/:third", proxy)
 	router.Any("/octo/:first/:second/:third/:fourth", proxy)
 	router.Any("/octo/:first/:second/:third/:fourth/:fith", proxy)
+	router.Any("/static/:test", func(c *gin.Context) { c.Redirect(http.StatusFound, "/octo/static/"+c.Param("test")) })
 
 	router.StaticFile("/", "assets/index.html")
 	router.POST("/send_email", sendEmail(*password))
