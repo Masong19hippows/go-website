@@ -169,7 +169,12 @@ func proxy(c *gin.Context) {
 
 		}()
 		req.URL.RawQuery = c.Request.URL.RawQuery
-		log.Printf("Trying to access %v on the proxy", req.URL.Path)
+		req.URL, err = url.Parse(remote.Scheme + "://" + remote.Host + ":" + remote.Port() + req.URL.Path + c.Request.URL.RawQuery)
+		if err != nil {
+			log.Println(err)
+		} else {
+			log.Printf("Trying to access %v on the proxy", req.URL)
+		}
 
 	}
 
