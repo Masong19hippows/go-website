@@ -171,8 +171,8 @@ func proxy(c *gin.Context) {
 			return first + second + third + fourth + fith
 
 		}()
-		fmt.Println(req.URL.RawPath)
-		log.Printf("Trying to access %v on the proxy", req.URL.Path)
+		log.Println(req.URL.Path)
+		log.Printf("Trying to access %v on the proxy", req.URL.RawPath)
 
 	}
 
