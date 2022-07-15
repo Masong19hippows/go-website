@@ -238,12 +238,12 @@ func main() {
 	router.Any("/octo/:first/:second/:third/:fourth", proxy(""))
 	router.Any("/octo/:first/:second/:third/:fourth/:fith", proxy(""))
 
-	router.Any("/static", proxy("/static/"))
-	router.Any("/static/:first", proxy("/static/"))
-	router.Any("/static/:first/:second", proxy("/static/"))
-	router.Any("/static/:first/:second/:third", proxy("/static/"))
-	router.Any("/static/:first/:second/:third/:fourth", proxy("/static/"))
-	router.Any("/static/:first/:second/:third/:fourth/:fith", proxy("/static/"))
+	router.Any("/static", proxy("/static"))
+	router.Any("/static/:first", proxy("/static"))
+	router.Any("/static/:first/:second", proxy("/static"))
+	router.Any("/static/:first/:second/:third", proxy("/static"))
+	router.Any("/static/:first/:second/:third/:fourth", proxy("/static"))
+	router.Any("/static/:first/:second/:third/:fourth/:fith", proxy("/static"))
 
 	router.StaticFile("/", "assets/index.html")
 	router.POST("/send_email", sendEmail(*password))
