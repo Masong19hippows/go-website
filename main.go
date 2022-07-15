@@ -3,7 +3,6 @@ package main
 import (
 	"bytes"
 	"flag"
-	"fmt"
 	"io"
 	"io/ioutil"
 	"log"
@@ -195,7 +194,8 @@ func proxy(c *gin.Context) {
 		if err != nil {
 			log.Println(err)
 		}
-		b = bytes.Replace(b, []byte("href=\"https://"), []byte("bref=\""), -1)                                                               // replace html
+		b = bytes.Replace(b, []byte("href=\"https://"), []byte("bref=\""), -1)
+		b = bytes.Replace(b, []byte("href=\"/"), []byte("bref=\"/octo/"), -1)
 		b = bytes.Replace(b, []byte("href=\""+remote.String()), []byte("href=\""+c.Request.URL.Scheme+"://"+c.Request.URL.Host+"octo/"), -1) // replace html
 		b = bytes.Replace(b, []byte("bref=\""), []byte("href=\"https://"), -1)                                                               // replace html
 		body := ioutil.NopCloser(bytes.NewReader(b))
@@ -205,7 +205,6 @@ func proxy(c *gin.Context) {
 		location, err := resp.Location()
 		if err == nil && location.String() != "" {
 			newLocation := location.String()
-			fmt.Println(c.Request.URL.String())
 			newLocation = strings.Replace(newLocation, remote.String(), c.Request.URL.Scheme+c.Request.URL.Host+"/octo", -1)
 			resp.Header.Set("location", newLocation)
 			log.Printf("Response is redirecting from %v and now to %v", location, newLocation)
