@@ -166,7 +166,6 @@ func proxy(c *gin.Context) {
 			return first + second + third + fourth + fith
 
 		}()
-		req.URL.RawQuery = c.Request.URL.RawQuery
 		req.URL, err = url.Parse(remote.Scheme + "://" + remote.Host + req.URL.Path + "?" + c.Request.URL.RawQuery)
 		if err != nil {
 			log.Println(err)
