@@ -87,135 +87,138 @@ func sendEmail(password string) gin.HandlerFunc {
 	}
 
 }
-func proxy(c *gin.Context) {
-	//Setting up a proxy connection to octoprint
-	remote, err := url.Parse("http://192.168.1.157:80")
-	// remote, err := url.Parse("http://localhost:8000")
-	if err != nil {
-		panic(err)
-	}
-	proxy := httputil.NewSingleHostReverseProxy(remote)
+func proxy(test string) gin.HandlerFunc {
 
-	//Modifying the request sent to the Proxy
-	proxy.Director = func(req *http.Request) {
-		req.Header = c.Request.Header
-		req.Host = remote.Host
-		req.URL.Path = func() string {
-			var first string
-			var second string
-			var third string
-			var fourth string
-			var fith string
-
-			//Proccessing each direcotry in path individually. This is the first
-			if c.Param("first") == "" {
-				return "/"
-			}
-			if c.Param("first")[0:1] != "/" {
-
-				first = "/" + c.Param("first")
-			} else {
-				first = c.Param("first")
-			}
-			if strings.Contains(first, ".") {
-				return first
-			}
-
-			//This is the start of the second.
-			if c.Param("second") == "" {
-				return first + "/"
-			}
-			if c.Param("second")[0:1] != "/" {
-				second = "/" + c.Param("second")
-			} else {
-				second = c.Param("second")
-			}
-			if strings.Contains(second, ".") {
-				return first + second
-			}
-
-			//This is the start of the Third
-			if c.Param("third") == "" {
-				return first + second + "/"
-			}
-			if c.Param("third")[0:1] != "/" {
-				third = "/" + c.Param("third")
-			} else {
-				third = c.Param("third")
-			}
-			if strings.Contains(third, ".") {
-				return first + second + third
-			}
-
-			//This is the start of the fourth
-			if c.Param("fourth") == "" {
-				return first + second + third + "/"
-			}
-			if c.Param("fourth")[0:1] != "/" {
-				fourth = "/" + c.Param("fourth")
-			} else {
-				fourth = c.Param("fourth")
-			}
-			if strings.Contains(fourth, ".") {
-				return first + second + third + fourth
-			}
-
-			//This is the start of the fith
-			if c.Param("fith") == "" {
-				return first + second + third + fourth + "/"
-			}
-			if c.Param("fith")[0:1] != "/" {
-				fith = "/" + c.Param("fith")
-			} else {
-				fith = c.Param("fith")
-			}
-			return first + second + third + fourth + fith
-
-		}()
-		req.URL.RawQuery = c.Request.URL.RawQuery
-		req.URL, err = url.Parse(remote.Scheme + "://" + remote.Host + req.URL.Path + "?" + c.Request.URL.RawQuery)
+	return func(c *gin.Context) {
+		//Setting up a proxy connection to octoprint
+		remote, err := url.Parse("http://192.168.1.157:80")
+		// remote, err := url.Parse("http://localhost:8000")
 		if err != nil {
-			log.Println(err)
-		} else {
-			log.Printf("Trying to access %v on the proxy", req.URL)
+			panic(err)
+		}
+		proxy := httputil.NewSingleHostReverseProxy(remote)
+
+		//Modifying the request sent to the Proxy
+		proxy.Director = func(req *http.Request) {
+			req.Header = c.Request.Header
+			req.Host = remote.Host
+			req.URL.Path = func() string {
+				var first string
+				var second string
+				var third string
+				var fourth string
+				var fith string
+
+				//Proccessing each direcotry in path individually. This is the first
+				if c.Param("first") == "" {
+					return test + "/"
+				}
+				if c.Param("first")[0:1] != "/" {
+
+					first = "/" + c.Param("first")
+				} else {
+					first = c.Param("first")
+				}
+				if strings.Contains(first, ".") {
+					return test + first
+				}
+
+				//This is the start of the second.
+				if c.Param("second") == "" {
+					return test + first + "/"
+				}
+				if c.Param("second")[0:1] != "/" {
+					second = "/" + c.Param("second")
+				} else {
+					second = c.Param("second")
+				}
+				if strings.Contains(second, ".") {
+					return test + first + second
+				}
+
+				//This is the start of the Third
+				if c.Param("third") == "" {
+					return test + first + second + "/"
+				}
+				if c.Param("third")[0:1] != "/" {
+					third = "/" + c.Param("third")
+				} else {
+					third = c.Param("third")
+				}
+				if strings.Contains(third, ".") {
+					return test + first + second + third
+				}
+
+				//This is the start of the fourth
+				if c.Param("fourth") == "" {
+					return test + first + second + third + "/"
+				}
+				if c.Param("fourth")[0:1] != "/" {
+					fourth = "/" + c.Param("fourth")
+				} else {
+					fourth = c.Param("fourth")
+				}
+				if strings.Contains(fourth, ".") {
+					return test + first + second + third + fourth
+				}
+
+				//This is the start of the fith
+				if c.Param("fith") == "" {
+					return test + first + second + third + fourth + "/"
+				}
+				if c.Param("fith")[0:1] != "/" {
+					fith = "/" + c.Param("fith")
+				} else {
+					fith = c.Param("fith")
+				}
+				return test + first + second + third + fourth + fith
+
+			}()
+			req.URL.RawQuery = c.Request.URL.RawQuery
+			req.URL, err = url.Parse(remote.Scheme + "://" + remote.Host + req.URL.Path + "?" + c.Request.URL.RawQuery)
+			if err != nil {
+				log.Println(err)
+			} else {
+				log.Printf("Trying to access %v on the proxy", req.URL)
+			}
+
 		}
 
+		//Modify the response so that links/redirects work
+		proxy.ModifyResponse = func(resp *http.Response) (err error) {
+
+			//Correcting The response body so that href links work
+			b, err := ioutil.ReadAll(resp.Body) //Read html
+			if err != nil {
+				log.Println(err)
+			}
+			err = resp.Body.Close()
+			if err != nil {
+				log.Println(err)
+			}
+			b = bytes.Replace(b, []byte("href=\"https://"), []byte("bref=\""), -1)
+			b = bytes.Replace(b, []byte("href=\"/"), []byte("href=\"/octo/"), -1)
+			b = bytes.Replace(b, []byte("href=\""+remote.String()), []byte("href=\""+c.Request.URL.Scheme+"://"+c.Request.URL.Host+"octo/"), -1) // replace html
+			b = bytes.Replace(b, []byte("bref=\""), []byte("href=\"https://"), -1)
+			body := ioutil.NopCloser(bytes.NewReader(b))
+			resp.Body = body
+
+			//Correcting The response location for redirects
+			location, err := resp.Location()
+			if err == nil && location.String() != "" {
+				newLocation := location.String()
+				newLocation = strings.Replace(newLocation, remote.String(), c.Request.URL.Scheme+c.Request.URL.Host+"/octo", -1)
+				resp.Header.Set("location", newLocation)
+				log.Printf("Response is redirecting from %v and now to %v", location, newLocation)
+			}
+			resp.ContentLength = int64(len(b))
+			resp.Header.Set("Content-Length", strconv.Itoa(len(b)))
+			return nil
+		}
+		//Serve content that was modified
+		proxy.ServeHTTP(c.Writer, c.Request)
 	}
 
-	//Modify the response so that links/redirects work
-	proxy.ModifyResponse = func(resp *http.Response) (err error) {
-
-		//Correcting The response body so that href links work
-		b, err := ioutil.ReadAll(resp.Body) //Read html
-		if err != nil {
-			log.Println(err)
-		}
-		err = resp.Body.Close()
-		if err != nil {
-			log.Println(err)
-		}
-		b = bytes.Replace(b, []byte("href=\"https://"), []byte("bref=\""), -1)
-		b = bytes.Replace(b, []byte("href=\"/"), []byte("href=\"/octo/"), -1)
-		b = bytes.Replace(b, []byte("href=\""+remote.String()), []byte("href=\""+c.Request.URL.Scheme+"://"+c.Request.URL.Host+"octo/"), -1) // replace html
-		b = bytes.Replace(b, []byte("bref=\""), []byte("href=\"https://"), -1)
-		body := ioutil.NopCloser(bytes.NewReader(b))
-		resp.Body = body
-
-		//Correcting The response location for redirects
-		location, err := resp.Location()
-		if err == nil && location.String() != "" {
-			newLocation := location.String()
-			newLocation = strings.Replace(newLocation, remote.String(), c.Request.URL.Scheme+c.Request.URL.Host+"/octo", -1)
-			resp.Header.Set("location", newLocation)
-			log.Printf("Response is redirecting from %v and now to %v", location, newLocation)
-		}
-		resp.ContentLength = int64(len(b))
-		resp.Header.Set("Content-Length", strconv.Itoa(len(b)))
-		return nil
-	}
-
-	//Serve content that was modified
-	proxy.ServeHTTP(c.Writer, c.Request)
 }
 func main() {
 
@@ -228,19 +231,19 @@ func main() {
 	router := gin.Default()
 	router.NoMethod(SendError(Response{Status: http.StatusMethodNotAllowed, Error: []string{"File Not Found on Server"}}))
 	router.NoRoute(SendError(Response{Status: http.StatusNotFound, Error: []string{"File Not Found on Server"}}))
-	router.Any("/octo", proxy)
-	router.Any("/octo/:first", proxy)
-	router.Any("/octo/:first/:second", proxy)
-	router.Any("/octo/:first/:second/:third", proxy)
-	router.Any("/octo/:first/:second/:third/:fourth", proxy)
-	router.Any("/octo/:first/:second/:third/:fourth/:fith", proxy)
+	router.Any("/octo", proxy(""))
+	router.Any("/octo/:first", proxy(""))
+	router.Any("/octo/:first/:second", proxy(""))
+	router.Any("/octo/:first/:second/:third", proxy(""))
+	router.Any("/octo/:first/:second/:third/:fourth", proxy(""))
+	router.Any("/octo/:first/:second/:third/:fourth/:fith", proxy(""))
 
-	router.Any("/static", proxy)
-	router.Any("/static/:first", proxy)
-	router.Any("/static/:first/:second", proxy)
-	router.Any("/static/:first/:second/:third", proxy)
-	router.Any("/static/:first/:second/:third/:fourth", proxy)
-	router.Any("/static/:first/:second/:third/:fourth/:fith", proxy)
+	router.Any("/static", proxy("/static/"))
+	router.Any("/static/:first", proxy("/static/"))
+	router.Any("/static/:first/:second", proxy("/static/"))
+	router.Any("/static/:first/:second/:third", proxy("/static/"))
+	router.Any("/static/:first/:second/:third/:fourth", proxy("/static/"))
+	router.Any("/static/:first/:second/:third/:fourth/:fith", proxy("/static/"))
 
 	router.StaticFile("/", "assets/index.html")
 	router.POST("/send_email", sendEmail(*password))
