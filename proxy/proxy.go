@@ -37,7 +37,7 @@ func Proxy(prefix string) gin.HandlerFunc {
 
 				//Proccessing each direcotry in path individually. This is the first
 				if c.Param("first") == "" {
-					return prefix + "/"
+					return prefix
 				}
 				if c.Param("first")[0:1] != "/" {
 
@@ -51,7 +51,7 @@ func Proxy(prefix string) gin.HandlerFunc {
 
 				//This is the start of the second.
 				if c.Param("second") == "" {
-					return prefix + first + "/"
+					return prefix + first
 				}
 				if c.Param("second")[0:1] != "/" {
 					second = "/" + c.Param("second")
@@ -77,7 +77,7 @@ func Proxy(prefix string) gin.HandlerFunc {
 
 				//This is the start of the fourth
 				if c.Param("fourth") == "" {
-					return prefix + first + second + third + "/"
+					return prefix + first + second + third
 				}
 				if c.Param("fourth")[0:1] != "/" {
 					fourth = "/" + c.Param("fourth")
@@ -90,7 +90,7 @@ func Proxy(prefix string) gin.HandlerFunc {
 
 				//This is the start of the fith
 				if c.Param("fith") == "" {
-					return prefix + first + second + third + fourth + "/"
+					return prefix + first + second + third + fourth
 				}
 				if c.Param("fith")[0:1] != "/" {
 					fith = "/" + c.Param("fith")
