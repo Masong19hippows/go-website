@@ -11,7 +11,36 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
+	cat "github.com/masong19hippows/go-website/catError"
 )
+
+var remote *url.URL
+
+func CreateAndReload() gin.HandlerFunc {
+	return func(c *gin.Context) {
+
+		// Get file path and check if exists
+		// If not, create
+		// No need to redirect as FS fill pick it up now
+
+		// continue with the flow
+		c.Next()
+
+		// 404 will never happen
+		status := c.Writer.Status()
+		if status == 404 {
+			newPath := c.Request.URL.Scheme + c.Request.URL.Host + "/proxy" + c.Request.URL.Path
+			resp, err := http.Get(remote.String() + newPath)
+			if err != nil {
+				log.Println(err)
+			} else if resp.StatusCode != 404 {
+				c.Redirect(http.StatusMovedPermanently, newPath)
+			} else {
+				cat.SendError(cat.Response{Status: http.StatusNotFound, Error: []string{"File Not Found on Server"}})
+			}
+		}
+	}
+}
 
 func Proxy(prefix string) gin.HandlerFunc {
 

@@ -2,36 +2,14 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"log"
 	"net/http"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-	cat "github.com/masong19hippows/go-website/catError"
 	"github.com/masong19hippows/go-website/email"
 	"github.com/masong19hippows/go-website/proxy"
 )
-
-func createAndReload() gin.HandlerFunc {
-	return func(c *gin.Context) {
-
-		// Get file path and check if exists
-		// If not, create
-		// No need to redirect as FS fill pick it up now
-
-		// continue with the flow
-		c.Next()
-
-		// 404 will never happen
-		status := c.Writer.Status()
-		if status == 404 {
-			newPath := c.Request.URL.Scheme + c.Request.URL.Host + "/proxy" + c.Request.URL.Path
-			fmt.Println(newPath)
-			c.Redirect(http.StatusMovedPermanently, newPath)
-		}
-	}
-}
 
 func main() {
 
@@ -42,8 +20,8 @@ func main() {
 
 	gin.SetMode(gin.ReleaseMode)
 	router := gin.Default()
-	router.Use(createAndReload())
-	router.NoMethod(cat.SendError(cat.Response{Status: http.StatusMethodNotAllowed, Error: []string{"No Method"}}))
+	router.Use(proxy.CreateAndReload())
+	// router.NoMethod(cat.SendError(cat.Response{Status: http.StatusMethodNotAllowed, Error: []string{"No Method"}}))
 	// router.NoRoute(cat.SendError(cat.Response{Status: http.StatusNotFound, Error: []string{"File Not Found on Server"}}))
 	router.Any("/proxy", proxy.Proxy(""))
 	router.Any("/proxy/:first", proxy.Proxy(""))
