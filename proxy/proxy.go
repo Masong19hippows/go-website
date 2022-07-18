@@ -64,7 +64,7 @@ func Proxy(prefix string) gin.HandlerFunc {
 
 				//This is the start of the Third
 				if c.Param("third") == "" {
-					return prefix + first + second + "/"
+					return prefix + first + second
 				}
 				if c.Param("third")[0:1] != "/" {
 					third = "/" + c.Param("third")
