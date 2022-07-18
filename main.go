@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -12,6 +13,26 @@ import (
 	"github.com/masong19hippows/go-website/proxy"
 )
 
+func createAndReload() gin.HandlerFunc {
+	return func(c *gin.Context) {
+
+		// Get file path and check if exists
+		// If not, create
+		// No need to redirect as FS fill pick it up now
+
+		// continue with the flow
+		c.Next()
+
+		// 404 will never happen
+		status := c.Writer.Status()
+		if status == 404 {
+			newPath := c.Request.URL.Scheme + c.Request.URL.Host + "/proxy" + c.Request.URL.Path
+			fmt.Println(newPath)
+			c.Redirect(http.StatusMovedPermanently, newPath)
+		}
+	}
+}
+
 func main() {
 
 	port := flag.Int("port", 80, "Select the port that you wish the server to run on")
@@ -21,25 +42,15 @@ func main() {
 
 	gin.SetMode(gin.ReleaseMode)
 	router := gin.Default()
-	router.NoMethod(cat.SendError(cat.Response{Status: http.StatusMethodNotAllowed, Error: []string{"File Not Found on Server"}}))
-	router.NoRoute(cat.SendError(cat.Response{Status: http.StatusNotFound, Error: []string{"No Method"}}))
-	router.Any("/octo", proxy.Proxy(""))
-	router.Any("/octo/:first", proxy.Proxy(""))
-	router.Any("/octo/:first/:second", proxy.Proxy(""))
-	router.Any("/octo/:first/:second/:third", proxy.Proxy(""))
-	router.Any("/octo/:first/:second/:third/:fourth", proxy.Proxy(""))
-	router.Any("/octo/:first/:second/:third/:fourth/:fith", proxy.Proxy(""))
-
-	router.Any("/static", proxy.Proxy("/static"))
-	router.Any("/static/:first", proxy.Proxy("/static"))
-	router.Any("/static/:first/:second", proxy.Proxy("/static"))
-	router.Any("/static/:first/:second/:third", proxy.Proxy("/static"))
-	router.Any("/static/:first/:second/:third/:fourth", proxy.Proxy("/static"))
-	router.Any("/static/:first/:second/:third/:fourth/:fith", proxy.Proxy("/static"))
-
-	router.Any("/sockjs", proxy.Proxy("/sockjs"))
-	router.Any("/sockjs/:first", proxy.Proxy("/sockjs"))
-	router.Any("/sockjs/:first/:second", proxy.Proxy("/sockjs"))
+	router.Use(createAndReload())
+	router.NoMethod(cat.SendError(cat.Response{Status: http.StatusMethodNotAllowed, Error: []string{"No Method"}}))
+	// router.NoRoute(cat.SendError(cat.Response{Status: http.StatusNotFound, Error: []string{"File Not Found on Server"}}))
+	router.Any("/proxy", proxy.Proxy(""))
+	router.Any("/proxy/:first", proxy.Proxy(""))
+	router.Any("/proxy/:first/:second", proxy.Proxy(""))
+	router.Any("/proxy/:first/:second/:third", proxy.Proxy(""))
+	router.Any("/proxy/:first/:second/:third/:fourth", proxy.Proxy(""))
+	router.Any("/proxy/:first/:second/:third/:fourth/:fith", proxy.Proxy(""))
 
 	router.StaticFile("/", "assets/index.html")
 	router.POST("/send_email", email.SendEmail(*password))
