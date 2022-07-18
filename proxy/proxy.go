@@ -2,6 +2,7 @@ package proxy
 
 import (
 	"bytes"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -28,6 +29,7 @@ func CreateAndReload() gin.HandlerFunc {
 
 		// 404 will never happen
 		status := c.Writer.Status()
+		fmt.Println(remote)
 		if status == 404 {
 			newPath := c.Request.URL.Scheme + c.Request.URL.Host + "/proxy" + c.Request.URL.Path
 			resp, err := http.Get(remote.String() + newPath)
