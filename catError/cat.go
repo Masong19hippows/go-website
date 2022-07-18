@@ -30,8 +30,8 @@ func downloadError(error int) []byte {
 	return result
 }
 
-func SendError(response Response) gin.HandlerFunc {
-	return func(c *gin.Context) {
-		c.Data(response.Status, "image/png", downloadError(response.Status))
-	}
+func SendError(response Response, c *gin.Context) {
+
+	c.Data(response.Status, "image/png", downloadError(response.Status))
+
 }
