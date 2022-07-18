@@ -19,7 +19,7 @@ func main() {
 	log.Println("Using port", *port)
 	proxy.CreateProxy()
 
-	// gin.SetMode(gin.ReleaseMode)
+	gin.SetMode(gin.ReleaseMode)
 	router := gin.Default()
 	router.Use(proxy.CreateAndReload)
 	// router.NoMethod(cat.SendError(cat.Response{Status: http.StatusMethodNotAllowed, Error: []string{"No Method"}}))
