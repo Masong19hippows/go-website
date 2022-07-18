@@ -45,9 +45,6 @@ func Proxy(prefix string) gin.HandlerFunc {
 				} else {
 					first = c.Param("first")
 				}
-				if strings.Contains(first, ".") {
-					return prefix + first
-				}
 
 				//This is the start of the second.
 				if c.Param("second") == "" {
@@ -57,9 +54,6 @@ func Proxy(prefix string) gin.HandlerFunc {
 					second = "/" + c.Param("second")
 				} else {
 					second = c.Param("second")
-				}
-				if strings.Contains(second, ".") {
-					return prefix + first + second
 				}
 
 				//This is the start of the Third
@@ -71,9 +65,6 @@ func Proxy(prefix string) gin.HandlerFunc {
 				} else {
 					third = c.Param("third")
 				}
-				if strings.Contains(third, ".") {
-					return prefix + first + second + third
-				}
 
 				//This is the start of the fourth
 				if c.Param("fourth") == "" {
@@ -83,9 +74,6 @@ func Proxy(prefix string) gin.HandlerFunc {
 					fourth = "/" + c.Param("fourth")
 				} else {
 					fourth = c.Param("fourth")
-				}
-				if strings.Contains(fourth, ".") {
-					return prefix + first + second + third + fourth
 				}
 
 				//This is the start of the fith
