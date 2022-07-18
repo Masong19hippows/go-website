@@ -16,6 +16,7 @@ import (
 )
 
 var remote *url.URL
+var err error
 
 func CreateAndReload() gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -48,7 +49,7 @@ func Proxy(prefix string) gin.HandlerFunc {
 
 	return func(c *gin.Context) {
 		//Setting up a proxy connection to octoprint
-		remote, err := url.Parse("http://192.168.1.157:80")
+		remote, err = url.Parse("http://192.168.1.157:80")
 		// remote, err := url.Parse("http://localhost:8000")
 		if err != nil {
 			panic(err)
