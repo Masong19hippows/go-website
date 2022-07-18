@@ -15,7 +15,7 @@ import (
 	cat "github.com/masong19hippows/go-website/catError"
 )
 
-var remote *url.URL
+var Remote *url.URL
 var err error
 
 func CreateAndReload() gin.HandlerFunc {
@@ -30,10 +30,10 @@ func CreateAndReload() gin.HandlerFunc {
 
 		// 404 will never happen
 		status := c.Writer.Status()
-		fmt.Println(remote)
+		fmt.Println(Remote)
 		if status == 404 {
 			newPath := c.Request.URL.Scheme + c.Request.URL.Host + "/proxy" + c.Request.URL.Path
-			resp, err := http.Get(remote.String() + newPath)
+			resp, err := http.Get(Remote.String() + newPath)
 			if err != nil {
 				log.Println(err)
 			} else if resp.StatusCode != 404 {
@@ -49,17 +49,17 @@ func Proxy(prefix string) gin.HandlerFunc {
 
 	return func(c *gin.Context) {
 		//Setting up a proxy connection to octoprint
-		remote, err = url.Parse("http://192.168.1.157:80")
-		// remote, err := url.Parse("http://localhost:8000")
+		Remote, err = url.Parse("http://192.168.1.157:80")
+		// Remote, err := url.Parse("http://localhost:8000")
 		if err != nil {
 			panic(err)
 		}
-		proxy := httputil.NewSingleHostReverseProxy(remote)
+		proxy := httputil.NewSingleHostReverseProxy(Remote)
 
 		//Modifying the request sent to the Proxy
 		proxy.Director = func(req *http.Request) {
 			req.Header = c.Request.Header
-			req.Host = remote.Host
+			req.Host = Remote.Host
 			req.URL.Path = func() string {
 				var first string
 				var second string
@@ -133,7 +133,7 @@ func Proxy(prefix string) gin.HandlerFunc {
 
 			}()
 			req.URL.RawQuery = c.Request.URL.RawQuery
-			req.URL, err = url.Parse(remote.Scheme + "://" + remote.Host + req.URL.Path + "?" + c.Request.URL.RawQuery)
+			req.URL, err = url.Parse(Remote.Scheme + "://" + Remote.Host + req.URL.Path + "?" + c.Request.URL.RawQuery)
 			if err != nil {
 				log.Println(err)
 			} else {
@@ -156,7 +156,7 @@ func Proxy(prefix string) gin.HandlerFunc {
 			}
 			b = bytes.Replace(b, []byte("href=\"https://"), []byte("bref=\""), -1)
 			b = bytes.Replace(b, []byte("href=\"/"), []byte("href=\"/proxy/"), -1)
-			b = bytes.Replace(b, []byte("href=\""+remote.String()), []byte("href=\""+c.Request.URL.Scheme+"://"+c.Request.URL.Host+"proxy/"), -1) // replace html
+			b = bytes.Replace(b, []byte("href=\""+Remote.String()), []byte("href=\""+c.Request.URL.Scheme+"://"+c.Request.URL.Host+"proxy/"), -1) // replace html
 			b = bytes.Replace(b, []byte("bref=\""), []byte("href=\"https://"), -1)
 			body := ioutil.NopCloser(bytes.NewReader(b))
 			resp.Body = body
@@ -165,7 +165,7 @@ func Proxy(prefix string) gin.HandlerFunc {
 			location, err := resp.Location()
 			if err == nil && location.String() != "" {
 				newLocation := location.String()
-				newLocation = strings.Replace(newLocation, remote.String(), c.Request.URL.Scheme+c.Request.URL.Host+"/proxy", -1)
+				newLocation = strings.Replace(newLocation, Remote.String(), c.Request.URL.Scheme+c.Request.URL.Host+"/proxy", -1)
 				resp.Header.Set("location", newLocation)
 				log.Printf("Response is redirecting from %v and now to %v", location, newLocation)
 			}
