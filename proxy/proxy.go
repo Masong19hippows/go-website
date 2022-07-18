@@ -154,7 +154,7 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 		location, err := resp.Location()
 		if err == nil && location.String() != "" {
 			newLocation := location.String()
-			newLocation = strings.Replace(newLocation, remote.String(), c.Request.URL.Scheme+c.Request.URL.Host+"/"+lookup.AccessPrefix, -1)
+			newLocation = strings.Replace(newLocation, remote.String(), c.Request.URL.Scheme+c.Request.URL.Host+lookup.AccessPrefix, -1)
 			resp.Header.Set("location", newLocation)
 			log.Printf("Response is redirecting from %v and now to %v", location, newLocation)
 		}
