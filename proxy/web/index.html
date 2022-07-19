@@ -1,0 +1,136 @@
+
+<!DOCTYPE html>
+<html style="font-size: 16px;" lang="en">
+  <head>
+    
+    <meta http-equiv="pragma" content="no-cache">
+<meta http-equiv="expires" content="-1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <title>Proxy</title>
+    <link rel="stylesheet" href="/proxy/index.css" media="screen">
+    <script class="u-script" type="text/javascript" src="//capp.nicepage.com/assets/jquery-1.9.1.min.js" defer=""></script>
+    <script class="u-script" type="text/javascript" src="//capp.nicepage.com/cabd552a8e78307aed2122f1d061efad7e2f86d6/nicepage.js" defer=""></script>
+    <meta name="generator" content="Nicepage 4.14.7, nicepage.com">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+</html>        
+            
+
+
+
+
+    <link id="u-theme-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i|Open+Sans:300,300i,400,400i,500,500i,600,600i,700,700i,800,800i">
+    <style class="u-style">.u-section-2 .u-sheet-1 {
+  min-height: 500px;
+}
+.u-section-2 .u-custom-html-1 {
+  margin-bottom: 60px;
+}</style>
+    
+    <meta name="theme-color" content="#478ac9">
+    <meta property="og:title" content="Proxy">
+    <meta property="og:type" content="website">
+    <link rel="canonical" href="https://website2466692.nicepage.io/Proxy.html">
+  
+</head>
+  <body class="u-body u-xl-mode" data-lang="en">
+<header class="u-clearfix u-header u-header" id="sec-4e6b"><div class="u-clearfix u-sheet u-sheet-1">
+        <nav class="u-menu u-menu-one-level u-offcanvas u-menu-1">
+          <div class="menu-collapse" style="font-size: 1rem; letter-spacing: 0px;">
+            <a class="u-button-style u-custom-left-right-menu-spacing u-custom-padding-bottom u-custom-top-bottom-menu-spacing u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="#">
+              <svg class="u-svg-link" viewBox="0 0 24 24"><use xlink:href="#menu-hamburger"></use></svg>
+              <svg class="u-svg-content" version="1.1" id="menu-hamburger" viewBox="0 0 16 16" x="0px" y="0px" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"><g><rect y="1" width="16" height="2"></rect><rect y="7" width="16" height="2"></rect><rect y="13" width="16" height="2"></rect>
+</g></svg>
+            </a>
+          </div>
+          <div class="u-custom-menu u-nav-container">
+</li></ul>
+          </div>
+          <div class="u-custom-menu u-nav-container-collapse">
+            <div class="u-black u-container-style u-inner-container-layout u-opacity u-opacity-95 u-sidenav">
+              <div class="u-inner-container-layout u-sidenav-overflow">
+                <div class="u-menu-close"></div>
+</li></ul>
+              </div>
+            </div>
+            <div class="u-black u-menu-overlay u-opacity u-opacity-70"></div>
+          </div>
+        </nav>
+
+        <div>
+          <p style="margin-right: -50px;" class="u-text u-text-default u-text-3"> Click Trashcan to Remove.</p> 
+      </div>
+        <h3 class="u-align-center u-headline u-text u-text-default u-text-2">
+          <a href="/">List of Proxies</a>
+      <div class="wrapper">
+        <div class="profile">
+           <table id= "userdata" border="2">
+             
+          <thead>
+                    <th>Access Prefix</th>
+                    <th>Proxy URL</th>
+                    <th>Access Postfix</th>
+                    <th>Delete</th>
+                </thead>
+                
+              <tbody>
+                <tr>
+                  <td>/proxy/</td>
+                  <td>http://localhost:5000</td>
+                  <td></td>
+                </tr>
+               </tbody>
+           </table>
+        
+        </div>
+        </div>
+        </h3>
+
+      </div></header>
+      <br>
+      <br>
+    
+    <section class="u-clearfix u-section-2" id="sec-080e">
+      <div class="u-clearfix u-sheet u-sheet-1">
+        <div class="u-clearfix u-custom-html u-expanded-width u-custom-html-1">
+          <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+          <script> $(function() {
+                var people = [];
+                $.getJSON('/proxy/proxies.json', function(data) {
+                $.each(data, function(i, f) {
+                    var tblRow = "<tr>" + "<td>" + f.accessPrefix + "</td>" +
+                    "<td>" + f.proxyURL + "</td>" + "<td>" + f.accessPostfix + "</td>" +"<td>" + 
+                    "<a href='/proxy/delete/" + i + "'> <i class='fa-solid fa-trash-can' title='Trash'></i></a>" + "</td>" +"</tr>"
+                    
+                    $(tblRow).appendTo("#userdata tbody");
+     });
+   });
+}); 
+</script>
+          
+<form class="container" action="/proxy/create" method="post">
+    <label for="prefix">Access Prefix:</label><br>
+    <input  required="required" type="text" id="prefix" name="prefix"><br>
+
+    <label for="url">Proxy URL:</label><br>
+    <input  required="required" type="text" id="url" name="url"><br>
+
+    <label for="postfix">Access Postfix:</label><br>
+    <input type="text" id="postfix" name="postfix"><br>
+
+    <div class="container">  
+      <br>
+        <button class="buttonHolder" name="create" value="create">Create +</button>
+    </div>  
+    
+</form>
+<style>  
+.container{  
+text-align: center;
+}
+</style>  
+</section>

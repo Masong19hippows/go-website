@@ -2,11 +2,15 @@ package proxy
 
 import (
 	"bytes"
+	"encoding/json"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
+	"os"
+	"path"
+	"path/filepath"
 	"regexp"
 	"strconv"
 	"strings"
@@ -18,19 +22,48 @@ import (
 //declare a proxy type that holds the prefix for the url to access it
 //as well as the url of the device being proxied to
 type Proxy struct {
-	AccessPrefix  string
-	ProxyUrl      string
-	AccessPostfix string
+	AccessPrefix  string `json:"accessPrefix"`
+	ProxyURL      string `json:"proxyURL"`
+	AccessPostfix string `json:"accessPostfix"`
 }
 
-//list of all proxies
+//array of all proxies
 var Proxies []Proxy
 
+func init() {
+	reloadProxies()
+
+}
+
+func reloadProxies() {
+	Proxies = nil
+	ex, err := os.Executable()
+	if err != nil {
+		panic(err)
+	}
+	exPath := filepath.Dir(ex)
+
+	jsonFile, err := os.Open(path.Join(exPath, "proxy", "web", "proxies.json"))
+	if err != nil {
+		log.Println(err)
+	}
+	log.Println("Successfully Opened proxies.json")
+	byteValue, _ := ioutil.ReadAll(jsonFile)
+	json.Unmarshal(byteValue, &Proxies)
+	Proxies = append(Proxies, Proxy{AccessPrefix: "/proxy/", ProxyURL: "http://localhost:5000", AccessPostfix: ""})
+	log.Println("Proxies now contains: ", Proxies)
+	jsonFile.Close()
+
+}
+
 //This is the middleware that handles the dynamic selection of proxies
-func CreateAndReload(c *gin.Context) {
+func Handler(c *gin.Context) {
 
 	//Only pass if the error is 404
 	if c.Writer.Status() == http.StatusNotFound {
+		// Reloading list of proxies to make sure that the latest is used
+
+		reloadProxies()
 		//Getting the first directory in the url and matching it with prefixes in Proxies
 		allSlash := regexp.MustCompile(`/(.*?)/`)
 
@@ -46,14 +79,14 @@ func CreateAndReload(c *gin.Context) {
 			}
 		}
 
-		//Only pass if there is no proxy associated with the fist durectory.
+		//Only pass if there is no proxy associated with the fist directory.
 		//If this happens, the prefix for each proxy in the list is tested to see if it exists on the proxy
 		//If it exists on the proxy, then traffic is redirected to Proxy
 		//If it doesn't exist on the proxy, then a 404 is sent with a picture of a cat
 		if (Proxy{}) == final {
 			// Loop through proxies and find one that mjatches the prefix
 			for _, proxy := range Proxies {
-				requestURL := proxy.ProxyUrl + proxy.AccessPrefix + c.Request.URL.Path
+				requestURL := proxy.ProxyURL + proxy.AccessPrefix + c.Request.URL.Path
 				requestURL = strings.ReplaceAll(requestURL, proxy.AccessPrefix, "")
 				resp, err := http.Get(requestURL)
 				if err != nil {
@@ -62,7 +95,7 @@ func CreateAndReload(c *gin.Context) {
 				} else if resp.StatusCode == 404 {
 					cat.SendError(cat.Response{Status: http.StatusNotFound, Error: []string{"File Not Found on Server"}}, c)
 				} else {
-
+					log.Printf("Proxy is redirecting from %v to %v", c.Request.URL.Path, requestURL)
 					lookProxy(proxy, c)
 				}
 			}
@@ -78,19 +111,10 @@ func CreateAndReload(c *gin.Context) {
 
 }
 
-func CreateProxy() Proxy {
-	var test Proxy
-	test.AccessPrefix = "/octo/"
-	test.ProxyUrl = "http://192.168.1.157:80"
-	test.AccessPostfix = ""
-	Proxies = append(Proxies, test)
-	return test
-}
-
 func lookProxy(lookup Proxy, c *gin.Context) {
 
 	//Setting up a proxy connection to octoprint
-	remote, err := url.Parse(lookup.ProxyUrl)
+	remote, err := url.Parse(lookup.ProxyURL)
 	if err != nil {
 		panic(err)
 	}
