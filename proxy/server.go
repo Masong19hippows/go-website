@@ -194,7 +194,7 @@ func server() {
 		}
 	})
 
-	err := router.Run(":5000")
+	err := router.Run(":6000")
 	if err != nil {
 		panic(err)
 	}

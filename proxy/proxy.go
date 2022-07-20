@@ -50,7 +50,7 @@ func reloadProxies() {
 	log.Println("Successfully Opened proxies.json")
 	byteValue, _ := ioutil.ReadAll(jsonFile)
 	json.Unmarshal(byteValue, &Proxies)
-	Proxies = append(Proxies, Proxy{AccessPrefix: "/proxy/", ProxyURL: "http://localhost:5000", AccessPostfix: ""})
+	Proxies = append(Proxies, Proxy{AccessPrefix: "/proxy/", ProxyURL: "http://localhost:6000", AccessPostfix: ""})
 	log.Println("Proxies now contains: ", Proxies)
 	jsonFile.Close()
 
