@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
 	"path"
 	"path/filepath"
@@ -51,6 +52,13 @@ func createProxy(webServer string, prefix string, postfix string) error {
 	// Sanitizing the url by checking for whitespaces
 	// and checking if web server is reachable
 	webServer = strings.ReplaceAll(webServer, " ", "")
+	t, err := url.Parse(webServer)
+	if err != nil {
+		return err
+	}
+	if t.Path != "/" {
+		return errors.New("use postfix for path")
+	}
 	if string(webServer[len(webServer)-1]) == "/" {
 		webServer = webServer[:len(webServer)-1]
 	}
