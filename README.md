@@ -11,17 +11,18 @@ It is also a [reverse proxy manager.](https://en.wikipedia.org/wiki/Reverse_prox
 The goal is to have an easy-to-use interface that users can delicate certain url's with, to act as a reverse proxy.
 
 The proxy manager looks like this:
-<kbd>![Looks like this](assets/images/manager.png?raw=true "Manager")</kbd>
+![Looks like this](assets/images/manager.png?raw=true "Manager")
 
 ## Install
 
 The install is easy. Just follow below steps.
 
-### Prerequisites
+### Prerequisites:
+
 - golang installed
 - git installed
 
-### Steps
+### Steps:
 
 - `git clone https://github.com/Masong19hippows/go-website.git`
 
@@ -29,7 +30,7 @@ The install is easy. Just follow below steps.
 
 - `go build`
 
-## How to Use: 
+## How to Use?
 
 It can executed like a normal program with `.\go-website.exe` for windows and `./go-website` for linux
 
