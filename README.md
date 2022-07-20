@@ -17,17 +17,17 @@ The proxy manager looks like this:
 
 The install is easy. Just follow below steps.
 
-### Prerequisites:
+### Prerequisites
     - golang installed
     - git installed
 
-### Steps: 
+### Steps
 
-     `git clone https://github.com/Masong19hippows/go-website.git`
+    - `git clone https://github.com/Masong19hippows/go-website.git`
 
-     `cd go-website`
+    - `cd go-website`
 
-     `go build`
+    - `go build`
 
 ## How to Use: 
 
@@ -40,5 +40,12 @@ The default is port 80
 
 The gmail app-password can be changed with the flag `-password <appPassword>`<br/>
 The default is nothing
+
+There is a default reverse proxy being servered on port 6000<br/>
+You need to access this to manage proxies
+You can access this by adding `/proxy` to the url to get there
+
+When adding a proxy, if you want to add a path to the url, you must only put the url in the url spot,
+<br/>and put the path in the postfix spot.
 
 # Thats All. Have Fun!!!
