@@ -56,7 +56,7 @@ func createProxy(webServer string, prefix string, postfix string) error {
 	if err != nil {
 		return err
 	}
-	if t.Path != "/" {
+	if t.Path != "/" && t.Path != "" {
 		return errors.New("use postfix for path")
 	}
 	if string(webServer[len(webServer)-1]) == "/" {
@@ -66,7 +66,7 @@ func createProxy(webServer string, prefix string, postfix string) error {
 	resp, err := http.Get(fixedURL)
 	if err != nil {
 		log.Println(err)
-		return errors.New("Cannot reach the URL: " + fixedURL)
+		return errors.New("cannot reach the URL: " + fixedURL)
 	} else if resp.StatusCode == 404 {
 		return errors.New("cannot reach url")
 	} else if prefix == "" {
