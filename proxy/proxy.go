@@ -30,11 +30,13 @@ type Proxy struct {
 //array of all proxies
 var Proxies []Proxy
 
+// make sure Proxies is the latest
 func init() {
 	reloadProxies()
 
 }
 
+// refreshes Proxies with proxies.json
 func reloadProxies() {
 	Proxies = nil
 	ex, err := os.Executable()
@@ -118,14 +120,18 @@ func Handler(c *gin.Context) {
 			lookProxy(final, c)
 		}
 	}
+
+	// make it so that nothing is cached
 	c.Header("Cache-Control", "no-cache, no-store, must-revalidate")
 	c.Header("Pragma", "no-cache")
 	c.Header("Expires", "0")
 
+	// move on to other handlers
 	c.Next()
 
 }
 
+// look up the url on the proxy. Send a 404 cat if not found
 func lookProxy(lookup Proxy, c *gin.Context) {
 
 	//Setting up a proxy connection to octoprint

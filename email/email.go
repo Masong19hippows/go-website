@@ -15,6 +15,7 @@ type EmailRequestBody struct {
 	Message string
 }
 
+// send email
 func SendEmail(password string) gin.HandlerFunc {
 
 	return func(c *gin.Context) {

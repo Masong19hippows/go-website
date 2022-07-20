@@ -73,7 +73,7 @@ func createProxy(webServer string, prefix string, postfix string) error {
 		return errors.New("no selection made")
 	}
 
-	//Check if its the same as any other Proxy
+	// Check if its the same as any other Proxy
 	for _, proxy := range Proxies {
 		if prefix == proxy.AccessPrefix {
 			return errors.New("prefix already exists: " + prefix)

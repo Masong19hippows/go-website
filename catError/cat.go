@@ -14,6 +14,7 @@ type Response struct {
 	Error  []string
 }
 
+// use http cat api to get cute cat errors
 func downloadError(error int) []byte {
 	//Get the response bytes from the url
 	cat, err := http.Get("https://http.cat/" + strconv.Itoa(error))
@@ -30,6 +31,7 @@ func downloadError(error int) []byte {
 	return result
 }
 
+// send the error back using gin.context
 func SendError(response Response, c *gin.Context) {
 
 	c.Data(response.Status, "image/png", downloadError(response.Status))
