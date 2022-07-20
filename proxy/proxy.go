@@ -84,28 +84,43 @@ func Handler(c *gin.Context) {
 		//If it exists on the proxy, then traffic is redirected to Proxy
 		//If it doesn't exist on the proxy, then a 404 is sent with a picture of a cat
 		if (Proxy{}) == final {
+
 			// Loop through proxies and find one that mjatches the prefix
-			for _, proxy := range Proxies {
-				requestURL := proxy.ProxyURL + proxy.AccessPrefix + c.Request.URL.Path
-				requestURL = strings.ReplaceAll(requestURL, proxy.AccessPrefix, "")
+			for i, proxy := range Proxies {
+
+				requestURL := proxy.ProxyURL + func() string {
+					if proxy.AccessPostfix == "" {
+						return ""
+					} else {
+						return proxy.AccessPostfix[:len(proxy.AccessPostfix)-1]
+					}
+				}() + c.Request.URL.Path
+
 				resp, err := http.Get(requestURL)
 				if err != nil {
 					log.Println(err)
 					continue
 				} else if resp.StatusCode == 404 {
-					cat.SendError(cat.Response{Status: http.StatusNotFound, Error: []string{"File Not Found on Server"}}, c)
+					if i == len(Proxies)-1 {
+						cat.SendError(cat.Response{Status: http.StatusNotFound, Error: []string{"File Not Found on Server"}}, c)
+						break
+					}
+					continue
 				} else {
-					log.Printf("Proxy is redirecting from %v to %v", c.Request.URL.Path, requestURL)
-					lookProxy(proxy, c)
+					log.Printf("Proxy is redirecting traffic from %v to %v", c.Request.URL.Path, proxy.AccessPrefix[:len(proxy.AccessPrefix)-1]+c.Request.URL.Path)
+					c.Redirect(http.StatusMovedPermanently, proxy.AccessPrefix[:len(proxy.AccessPrefix)-1]+c.Request.URL.Path)
 				}
+
 			}
 
 		} else {
-
 			//Look up the directory in the proxy
 			lookProxy(final, c)
 		}
 	}
+	c.Header("Cache-Control", "no-cache, no-store, must-revalidate")
+	c.Header("Pragma", "no-cache")
+	c.Header("Expires", "0")
 
 	c.Next()
 
@@ -169,7 +184,7 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 		}
 		b = bytes.Replace(b, []byte("href=\"https://"), []byte("bref=\""), -1)
 		b = bytes.Replace(b, []byte("href=\"/"), []byte("href=\""+lookup.AccessPrefix), -1)
-		b = bytes.Replace(b, []byte("href=\""+remote.String()), []byte("href=\""+c.Request.URL.Scheme+"://"+c.Request.URL.Host+lookup.AccessPrefix[:0]), -1) // replace html
+		b = bytes.Replace(b, []byte("href=\""+remote.String()), []byte("href=\""+c.Request.URL.Scheme+"://"+c.Request.URL.Host+lookup.AccessPrefix), -1) // replace html
 		b = bytes.Replace(b, []byte("bref=\""), []byte("href=\"https://"), -1)
 		body := ioutil.NopCloser(bytes.NewReader(b))
 		resp.Body = body
@@ -178,14 +193,20 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 		location, err := resp.Location()
 		if err == nil && location.String() != "" {
 			newLocation := location.String()
-			newLocation = strings.Replace(newLocation, remote.String(), c.Request.URL.Scheme+c.Request.URL.Host+lookup.AccessPrefix, -1)
+			newLocation = strings.Replace(newLocation, remote.String(), c.Request.URL.Scheme+c.Request.URL.Host+lookup.AccessPrefix[:len(lookup.AccessPrefix)-1], -1)
 			resp.Header.Set("location", newLocation)
 			log.Printf("Response is redirecting from %v and now to %v", location, newLocation)
 		}
+		if resp.StatusCode == 404 {
+			cat.SendError(cat.Response{Status: http.StatusNotFound, Error: []string{"File Not Found on Server"}}, c)
+
+		}
+
 		resp.ContentLength = int64(len(b))
 		resp.Header.Set("Content-Length", strconv.Itoa(len(b)))
 		return nil
 	}
+
 	//Serve content that was modified
 	proxy.ServeHTTP(c.Writer, c.Request)
 

@@ -16,7 +16,7 @@ func main() {
 	port := flag.Int("port", 80, "Select the port that you wish the server to run on")
 	password := flag.String("password", "", "Choose the app password obtained form no-reply email account")
 	flag.Parse()
-	log.Println("Using port", *port)
+	log.Println("Using port", *port, "For webserver")
 
 	gin.SetMode(gin.ReleaseMode)
 	router := gin.Default()

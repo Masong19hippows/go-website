@@ -11,6 +11,7 @@ import (
 	"path"
 	"path/filepath"
 	"strconv"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	cat "github.com/masong19hippows/go-website/catError"
@@ -24,7 +25,9 @@ var temp []Proxy
 
 func createProxy(webServer string, prefix string, postfix string) error {
 
-	//Checking for correct input and trying to correct if possible
+	// Sanitizing the postfux by checking for whitespaces and "/"
+	// at the end and beginning of string, if it exists
+	postfix = strings.ReplaceAll(postfix, " ", "")
 	if postfix != "" {
 		if string(postfix[0]) != "/" {
 			postfix = "/" + postfix
@@ -32,7 +35,12 @@ func createProxy(webServer string, prefix string, postfix string) error {
 		if string(postfix[len(postfix)-1]) != "/" {
 			postfix = postfix + "/"
 		}
+
 	}
+
+	// Sanitizing the prefix by checking for whitespaces and "/"
+	// at the end and beginning of string
+	prefix = strings.ReplaceAll(prefix, " ", "")
 	if string(prefix[0]) != "/" {
 		prefix = "/" + prefix
 	}
@@ -40,11 +48,17 @@ func createProxy(webServer string, prefix string, postfix string) error {
 		prefix = prefix + "/"
 	}
 
-	//Check if web server is reachable
-	resp, err := http.Get(webServer + postfix)
+	// Sanitizing the url by checking for whitespaces
+	// and checking if web server is reachable
+	webServer = strings.ReplaceAll(webServer, " ", "")
+	if string(webServer[len(webServer)-1]) == "/" {
+		webServer = webServer[:len(webServer)-1]
+	}
+	fixedURL := webServer + postfix
+	resp, err := http.Get(fixedURL)
 	if err != nil {
 		log.Println(err)
-		return errors.New("Cannot reach the URL: " + webServer + postfix)
+		return errors.New("Cannot reach the URL: " + fixedURL)
 	} else if resp.StatusCode == 404 {
 		return errors.New("cannot reach url")
 	} else if prefix == "" {
@@ -56,8 +70,8 @@ func createProxy(webServer string, prefix string, postfix string) error {
 		if prefix == proxy.AccessPrefix {
 			return errors.New("prefix already exists: " + prefix)
 		}
-		if webServer+postfix == proxy.ProxyURL+proxy.AccessPostfix {
-			return errors.New("URL already exists: " + webServer + postfix)
+		if fixedURL == proxy.ProxyURL+proxy.AccessPostfix {
+			return errors.New("URL already exists: " + fixedURL)
 		}
 	}
 
@@ -147,6 +161,7 @@ func server() {
 	gin.SetMode(gin.ReleaseMode)
 	router := gin.Default()
 	router.StaticFile("/", "proxy/web/index.html")
+	router.StaticFile("/index.html", "proxy/web/index.html")
 	router.StaticFile("/proxy", "proxy/web/index.html")
 	router.StaticFile("/proxies.json", "proxy/web/proxies.json")
 	router.StaticFile("/proxy/proxies.json", "proxy/web/proxies.json")
@@ -165,8 +180,8 @@ func server() {
 		}
 	})
 
-	router.GET("/delete/:test", func(c *gin.Context) {
-		index, err := strconv.Atoi(c.Param("test"))
+	router.GET("/delete/:index", func(c *gin.Context) {
+		index, err := strconv.Atoi(c.Param("index"))
 		if err != nil {
 			c.Data(http.StatusOK, "text/html; charset=utf-8", []byte("<html><script> window.alert('Failed to Delete Proxy. Error: "+err.Error()+"'); window.location.href='/proxy'; </script> </html>"))
 		} else {

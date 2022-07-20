@@ -2,9 +2,6 @@
 <!DOCTYPE html>
 <html style="font-size: 16px;" lang="en">
   <head>
-    
-    <meta http-equiv="pragma" content="no-cache">
-<meta http-equiv="expires" content="-1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="utf-8">
     <meta name="keywords" content="">
@@ -68,7 +65,7 @@
           <a href="/">List of Proxies</a>
       <div class="wrapper">
         <div class="profile">
-           <table id= "userdata" border="2">
+           <table id="userdata" border="2">
              
           <thead>
                     <th>Access Prefix</th>
@@ -78,11 +75,7 @@
                 </thead>
                 
               <tbody>
-                <tr>
-                  <td>/proxy/</td>
-                  <td>http://localhost:5000</td>
-                  <td></td>
-                </tr>
+               
                </tbody>
            </table>
         
@@ -101,17 +94,29 @@
           <script> $(function() {
                 var people = [];
                 $.getJSON('/proxy/proxies.json', function(data) {
+                  var first = "<tr>" + "<td>"+"/proxy/"+"</td>" + "<td>" + "http://localhost:5000" + "</td>" + "<td>" + "" + "</td>"+ "<td>"+"</td>" +"</tr>"
+                  $(first).appendTo("#userdata tbody");
                 $.each(data, function(i, f) {
-                    var tblRow = "<tr>" + "<td>" + f.accessPrefix + "</td>" +
-                    "<td>" + f.proxyURL + "</td>" + "<td>" + f.accessPostfix + "</td>" +"<td>" + 
+                  
+                    var tblRow = "<tr>" + "<td>" +  "<a href="+f.accessPrefix.slice(0, -1)+">"+f.accessPrefix+"</a>" + "</td>" +
+                    "<td>" +"<a href="+f.proxyURL+">"+f.proxyURL+"</a>"+ "</td>" + "<td>" + "<a href="+f.proxyURL+f.accessPostfix.slice(0, -1)+">"+f.accessPostfix+"</a>" + "</td>" +"<td>" + 
                     "<a href='/proxy/delete/" + i + "'> <i class='fa-solid fa-trash-can' title='Trash'></i></a>" + "</td>" +"</tr>"
                     
                     $(tblRow).appendTo("#userdata tbody");
      });
    });
 }); 
-</script>
-          
+</script> 
+<style>
+  td a {
+    display:block;
+    width:100%;
+}
+td:hover {
+  background-color: black;
+  color: white;
+}
+</style>       
 <form class="container" action="/proxy/create" method="post">
     <label for="prefix">Access Prefix:</label><br>
     <input  required="required" type="text" id="prefix" name="prefix"><br>
@@ -124,7 +129,7 @@
 
     <div class="container">  
       <br>
-        <button class="buttonHolder" name="create" value="create">Create +</button>
+        <button class="buttonHolder" name="create" value="create">Create Proxy</button>
     </div>  
     
 </form>
