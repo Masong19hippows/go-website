@@ -7,7 +7,7 @@
     <meta name="keywords" content="">
     <meta name="description" content="">
     <title>Proxy</title>
-    <link rel="stylesheet" href="/proxy/index.css" media="screen">
+    <link rel="stylesheet" href="index.css" media="screen">
     <script class="u-script" type="text/javascript" src="//capp.nicepage.com/assets/jquery-1.9.1.min.js" defer=""></script>
     <script class="u-script" type="text/javascript" src="//capp.nicepage.com/cabd552a8e78307aed2122f1d061efad7e2f86d6/nicepage.js" defer=""></script>
     <meta name="generator" content="Nicepage 4.14.7, nicepage.com">
@@ -87,7 +87,7 @@
           <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
           <script> $(function() {
                 var people = [];
-                $.getJSON('/proxy/proxies.json', function(data) {
+                $.getJSON('proxies.json', function(data) {
                   var first = "<tr>" + "<td>"+"/proxy/"+"</td>" + "<td>" + "http://localhost:6000" + "</td>" + "<td>" + "" + "</td>"+ "<td>"+"</td>" +"</tr>"
                   $(first).appendTo("#userdata tbody");
                 $.each(data, function(i, f) {
@@ -105,7 +105,7 @@
   var previous = null;
   var current = null;
   setInterval(function() {
-      $.getJSON("/proxy/proxies.json", function(json) {
+      $.getJSON("proxies.json", function(json) {
           current = JSON.stringify(json);            
           if (previous && current && previous !== current) {
               console.log('refresh');
