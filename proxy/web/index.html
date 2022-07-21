@@ -15,11 +15,6 @@
 </head>
 
 </html>        
-            
-
-
-
-
     <link id="u-theme-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i|Open+Sans:300,300i,400,400i,500,500i,600,600i,700,700i,800,800i">
     <style class="u-style">.u-section-2 .u-sheet-1 {
   min-height: 500px;
@@ -106,6 +101,20 @@
    });
 }); 
 </script> 
+<script>
+  var previous = null;
+  var current = null;
+  setInterval(function() {
+      $.getJSON("/proxy/proxies.json", function(json) {
+          current = JSON.stringify(json);            
+          if (previous && current && previous !== current) {
+              console.log('refresh');
+              location.reload();
+          }
+          previous = current;
+      });                       
+  }, 3000);   
+</script>
 <style>
   td a {
     display:block;
