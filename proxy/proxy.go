@@ -207,7 +207,7 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 			cat.SendError(cat.Response{Status: http.StatusNotFound, Error: []string{"File Not Found on Server"}}, c)
 
 		}
-
+		resp.Header.Set("X-Script-Name", "/octoprint")
 		resp.ContentLength = int64(len(b))
 		resp.Header.Set("Content-Length", strconv.Itoa(len(b)))
 		return nil
