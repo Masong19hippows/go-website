@@ -109,6 +109,9 @@ func Handler(c *gin.Context) {
 					}
 					continue
 				} else {
+					c.Header("Cache-Control", "no-cache, no-store, must-revalidate")
+					c.Header("Pragma", "no-cache")
+					c.Header("Expires", "0")
 					log.Printf("Proxy is redirecting traffic from %v to %v", c.Request.URL.Path, proxy.AccessPrefix[:len(proxy.AccessPrefix)-1]+c.Request.URL.Path)
 					c.Redirect(http.StatusMovedPermanently, proxy.AccessPrefix[:len(proxy.AccessPrefix)-1]+c.Request.URL.Path)
 				}
@@ -116,15 +119,13 @@ func Handler(c *gin.Context) {
 			}
 
 		} else {
+			c.Header("Cache-Control", "no-cache, no-store, must-revalidate")
+			c.Header("Pragma", "no-cache")
+			c.Header("Expires", "0")
 			//Look up the directory in the proxy
 			lookProxy(final, c)
 		}
 	}
-
-	// make it so that nothing is cached
-	c.Header("Cache-Control", "no-cache, no-store, must-revalidate")
-	c.Header("Pragma", "no-cache")
-	c.Header("Expires", "0")
 
 	// move on to other handlers
 	c.Next()
