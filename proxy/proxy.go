@@ -49,11 +49,9 @@ func reloadProxies() {
 	if err != nil {
 		log.Println(err)
 	}
-	log.Println("Successfully Opened proxies.json")
 	byteValue, _ := ioutil.ReadAll(jsonFile)
 	json.Unmarshal(byteValue, &Proxies)
 	Proxies = append(Proxies, Proxy{AccessPrefix: "/proxy/", ProxyURL: "http://localhost:6000", AccessPostfix: ""})
-	log.Println("Proxies now contains: ", Proxies)
 	jsonFile.Close()
 
 }
@@ -61,6 +59,7 @@ func reloadProxies() {
 //This is the middleware that handles the dynamic selection of proxies
 func Handler(c *gin.Context) {
 
+	log.Printf("Client requested %v", c.Request.URL)
 	//Only pass if the error is 404
 	if c.Writer.Status() == http.StatusNotFound {
 		// Reloading list of proxies to make sure that the latest is used
@@ -109,19 +108,14 @@ func Handler(c *gin.Context) {
 					}
 					continue
 				} else {
-					c.Header("Cache-Control", "no-cache, no-store, must-revalidate")
-					c.Header("Pragma", "no-cache")
-					c.Header("Expires", "0")
-					log.Printf("Proxy is redirecting traffic from %v to %v", c.Request.URL.Path, proxy.AccessPrefix[:len(proxy.AccessPrefix)-1]+c.Request.URL.Path)
+					log.Printf("Proxy %v is redirecting traffic from %v to %v", proxy, c.Request.URL.Path, proxy.AccessPrefix[:len(proxy.AccessPrefix)-1]+c.Request.URL.Path)
 					c.Redirect(http.StatusMovedPermanently, proxy.AccessPrefix[:len(proxy.AccessPrefix)-1]+c.Request.URL.Path)
 				}
 
 			}
 
 		} else {
-			c.Header("Cache-Control", "no-cache, no-store, must-revalidate")
-			c.Header("Pragma", "no-cache")
-			c.Header("Expires", "0")
+
 			//Look up the directory in the proxy
 			lookProxy(final, c)
 		}

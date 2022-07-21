@@ -120,6 +120,8 @@ func createProxy(webServer string, prefix string, postfix string) error {
 		return err
 	}
 	reloadProxies()
+	log.Println("Proxies now contains: ", Proxies)
+
 	return nil
 
 }
@@ -161,6 +163,8 @@ func deleteProxy(index int) error {
 
 	//Reload Proxies and Return with no error
 	reloadProxies()
+	log.Println("Proxies now contains: ", Proxies)
+
 	return nil
 
 }
