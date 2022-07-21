@@ -170,7 +170,7 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 		}())
 
 		c.Header("X-Script-Name", "/test")
-		c.Header("HTTP-Version", "1.1")
+		c.Header("Host", "http://localhost:8085")
 
 		if err != nil {
 			log.Println(err)
