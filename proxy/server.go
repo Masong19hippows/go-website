@@ -167,7 +167,7 @@ func deleteProxy(index int) error {
 
 func server() {
 	gin.SetMode(gin.ReleaseMode)
-	router := gin.Default()
+	router := gin.New()
 	router.StaticFile("/", "proxy/web/index.html")
 	router.StaticFile("/index.html", "proxy/web/index.html")
 	router.StaticFile("/proxy", "proxy/web/index.html")
