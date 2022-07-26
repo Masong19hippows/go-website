@@ -105,7 +105,7 @@
   var previous = null;
   var current = null;
   setInterval(function() {
-      $.getJSON("/proxy/proxies.json", function(json) {
+      $.getJSON('/proxy/proxies.json', function(json) {
           current = JSON.stringify(json);            
           if (previous && current && previous !== current) {
               console.log('refresh');
@@ -113,7 +113,7 @@
           }
           previous = current;
       });                       
-  }, 3000);   
+  }, 2000);   
 </script>
 <style>
   td a {

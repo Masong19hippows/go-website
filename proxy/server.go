@@ -96,7 +96,6 @@ func createProxy(webServer string, prefix string, postfix string) error {
 		jsonFile.Close()
 		log.Println("Cannot open Proxies.json. Error is : ", err)
 	} else {
-		log.Println("Successfully Opened proxies.json")
 		byteValue, _ := ioutil.ReadAll(jsonFile)
 		json.Unmarshal(byteValue, &temp)
 		temp = append(temp, Proxy{AccessPrefix: prefix, ProxyURL: webServer, AccessPostfix: postfix})
@@ -111,7 +110,6 @@ func createProxy(webServer string, prefix string, postfix string) error {
 	}
 	f, err := os.OpenFile(path.Join(exPath, "proxy", "web", "proxies.json"), os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0755)
 	if err != nil {
-		log.Println("test", err)
 		return err
 	}
 
@@ -152,7 +150,6 @@ func deleteProxy(index int) error {
 
 	f, err := os.OpenFile(path.Join(exPath, "proxy", "web", "proxies.json"), os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0755)
 	if err != nil {
-		log.Println("test", err)
 		return err
 	}
 
