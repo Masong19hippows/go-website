@@ -167,15 +167,20 @@ func deleteProxy(index int) error {
 }
 
 func server() {
+	ex, err := os.Executable()
+    	if err != nil {
+        	panic(err)
+    	}
+    	exPath := filepath.Dir(ex)
 	gin.SetMode(gin.ReleaseMode)
 	router := gin.New()
-	router.StaticFile("/", "proxy/web/index.html")
-	router.StaticFile("/index.html", "proxy/web/index.html")
-	router.StaticFile("/proxy", "proxy/web/index.html")
-	router.StaticFile("/proxies.json", "proxy/web/proxies.json")
-	router.StaticFile("/proxy/proxies.json", "proxy/web/proxies.json")
-	router.StaticFile("/index.css", "proxy/web/index.css")
-	router.StaticFile("/proxy/index.css", "proxy/web/index.css")
+	router.StaticFile("/", exPath + "/proxy/web/index.html")
+	router.StaticFile("/index.html", exPath + "/proxy/web/index.html")
+	router.StaticFile("/proxy", exPath + "/proxy/web/index.html")
+	router.StaticFile("/proxies.json", exPath + "/proxy/web/proxies.json")
+	router.StaticFile("/proxy/proxies.json", exPath + "/proxy/web/proxies.json")
+	router.StaticFile("/index.css", exPath + "/proxy/web/index.css")
+	router.StaticFile("/proxy/index.css", exPath + "/proxy/web/index.css")
 	router.NoRoute(func(c *gin.Context) {
 		cat.SendError(cat.Response{Status: http.StatusNotFound, Error: []string{"File Not Found on Server"}}, c)
 	})
@@ -203,7 +208,7 @@ func server() {
 		}
 	})
 
-	err := router.Run(":6000")
+	err = router.Run(":6000")
 	if err != nil {
 		panic(err)
 	}
