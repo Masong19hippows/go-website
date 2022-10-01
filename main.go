@@ -32,13 +32,13 @@ func main() {
 	//default routes + the proxy handler
 	router := gin.New()
 	router.Use(proxy.Handler)
-	router.StaticFile("/", expath + "assets/index.html")
+	router.StaticFile("/", exPath + "assets/index.html")
 	router.POST("/send_email", email.SendEmail(*password))
-	router.StaticFile("/favicon.ico", expath + "assets/favicon.ico")
-	router.StaticFile("/index.css", expath + "assets/index.css")
-	router.StaticFS("/images", http.Dir(expath + "assets/images/"))
+	router.StaticFile("/favicon.ico", exPath + "assets/favicon.ico")
+	router.StaticFile("/index.css", exPath + "assets/index.css")
+	router.StaticFS("/images", http.Dir(exPath + "assets/images/"))
 
-	err := router.Run(":" + strconv.Itoa(*port))
+	err = router.Run(":" + strconv.Itoa(*port))
 	if err != nil {
 		log.Println(err)
 	}
