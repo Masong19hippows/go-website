@@ -12,6 +12,11 @@ import (
 )
 
 func main() {
+	ex, err := os.Executable()
+    	if err != nil {
+        	panic(err)
+    	}
+    	exPath := filepath.Dir(ex)
 
 	//get port flag and password flag
 	port := flag.Int("port", 80, "Select the port that you wish the server to run on")
@@ -25,11 +30,11 @@ func main() {
 	//default routes + the proxy handler
 	router := gin.New()
 	router.Use(proxy.Handler)
-	router.StaticFile("/", "assets/index.html")
+	router.StaticFile("/", expath + "assets/index.html")
 	router.POST("/send_email", email.SendEmail(*password))
-	router.StaticFile("/favicon.ico", "assets/favicon.ico")
-	router.StaticFile("/index.css", "assets/index.css")
-	router.StaticFS("/images", http.Dir("./assets/images/"))
+	router.StaticFile("/favicon.ico", expath + "assets/favicon.ico")
+	router.StaticFile("/index.css", expath + "assets/index.css")
+	router.StaticFS("/images", http.Dir(expath + "assets/images/"))
 
 	err := router.Run(":" + strconv.Itoa(*port))
 	if err != nil {
