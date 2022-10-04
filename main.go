@@ -38,7 +38,7 @@ func main() {
 	router.StaticFile("/index.css", exPath + "/assets/index.css")
 	router.StaticFS("/images", http.Dir(exPath + "/assets/images/"))
 
-	err = router.Run(":" + strconv.Itoa(*port))
+	err = router.Run("0.0.0.0:" + strconv.Itoa(*port))
 	if err != nil {
 		log.Println(err)
 	}
