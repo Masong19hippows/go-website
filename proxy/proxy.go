@@ -140,7 +140,7 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 	proxy.Director = func(req *http.Request) {
 		req.Header = c.Request.Header
 		req.Host = remote.Host
-		printf("%v", req.Host)
+		log.Printf("%v", req.Host)
 
 		path := strings.Replace(c.Request.URL.Path, lookup.AccessPrefix, "", -1)
 		if path == lookup.AccessPrefix[:len(lookup.AccessPrefix)-1] {
