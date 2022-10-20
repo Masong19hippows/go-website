@@ -183,10 +183,10 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 				ip := net.ParseIP(host)
 				if ip.IsPrivate() == false{
 					cat.SendError(cat.Response{Status: http.StatusNotFound, Error: []string{"Not a Private IP Address"}}, c)
+					return nil;
 				}
 			}
 		}
-		log.Printf("&v", resp.Request.RemoteAddr)
 		//Correcting The response body so that href links work
 		b, err := ioutil.ReadAll(resp.Body) //Read html
 		if err != nil {
