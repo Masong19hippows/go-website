@@ -140,6 +140,7 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 	//Modifying the request sent to the Proxy
 	proxy.Director = func(req *http.Request) {
 		req.Header = c.Request.Header
+		req.Header.Set("X-Script-Name", lookup.AccessPrefix)
 		req.Host = remote.Host
 
 		path := strings.Replace(c.Request.URL.Path, lookup.AccessPrefix, "", -1)
@@ -218,7 +219,6 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 		}
 		resp.ContentLength = int64(len(b))
 		resp.Header.Set("Content-Length", strconv.Itoa(len(b)))
-		resp.Header.Set("X-Script-Name", lookup.AccessPrefix)
 		return nil
 	}
 
