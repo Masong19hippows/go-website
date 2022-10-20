@@ -173,7 +173,7 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 
 	//Modify the response so that links/redirects work
 	proxy.ModifyResponse = func(resp *http.Response) (err error) {
-		log.Printf("%v", resp.Host)
+		log.Printf("%v", resp.URL.String())
 		//Correcting The response body so that href links work
 		b, err := ioutil.ReadAll(resp.Body) //Read html
 		if err != nil {
