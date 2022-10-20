@@ -6,7 +6,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"net/SplitHostPort"
+	"net"
 	"net/http/httputil"
 	"net/url"
 	"os"
@@ -176,7 +176,7 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 	proxy.ModifyResponse = func(resp *http.Response) (err error) {
 		//Filter out the proxy reverse manager unless its from an internal ip address
 		if lookup.AccessPrefix == "/proxy"{
-			host, _, err := SplitHostPort(resp.Request.RemoteAddr)
+			host, _, err := net.SplitHostPort(resp.Request.RemoteAddr)
 			if err != nill{
 				log.Println(err)
 			} else if host.IsPrivate() == false {
