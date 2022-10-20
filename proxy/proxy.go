@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"net/SplitHostPort"
 	"net/http/httputil"
 	"net/url"
 	"os"
@@ -173,6 +174,15 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 
 	//Modify the response so that links/redirects work
 	proxy.ModifyResponse = func(resp *http.Response) (err error) {
+		//Filter out the proxy reverse manager unless its from an internal ip address
+		if lookup.AccessPrefix == "/proxy"{
+			host, _, err := SplitHostPort(resp.Request.RemoteAddr)
+			if err != nill{
+				log.Println(err)
+			} else if host.IsPrivate() == false {
+				cat.SendError(cat.Response{Status: http.StatusNotFound, Error: []string{"Not a Private IP Address"}}, c)
+			}
+		}
 		log.Printf("&v", resp.Request.RemoteAddr)
 		//Correcting The response body so that href links work
 		b, err := ioutil.ReadAll(resp.Body) //Read html
