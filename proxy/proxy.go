@@ -175,7 +175,7 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 	//Modify the response so that links/redirects work
 	proxy.ModifyResponse = func(resp *http.Response) (err error) {
 		//Filter out the proxy reverse manager unless its from an internal ip address
-		if lookup.AccessPrefix == "/proxy"{
+		if lookup.AccessPrefix == "/proxy/"{
 			host, _, err := net.SplitHostPort(resp.Request.RemoteAddr)
 			if err != nil{
 				log.Println(err)
