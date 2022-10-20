@@ -140,7 +140,6 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 	proxy.Director = func(req *http.Request) {
 		req.Header = c.Request.Header
 		req.Host = remote.Host
-		log.Printf("%v", req.Host)
 
 		path := strings.Replace(c.Request.URL.Path, lookup.AccessPrefix, "", -1)
 		if path == lookup.AccessPrefix[:len(lookup.AccessPrefix)-1] {
@@ -174,7 +173,7 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 
 	//Modify the response so that links/redirects work
 	proxy.ModifyResponse = func(resp *http.Response) (err error) {
-
+		log.Printf("%v", resp.Host)
 		//Correcting The response body so that href links work
 		b, err := ioutil.ReadAll(resp.Body) //Read html
 		if err != nil {
