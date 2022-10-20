@@ -182,8 +182,11 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 			} else {
 				ip := net.ParseIP(host)
 				if ip.IsPrivate() == false{
+					log.Printf("Denied Acces to Proxy from %v", ip)
 					cat.SendError(cat.Response{Status: http.StatusNotFound, Error: []string{"Not a Private IP Address"}}, c)
 					return nil;
+				} else {
+					log.Println("not denied")
 				}
 			}
 		}
