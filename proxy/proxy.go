@@ -143,7 +143,7 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 		req.Header.Set("X-Script-Name", lookup.AccessPrefix)
 		req.Host = remote.Host
 		req.Header.Set("X-Forwarded-Host", remote.Host)
-		req.Header.Set("X-Forwarded-Port", remote.Port)
+		req.Header.Set("X-Forwarded-Port", remote.Port.String())
 		log.Println(remote.Host)
 		log.Println(remote.Port)
 		path := strings.Replace(c.Request.URL.Path, lookup.AccessPrefix, "", -1)
