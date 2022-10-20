@@ -179,8 +179,11 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 			host, _, err := net.SplitHostPort(resp.Request.RemoteAddr)
 			if err != nill{
 				log.Println(err)
-			} else if host.IsPrivate() == false {
-				cat.SendError(cat.Response{Status: http.StatusNotFound, Error: []string{"Not a Private IP Address"}}, c)
+			} else {
+				ip := net.ParseIP(host)
+				if ip.IsPrivate() == false{
+					cat.SendError(cat.Response{Status: http.StatusNotFound, Error: []string{"Not a Private IP Address"}}, c)
+				}
 			}
 		}
 		log.Printf("&v", resp.Request.RemoteAddr)
