@@ -9,6 +9,7 @@ import (
     "path/filepath"
 
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/autotls"
 	"github.com/masong19hippows/go-website/certs"
 	"github.com/masong19hippows/go-website/email"
 	"github.com/masong19hippows/go-website/proxy"
@@ -47,17 +48,10 @@ func main() {
 		return
 	}(ch)
 	go func (ch chan error) {
-		err := certs.Gen(exPath)
-		if err != nil{
-			ch <- err
-			return
-		}
-		log.Println("Still here")
-		err = http.ListenAndServeTLS(":" + strconv.Itoa(*portHTTPS), exPath + "/certs/cert.pem", exPath + "/certs/key.pem", nil)
+		err := autotls.Run(router, "masongarten.sytes.net")
 		ch <- err
 		return
 	}(ch)
 
-	test := <-ch
-	log.Println(test)
+	panic(<-ch)
 }
