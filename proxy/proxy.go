@@ -179,6 +179,7 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 		} else {
 			log.Printf("Trying to access %v with the proxy %v", req.URL, lookup)
 		}
+		fmt.Println(req.URL)
 	}
 
 	//Modify the response so that links/redirects work
