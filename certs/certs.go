@@ -26,7 +26,7 @@ var (
 	ed25519Key = false
 )
 
-func publicKey(priv any) any {
+func PublicKey(priv any) any {
 	switch k := priv.(type) {
 	case *rsa.PrivateKey:
 		return &k.PublicKey
@@ -110,7 +110,7 @@ func Gen(path string) error {
 		template.KeyUsage |= x509.KeyUsageCertSign
 	}
 
-	derBytes, err := x509.CreateCertificate(rand.Reader, &template, &template, publicKey(priv), priv)
+	derBytes, err := x509.CreateCertificate(rand.Reader, &template, &template, PublicKey(priv), priv)
 	if err != nil {
 		return err
 	}
