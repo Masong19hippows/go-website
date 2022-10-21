@@ -224,8 +224,10 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 				}
 				idx := strings.Index(newLocation, lookup.AccessPostfix)
 				if newLocation[idx-1] == '/'{
+					log.Println("its a slash at the end")
 					return strings.Replace(newLocation, lookup.AccessPostfix, "", -1)
 				} else {
+					log.Println("NOT A SLASH")
 					return strings.Replace(newLocation, lookup.AccessPostfix, "/", -1)
 				}
 			}()
