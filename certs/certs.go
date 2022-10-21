@@ -81,7 +81,7 @@ func Gen(path string) error {
 	} else {
 		notBefore, err = time.Parse("Jan 2 15:04:05 2006", validFrom)
 		if err != nil {
-			return errors.New("Failed to parse creation date")
+			return err
 		}
 	}
 
@@ -90,7 +90,7 @@ func Gen(path string) error {
 	serialNumberLimit := new(big.Int).Lsh(big.NewInt(1), 128)
 	serialNumber, err := rand.Int(rand.Reader, serialNumberLimit)
 	if err != nil {
-		return errors.New("Failed to generate serial number")
+		return err
 	}
 
 	template := x509.Certificate{
@@ -122,33 +122,33 @@ func Gen(path string) error {
 
 	derBytes, err := x509.CreateCertificate(rand.Reader, &template, &template, publicKey(priv), priv)
 	if err != nil {
-		return errors.New("Failed to create certificate")
+		return err
 	}
 
 	certOut, err := os.Create(path + "/cert.pem")
 	if err != nil {
-		return errors.New("Failed to open cert.pem for writing")
+		return err
 	}
 	if err := pem.Encode(certOut, &pem.Block{Type: "CERTIFICATE", Bytes: derBytes}); err != nil {
-		return errors.New("Failed to write data to cert.pem")
+		return err
 	}
 	if err := certOut.Close(); err != nil {
-		return errors.New("Error closing cert.pem")
+		return err
 	}
 
 	keyOut, err := os.OpenFile(path + "/key.pem", os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0600)
 	if err != nil {
-		return errors.New("Failed to open key.pem for writing")
+		return err
 	}
 	privBytes, err := x509.MarshalPKCS8PrivateKey(priv)
 	if err != nil {
-		return errors.New("Unable to marshal private key")
+		return err
 	}
 	if err := pem.Encode(keyOut, &pem.Block{Type: "PRIVATE KEY", Bytes: privBytes}); err != nil {
-		return errors.New("Failed to write data to key.pem")
+		return err
 	}
 	if err := keyOut.Close(); err != nil {
-		return errors.New("Error closing key.pem")
+		return err
 	}
 	return nil
 }
