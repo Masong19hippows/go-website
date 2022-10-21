@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"log"
+	"fmt"
 	"net/http"
 	"strconv"
 	"os"
@@ -49,7 +50,7 @@ func main() {
 	go func (ch chan error) {
 		err := certs.Gen(exPath)
 		if err != nil{
-			log.Println(err)
+			fmt.Println(err)
 			ch <- err
 			return
 		}
@@ -58,5 +59,5 @@ func main() {
 		return
 	}(ch)
 
-	panic(<-ch)
+	<-ch
 }
