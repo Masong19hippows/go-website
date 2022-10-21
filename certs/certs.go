@@ -19,7 +19,6 @@ import (
 
 var (
 	host       = "masongarten.sytes.net"
-	validFrom  = time.Now().String()
 	validFor   = 365*24*time.Hour
 	isCA       = true
 	rsaBits    = 2048
@@ -75,16 +74,7 @@ func Gen(path string) error {
 		keyUsage |= x509.KeyUsageKeyEncipherment
 	}
 
-	var notBefore time.Time
-	if len(validFrom) == 0 {
-		notBefore = time.Now()
-	} else {
-		notBefore, err = time.Parse("Jan 2 15:04:05 2006", validFrom)
-		if err != nil {
-			return err
-		}
-	}
-
+	notBefore := time.Now()
 	notAfter := notBefore.Add(validFor)
 
 	serialNumberLimit := new(big.Int).Lsh(big.NewInt(1), 128)
