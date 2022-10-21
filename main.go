@@ -17,10 +17,10 @@ import (
 
 func main() {
 	ex, err := os.Executable()
-    	if err != nil {
-        	panic(err)
-    	}
-    	exPath := filepath.Dir(ex)
+    if err != nil {
+        panic(err)
+    }
+    exPath := filepath.Dir(ex)
 
 	//get port flag and password flag
 	portHTTP := flag.Int("portHTTP", 80, "Select the port that you wish the http server to run on")
@@ -47,10 +47,10 @@ func main() {
 		ch <- err
 		return
 	}(ch)
-	go func (ch chan error) {
+	go func (ch chan error, path string) {
 		certManager := autocert.Manager{
 			Prompt: autocert.AcceptTOS,
-			Cache:  autocert.DirCache(expath + "/certs"),
+			Cache:  autocert.DirCache(path + "/certs"),
 		}
 	
 		server := &http.Server{
@@ -63,7 +63,7 @@ func main() {
 		err := server.ListenAndServeTLS("", "")
 		ch <- err
 		return
-	}(ch)
+	}(ch, expath)
 
 	panic(<-ch)
 }
