@@ -2,9 +2,7 @@ package main
 
 import (
 	"flag"
-	"log"
 	"net/http"
-	"strconv"
 	"os"
     "path/filepath"
 
