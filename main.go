@@ -60,4 +60,5 @@ func main() {
 	}(ch)
 
 	test := <-ch
+	fmt.Println(test)
 }
