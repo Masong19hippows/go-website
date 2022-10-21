@@ -40,13 +40,15 @@ func main() {
 	router.StaticFS("/images", http.Dir(exPath + "/assets/images/"))
 
 	ch := make(chan error)
-	go func (ch chan error) error {
+	go func (ch chan error) {
 		err := router.Run("0.0.0.0:" + strconv.Itoa(*portHTTP))
 		ch <- err
+		return
 	}(ch)
-	go func (ch chan error) error {
+	go func (ch chan error) {
 		err := router.Run("0.0.0.0:" + strconv.Itoa(81))
 		ch <- err
+		return
 	}(ch)
 
 	panic(<-ch)
