@@ -130,7 +130,7 @@ func Handler(c *gin.Context) {
 // look up the url on the proxy. Send a 404 cat if not found
 func lookProxy(lookup Proxy, c *gin.Context) {
 
-	//Setting up a proxy connection to octoprint
+	//Setting up a proxy connection
 	remote, err := url.Parse(lookup.ProxyURL)
 	if err != nil {
 		panic(err)
@@ -139,12 +139,14 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 
 	//Modifying the request sent to the Proxy
 	proxy.Director = func(req *http.Request) {
+
+		//Setting the connection up so it looks like its not form the Reverse Proxy Server
 		req.Header = c.Request.Header
 		req.Header.Set("X-Script-Name", lookup.AccessPrefix)
 		req.Host = remote.Host
 		req.Header.Set("X-Forwarded-Host", c.Request.Host)
-		// req.Header.Set("X-Forwarded-Port", remote.Port())
-		log.Println(c.Request.Host)
+		req.Header.Set("X-Forwarded-For", c.Request.URL.Host)
+
 		path := strings.Replace(c.Request.URL.Path, lookup.AccessPrefix, "", -1)
 		if path == lookup.AccessPrefix[:len(lookup.AccessPrefix)-1] {
 			path = ""
