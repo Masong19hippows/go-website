@@ -10,6 +10,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/autotls"
+	"golang.org/x/crypto/acme/autocert"
 	"github.com/masong19hippows/go-website/email"
 	"github.com/masong19hippows/go-website/proxy"
 )
@@ -47,12 +48,12 @@ func main() {
 		return
 	}(ch)
 	go func (ch chan error) {
-		// m := autocert.Manager{
-		// 	Prompt:     autocert.AcceptTOS,
-		// 	HostPolicy: autocert.HostWhitelist("masongarten.mooo.com"),
-		// 	Cache:      autocert.DirCache(exPath +  "/certs"),
-		//   }
-		err := autotls.Run(router, "masongarten.mooo.com")
+		m := autocert.Manager{
+			Prompt:     autocert.AcceptTOS,
+			HostPolicy: autocert.HostWhitelist("masongarten.mooo.com"),
+			Cache:      autocert.DirCache(exPath +  "/certs"),
+		  }
+		err := autotls.RunWithManager(router, &m)
 		ch <- err
 		return
 	}(ch)
