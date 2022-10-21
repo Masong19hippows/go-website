@@ -6,8 +6,10 @@ import (
 	"net/http"
 	"strconv"
 	"os"
-    	"path/filepath"
+    "path/filepath"
+	"crypto/tls"
 
+	"golang.org/x/crypto/acme/autocert"
 	"github.com/gin-gonic/gin"
 	"github.com/masong19hippows/go-website/email"
 	"github.com/masong19hippows/go-website/proxy"
@@ -46,7 +48,19 @@ func main() {
 		return
 	}(ch)
 	go func (ch chan error) {
-		err := router.Run("0.0.0.0:" + strconv.Itoa(81))
+		certManager := autocert.Manager{
+			Prompt: autocert.AcceptTOS,
+			Cache:  autocert.DirCache(expath + "/certs"),
+		}
+	
+		server := &http.Server{
+			Addr:    ":443",
+			Handler: router,
+			TLSConfig: &tls.Config{
+				GetCertificate: certManager.GetCertificate,
+			},
+		}
+		err := server.ListenAndServeTLS("", "")
 		ch <- err
 		return
 	}(ch)
