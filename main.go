@@ -47,10 +47,10 @@ func main() {
 		ch <- err
 		return
 	}(ch)
-	go func (ch chan error, path string) {
+	go func (ch chan error) {
 		certManager := autocert.Manager{
 			Prompt: autocert.AcceptTOS,
-			Cache:  autocert.DirCache(path + "/certs"),
+			Cache:  autocert.DirCache(exPath + "/certs"),
 		}
 	
 		server := &http.Server{
@@ -63,7 +63,7 @@ func main() {
 		err := server.ListenAndServeTLS("", "")
 		ch <- err
 		return
-	}(ch, expath)
+	}(ch)
 
 	panic(<-ch)
 }
