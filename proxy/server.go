@@ -21,7 +21,7 @@ import (
 )
 
 func init() {
-	go httpServer()
+	go server()
 }
 
 var temp []Proxy
