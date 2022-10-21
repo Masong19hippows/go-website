@@ -114,8 +114,7 @@ func Gen(path string) error {
 	if err != nil {
 		return err
 	}
-
-	certOut, err := os.OpenFile(path + "/cert.pem", os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0600)
+	certOut, err := os.OpenFile(path + "/cert.pem", os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0755)
 	if err != nil {
 		return err
 	}
@@ -126,7 +125,7 @@ func Gen(path string) error {
 		return err
 	}
 
-	keyOut, err := os.OpenFile(path + "/key.pem", os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0600)
+	keyOut, err := os.OpenFile(path + "/key.pem", os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0755)
 	if err != nil {
 		return err
 	}
