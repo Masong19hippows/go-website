@@ -15,6 +15,7 @@ import (
 	"os"
 	"strings"
 	"time"
+	"fmt"
 )
 
 var (
@@ -119,6 +120,7 @@ func Gen(path string) error {
 	if err != nil {
 		return err
 	}
+	fmt.Println("test")
 	if err := pem.Encode(certOut, &pem.Block{Type: "CERTIFICATE", Bytes: derBytes}); err != nil {
 		return err
 	}
