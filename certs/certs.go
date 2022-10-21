@@ -13,7 +13,6 @@ import (
 	"math/big"
 	"net"
 	"os"
-	"log"
 	"strings"
 	"time"
 )
@@ -115,7 +114,7 @@ func Gen(path string) error {
 	if err != nil {
 		return err
 	}
-	certOut, err := os.Create(path + "/cert.pem")
+	certOut, err := os.Create(path + "/cert/cert.pem")
 	if err != nil {
 		return err
 	}
@@ -126,11 +125,10 @@ func Gen(path string) error {
 		return err
 	}
 
-	keyOut, err := os.Create(path + "/key.pem")
+	keyOut, err := os.Create(path + "/certs/key.pem")
 	if err != nil {
 		return err
 	}
-	log.Println("its been working")
 	privBytes, err := x509.MarshalPKCS8PrivateKey(priv)
 	if err != nil {
 		return err
