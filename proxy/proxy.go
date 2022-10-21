@@ -220,7 +220,7 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 			newLocation = strings.Replace(newLocation, remote.String(), c.Request.URL.Scheme+c.Request.URL.Host+lookup.AccessPrefix[:len(lookup.AccessPrefix)-1], -1)
 			newLocation = func() string {
 				if lookup.AccessPostfix == ""{
-					return ""
+					return newLocation
 				}
 				idx := strings.Index(newLocation, lookup.AccessPostfix)
 				if newLocation[idx-1] == '/'{
