@@ -59,5 +59,5 @@ func main() {
 		return
 	}(ch)
 
-	<-ch
+	test := <-ch
 }
