@@ -3,6 +3,7 @@ package proxy
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -110,8 +111,9 @@ func Handler(c *gin.Context) {
 					continue
 				} else {
 					path := strings.Replace(c.Request.URL.Path, proxy.AccessPostfix, "", -1)
+					fmt.Println(path)
 					log.Printf("Proxy %v is redirecting traffic from %v to %v", proxy, c.Request.URL.Path, proxy.AccessPrefix[:len(proxy.AccessPrefix)-1]+path)
-					c.Redirect(http.StatusMovedPermanently, proxy.AccessPrefix[:len(proxy.AccessPrefix)-1]+c.Request.URL.Path)
+					c.Redirect(http.StatusMovedPermanently, proxy.AccessPrefix[:len(proxy.AccessPrefix)-1]+path)
 				}
 
 			}
