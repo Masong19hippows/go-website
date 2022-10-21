@@ -59,5 +59,5 @@ func main() {
 	}(ch)
 
 	test := <-ch
-	fmt.Println(test)
+	log.Println(test)
 }
