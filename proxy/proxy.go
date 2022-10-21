@@ -153,8 +153,7 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 
 		//Making sure https goies through the server's https
 		if c.Request.TLS == nil && remote.Scheme == "https"{
-			log.Println(strings.Replace(c.Request.URL.String(), "http", "https", 1))
-			c.Redirect(http.StatusMovedPermanently, strings.Replace(c.Request.URL.String(), "http", "https", 1))
+			c.Redirect(http.StatusMovedPermanently, "https" + c.Request.URL.Host + c.Request.URL.Path + c.Request.URL.RawQuery)
 			return
 		}
 
