@@ -13,6 +13,7 @@ import (
 	"math/big"
 	"net"
 	"os"
+	"log"
 	"strings"
 	"time"
 )
@@ -129,6 +130,7 @@ func Gen(path string) error {
 	if err != nil {
 		return err
 	}
+	log.Println("its been working")
 	privBytes, err := x509.MarshalPKCS8PrivateKey(priv)
 	if err != nil {
 		return err
