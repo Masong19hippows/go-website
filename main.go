@@ -43,11 +43,11 @@ func main() {
 	go func (ch chan error) error {
 		err := router.Run("0.0.0.0:" + strconv.Itoa(*portHTTP))
 		ch <- err
-	}()
+	}(ch)
 	go func (ch chan error) error {
 		err := router.Run("0.0.0.0:" + strconv.Itoa(81))
 		ch <- err
-	}()
+	}(ch)
 
 	panic(<-ch)
 }
