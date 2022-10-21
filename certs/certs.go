@@ -114,7 +114,7 @@ func Gen(path string) error {
 	if err != nil {
 		return err
 	}
-	certOut, err := os.Create(path + "/cert/cert.pem")
+	certOut, err := os.Create(path + "/certs/cert.pem")
 	if err != nil {
 		return err
 	}
