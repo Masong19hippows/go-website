@@ -49,6 +49,7 @@ func main() {
 	go func (ch chan error) {
 		err := certs.Gen(exPath)
 		if err != nil{
+			log.Fatal(err)
 			ch <- err
 			return
 		}
