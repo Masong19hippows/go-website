@@ -10,7 +10,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/autotls"
-	"github.com/masong19hippows/go-website/certs"
 	"github.com/masong19hippows/go-website/email"
 	"github.com/masong19hippows/go-website/proxy"
 )
