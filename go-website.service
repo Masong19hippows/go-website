@@ -1,0 +1,11 @@
+[Unit]
+Description=go-website
+After=network.target
+StartLimitIntervalSec=0
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+ExecStart=/home/pi/go-website/go-website -port 8080 -password urnjtnitmiqnsxjc
+[Install]
+WantedBy=multi-user.target
