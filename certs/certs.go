@@ -43,12 +43,12 @@ func publicKey(priv any) any {
 func Gen(path string) error {
 	var priv any
 	var err error
-	switch *ecdsaCurve {
+	switch ecdsaCurve {
 	case "":
-		if *ed25519Key {
+		if ed25519Key {
 			_, priv, err = ed25519.GenerateKey(rand.Reader)
 		} else {
-			priv, err = rsa.GenerateKey(rand.Reader, *rsaBits)
+			priv, err = rsa.GenerateKey(rand.Reader, rsaBits)
 		}
 	case "P224":
 		priv, err = ecdsa.GenerateKey(elliptic.P224(), rand.Reader)
@@ -76,16 +76,16 @@ func Gen(path string) error {
 	}
 
 	var notBefore time.Time
-	if len(*validFrom) == 0 {
+	if len(validFrom) == 0 {
 		notBefore = time.Now()
 	} else {
-		notBefore, err = time.Parse("Jan 2 15:04:05 2006", *validFrom)
+		notBefore, err = time.Parse("Jan 2 15:04:05 2006", validFrom)
 		if err != nil {
 			return errors.New("Failed to parse creation date")
 		}
 	}
 
-	notAfter := notBefore.Add(*validFor)
+	notAfter := notBefore.Add(validFor)
 
 	serialNumberLimit := new(big.Int).Lsh(big.NewInt(1), 128)
 	serialNumber, err := rand.Int(rand.Reader, serialNumberLimit)
@@ -106,7 +106,7 @@ func Gen(path string) error {
 		BasicConstraintsValid: true,
 	}
 
-	hosts := strings.Split(*host, ",")
+	hosts := strings.Split(host, ",")
 	for _, h := range hosts {
 		if ip := net.ParseIP(h); ip != nil {
 			template.IPAddresses = append(template.IPAddresses, ip)
@@ -115,7 +115,7 @@ func Gen(path string) error {
 		}
 	}
 
-	if *isCA {
+	if isCA {
 		template.IsCA = true
 		template.KeyUsage |= x509.KeyUsageCertSign
 	}
@@ -150,4 +150,5 @@ func Gen(path string) error {
 	if err := keyOut.Close(); err != nil {
 		return errors.New("Error closing key.pem")
 	}
+	return nil
 }
