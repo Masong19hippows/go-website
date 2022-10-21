@@ -8,8 +8,8 @@ import (
 	"os"
     "path/filepath"
 
-	"github.com/foomo/simplecert"
 	"github.com/gin-gonic/gin"
+	"github.com/masong19hippows/go-website/certs"
 	"github.com/masong19hippows/go-website/email"
 	"github.com/masong19hippows/go-website/proxy"
 )
@@ -47,27 +47,8 @@ func main() {
 		return
 	}(ch)
 	go func (ch chan error) {
-		cfg := simplecert.Default
-		cfg.Domains = []string{"masongarten.sytes.net"}
-		cfg.CacheDir = exPath + "/certs"
-		cfg.SSLEmail = "garten323@gmail.com"
-		cfg.DNSProvider = "cloudflare"
-		certReloader, err := simplecert.Init(cfg, nil)
-		if err != nil {
-			ch <- err
-			return
-		}
-		tlsconf := tlsconfig.NewServerTLSConfig(tlsconfig.TLSModeServerStrict)
-
-		// now set GetCertificate to the reloaders GetCertificateFunc to enable hot reload
-		tlsconf.GetCertificate = certReloader.GetCertificateFunc()
-
-		// init server
-		s := &http.Server{
-			Addr:      ":" + *portHTTPS,
-			TLSConfig: tlsconf,
-		}
-		err := s.ListenAndServeTLS("", "")
+		certs.Gen(exPath)
+		err := http.ListenAndServeTLS(":" + *portHTTPS, exPath + "/certs/cert.pem", exPath + "/certs/key.pem", nil)
 		ch <- err
 		return
 	}(ch)
