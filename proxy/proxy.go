@@ -110,7 +110,7 @@ func Handler(c *gin.Context) {
 					}
 					continue
 				} else {
-					path := strings.Replace(c.Request.URL.Path, lookup.AccessPostfix, "", -1)
+					path := strings.Replace(c.Request.URL.Path, proxy.AccessPostfix, "", -1)
 					log.Printf("Proxy %v is redirecting traffic from %v to %v", proxy, c.Request.URL.Path, proxy.AccessPrefix[:len(proxy.AccessPrefix)-1]+path)
 					c.Redirect(http.StatusMovedPermanently, proxy.AccessPrefix[:len(proxy.AccessPrefix)-1]+c.Request.URL.Path)
 				}
@@ -181,7 +181,6 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 		} else {
 			log.Printf("Trying to access %v with the proxy %v", req.URL, lookup)
 		}
-		fmt.Println(lookup.AccessPrefix[:len(lookup.AccessPrefix)-1])
 	}
 
 	//Modify the response so that links/redirects work
