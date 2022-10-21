@@ -2,6 +2,7 @@ package proxy
 
 import (
 	"bytes"
+	"fmt"
 	"encoding/json"
 	"io/ioutil"
 	"log"
