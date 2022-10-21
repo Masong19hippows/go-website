@@ -21,8 +21,8 @@ func main() {
     	exPath := filepath.Dir(ex)
 
 	//get port flag and password flag
-	portHTTP := flag.Int("port", 80, "Select the port that you wish the http server to run on")
-	portHTTPS := flag.Int("port", 443, "Select the port that you wish the https server to run on")
+	portHTTP := flag.Int("portHTTP", 80, "Select the port that you wish the http server to run on")
+	portHTTPS := flag.Int("portHTTPS", 443, "Select the port that you wish the https server to run on")
 	password := flag.String("password", "", "Choose the app password obtained form no-reply email account")
 	flag.Parse()
 	log.Println("Using port", *portHTTP, "For http webserver and port", *portHTTPS, "for https server")
