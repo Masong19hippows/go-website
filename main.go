@@ -3,7 +3,6 @@ package main
 import (
 	"flag"
 	"log"
-	"fmt"
 	"net/http"
 	"strconv"
 	"os"
@@ -50,10 +49,10 @@ func main() {
 	go func (ch chan error) {
 		err := certs.Gen(exPath)
 		if err != nil{
-			fmt.Println(err)
 			ch <- err
 			return
 		}
+		log.Println("Still here")
 		err = http.ListenAndServeTLS(":" + strconv.Itoa(*portHTTPS), exPath + "/certs/cert.pem", exPath + "/certs/key.pem", nil)
 		ch <- err
 		return
