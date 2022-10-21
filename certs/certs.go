@@ -19,7 +19,7 @@ import (
 
 var (
 	host       = "masongarten.sytes.net"
-	validFrom  = time.Now()
+	validFrom  = time.Now().String()
 	validFor   = 365*24*time.Hour
 	isCA       = true
 	rsaBits    = 2048
