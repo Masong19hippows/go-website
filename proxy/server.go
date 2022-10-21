@@ -21,7 +21,7 @@ import (
 )
 
 func init() {
-	go server()
+	go httpServer()
 }
 
 var temp []Proxy
@@ -170,10 +170,10 @@ func deleteProxy(index int) error {
 
 func server() {
 	ex, err := os.Executable()
-    	if err != nil {
+    if err != nil {
         	panic(err)
-    	}
-    	exPath := filepath.Dir(ex)
+    }
+    exPath := filepath.Dir(ex)
 	gin.SetMode(gin.ReleaseMode)
 	router := gin.New()
 	router.StaticFile("/", exPath + "/proxy/web/index.html")
