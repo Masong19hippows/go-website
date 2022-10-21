@@ -50,6 +50,7 @@ func main() {
 	go func (ch chan error) {
 		certManager := autocert.Manager{
 			Prompt: autocert.AcceptTOS,
+			Hostname: "masongarten.sytes.net"
 			Cache:  autocert.DirCache(exPath + "/certs"),
 		}
 	
