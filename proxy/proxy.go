@@ -223,10 +223,10 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 					return ""
 				}
 				idx := strings.Index(newLocation, lookup.AccessPostfix)
-				if newLocation[idx-1] == "/"{
+				if newLocation[idx-1] == '/'{
 					return strings.Replace(newLocation, lookup.AccessPostfix, "", -1)
 				} else {
-					strings.Replace(newLocation, lookup.AccessPostfix, "/", -1)
+					return strings.Replace(newLocation, lookup.AccessPostfix, "/", -1)
 				}
 			}()
 			resp.Header.Set("location", newLocation)
