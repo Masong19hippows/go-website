@@ -151,6 +151,12 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 		req.Header.Set("X-Forwarded-Host", c.Request.Host)
 		req.Header.Set("X-Forwarded-For", host)
 
+		//Making sure https goies through the server's https
+		if c.Request.Scheme == "http" && remote.Scheme == "https"{
+			c.Redirect(http.StatusMovedPermanently, strings.Replace(c.Request.URL, "http", "https", 1))
+			return
+		}
+
 		path := strings.Replace(c.Request.URL.Path, lookup.AccessPrefix, "", -1)
 		if path == lookup.AccessPrefix[:len(lookup.AccessPrefix)-1] {
 			path = ""
