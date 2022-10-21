@@ -116,11 +116,10 @@ func Gen(path string) error {
 		return err
 	}
 
-	certOut, err := os.Create(path + "/cert.pem")
+	certOut, err := os.OpenFile(path + "/cert.pem", os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0600)
 	if err != nil {
 		return err
 	}
-	fmt.Println("test")
 	if err := pem.Encode(certOut, &pem.Block{Type: "CERTIFICATE", Bytes: derBytes}); err != nil {
 		return err
 	}
