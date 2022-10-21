@@ -166,7 +166,7 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 			} else {
 				return ""
 			}
-		}() + func () string {if len(lookup.AccessPostfix) <= 1 || path == "" {return lookup.AccessPostfix} else if path[len(path)-1] != '/'{return lookup.AccessPostfix} else {return lookup.AccessPostfix[1:]}}() + path + func() string {
+		}() + func () string {if len(lookup.AccessPostfix) <= 1 {return lookup.AccessPostfix} else {return lookup.AccessPostfix[1:]}}() + path + func() string {
 			if c.Request.URL.RawQuery == "" {
 				return ""
 			} else {
