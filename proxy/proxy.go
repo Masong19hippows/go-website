@@ -110,7 +110,8 @@ func Handler(c *gin.Context) {
 					}
 					continue
 				} else {
-					log.Printf("Proxy %v is redirecting traffic from %v to %v", proxy, c.Request.URL.Path, proxy.AccessPrefix[:len(proxy.AccessPrefix)-1]+c.Request.URL.Path)
+					path := strings.Replace(c.Request.URL.Path, lookup.AccessPostfix, "", -1)
+					log.Printf("Proxy %v is redirecting traffic from %v to %v", proxy, c.Request.URL.Path, proxy.AccessPrefix[:len(proxy.AccessPrefix)-1]+path)
 					c.Redirect(http.StatusMovedPermanently, proxy.AccessPrefix[:len(proxy.AccessPrefix)-1]+c.Request.URL.Path)
 				}
 
