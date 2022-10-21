@@ -2,7 +2,6 @@ package proxy
 
 import (
 	"bytes"
-	"fmt"
 	"encoding/json"
 	"io/ioutil"
 	"log"
@@ -180,7 +179,6 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 		} else {
 			log.Printf("Trying to access %v with the proxy %v", req.URL, lookup)
 		}
-		fmt.Println(lookup.AccessPrefix[:len(lookup.AccessPrefix)-1])
 	}
 
 	//Modify the response so that links/redirects work
