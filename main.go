@@ -48,7 +48,7 @@ func main() {
 	}(ch)
 	go func (ch chan error) {
 		certs.Gen(exPath)
-		err := http.ListenAndServeTLS(":" + *portHTTPS, exPath + "/certs/cert.pem", exPath + "/certs/key.pem", nil)
+		err := http.ListenAndServeTLS(":" + strconv.Itoa(*portHTTPS), exPath + "/certs/cert.pem", exPath + "/certs/key.pem", nil)
 		ch <- err
 		return
 	}(ch)
