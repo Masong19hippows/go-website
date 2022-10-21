@@ -172,7 +172,7 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 			} else {
 				return "?" + c.Request.URL.RawQuery
 			}
-		}()
+		}())
 
 		if err != nil {
 			log.Println(err)
