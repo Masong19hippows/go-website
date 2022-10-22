@@ -8,7 +8,9 @@ This is a website built with golang. When accessing / on the given port, it will
 There is also an email functionality that requires a gmail app password associated with the account `noreplymasongarten`
 
 It is also a [reverse proxy manager.](https://en.wikipedia.org/wiki/Reverse_proxy#:~:text=In%20computer%20networks%2C%20a%20reverse,%2C%20performance%2C%20resilience%20and%20security.)
-The goal is to have an easy-to-use interface that users can delicate certain url's with, to act as a reverse proxy.
+The goal is to have an easy-to-use interface that users can delicate certain url's with, to act as a reverse proxy. You can add any URL you want into the proxy manager. If it is an https site, the site will automatically redirect you to the https version of the site. <br/> <br/>
+
+YOU CANNOT ACCESS THE PROXY MANAGER ON AN OUTSIDE NETWORK. It must be accessed through a private ip address.
 
 The proxy manager looks like this:
 <kbd>![Looks like this](assets/images/manager.png?raw=true "Manager")</kbd>
@@ -30,14 +32,16 @@ The install is easy. Just follow below steps.
 
 - `go build`
 
+#### Auto-Start
+
+There is a systemd service script go-website.service <br/>
+This script can be moved with `mv go-website.service /etc/systemd/system/`
+
 ## How to Use?
 
 It can executed like a normal program with `.\go-website.exe` for windows and `./go-website` for linux
 
-There are two flags. One controls the port that the webserver uses, and the other controls the app-password used to send emails.
-
-The port can be changed with the flag `-port <portNumber>`<br/>
-The default is port 80
+There is one flag. The flag controls the app-password used to send emails.
 
 The gmail app-password can be changed with the flag `-password <appPassword>`<br/>
 The default is nothing

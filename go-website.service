@@ -6,6 +6,6 @@ StartLimitIntervalSec=0
 Type=simple
 Restart=always
 RestartSec=1
-ExecStart=/home/pi/go-website/go-website -port 8080 -password urnjtnitmiqnsxjc
+ExecStart=/home/pi/go-website/go-website -password urnjtnitmiqnsxjc
 [Install]
 WantedBy=multi-user.target
