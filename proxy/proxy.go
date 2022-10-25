@@ -152,7 +152,7 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 		req.Header.Set("X-Forwarded-For", host)
 
 		//Making sure https goies through the server's https
-		if c.Request.TLS == nil && remote.Scheme == "https" {
+		if c.Request.TLS == nil {
 			c.Redirect(http.StatusMovedPermanently, "https://"+c.Request.Host+c.Request.URL.Path+c.Request.URL.RawQuery)
 			return
 		}
@@ -246,6 +246,7 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 		}
 		if resp.StatusCode == 404 {
 			cat.SendError(cat.Response{Status: http.StatusNotFound, Error: []string{"File Not Found on Server"}}, c)
+			return nil
 
 		}
 		resp.ContentLength = int64(len(b))
