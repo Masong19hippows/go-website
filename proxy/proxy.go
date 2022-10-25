@@ -5,8 +5,8 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"log"
-	"net/http"
 	"net"
+	"net/http"
 	"net/http/httputil"
 	"net/url"
 	"os"
@@ -105,7 +105,7 @@ func Handler(c *gin.Context) {
 				} else if resp.StatusCode == 404 {
 					if i == len(Proxies)-1 {
 						cat.SendError(cat.Response{Status: http.StatusNotFound, Error: []string{"File Not Found on Server"}}, c)
-						break
+						return
 					}
 					continue
 				} else {
@@ -145,15 +145,15 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 		req.Header.Set("X-Script-Name", lookup.AccessPrefix)
 		req.Host = remote.Host
 		host, _, err := net.SplitHostPort(req.RemoteAddr)
-		if err != nil{
+		if err != nil {
 			log.Println(err)
 		}
 		req.Header.Set("X-Forwarded-Host", c.Request.Host)
 		req.Header.Set("X-Forwarded-For", host)
 
 		//Making sure https goies through the server's https
-		if c.Request.TLS == nil && remote.Scheme == "https"{
-			c.Redirect(http.StatusMovedPermanently, "https://" + c.Request.Host + c.Request.URL.Path + c.Request.URL.RawQuery)
+		if c.Request.TLS == nil && remote.Scheme == "https" {
+			c.Redirect(http.StatusMovedPermanently, "https://"+c.Request.Host+c.Request.URL.Path+c.Request.URL.RawQuery)
 			return
 		}
 
@@ -172,7 +172,13 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 			} else {
 				return "/"
 			}
-		}() + func () string {if len(lookup.AccessPostfix) <= 1 {return lookup.AccessPostfix} else {return lookup.AccessPostfix[1:]}}() + path + func() string {
+		}() + func() string {
+			if len(lookup.AccessPostfix) <= 1 {
+				return lookup.AccessPostfix
+			} else {
+				return lookup.AccessPostfix[1:]
+			}
+		}() + path + func() string {
 			if c.Request.URL.RawQuery == "" {
 				return ""
 			} else {
@@ -190,17 +196,17 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 	//Modify the response so that links/redirects work
 	proxy.ModifyResponse = func(resp *http.Response) (err error) {
 		//Filter out the proxy reverse manager unless its from an internal ip address
-		if lookup.AccessPrefix == "/proxy/"{
+		if lookup.AccessPrefix == "/proxy/" {
 			host, _, err := net.SplitHostPort(resp.Request.RemoteAddr)
-			if err != nil{
+			if err != nil {
 				log.Println(err)
 			} else {
 				ip := net.ParseIP(host)
-				if ip.IsPrivate() == false{
+				if !ip.IsPrivate() {
 					log.Printf("Denied Acces to Proxy from %v", ip)
 					cat.SendError(cat.Response{Status: http.StatusNotFound, Error: []string{"Not a Private IP Address"}}, c)
-					return nil;
-				} 
+					return nil
+				}
 			}
 		}
 		//Correcting The response body so that href links work
@@ -225,11 +231,11 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 			newLocation := location.String()
 			newLocation = strings.Replace(newLocation, remote.String(), c.Request.URL.Scheme+c.Request.URL.Host+lookup.AccessPrefix[:len(lookup.AccessPrefix)-1], -1)
 			newLocation = func() string {
-				if lookup.AccessPostfix == ""{
+				if lookup.AccessPostfix == "" {
 					return newLocation
 				}
 				idx := strings.Index(newLocation, lookup.AccessPostfix)
-				if newLocation[idx-1] == '/'{
+				if newLocation[idx-1] == '/' {
 					return strings.Replace(newLocation, lookup.AccessPostfix, "", -1)
 				} else {
 					return strings.Replace(newLocation, lookup.AccessPostfix, "/", -1)
