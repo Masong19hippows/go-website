@@ -50,7 +50,7 @@ func main() {
 	go func (ch chan error) {
 		m := autocert.Manager{
 			Prompt:     autocert.AcceptTOS,
-			HostPolicy: autocert.HostWhitelist("masongarten.mooo.com"),
+			HostPolicy: autocert.HostWhitelist("masongarten.com", "host1.masongarten.com"),
 			Cache:      autocert.DirCache(exPath +  "/certs"),
 		  }
 		err := autotls.RunWithManager(router, &m)
