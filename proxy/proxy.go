@@ -61,6 +61,19 @@ func reloadProxies() {
 func Handler(c *gin.Context) {
 
 	log.Printf("Client requested %v", c.Request.URL)
+
+	//Redirecting http to https
+	if c.Request.TLS == nil {
+		c.Redirect(http.StatusMovedPermanently, "https://"+c.Request.Host+c.Request.URL.Path+func() string {
+			if c.Request.URL.RawQuery == "" {
+				return ""
+			} else {
+				return "?" + c.Request.URL.RawQuery
+			}
+		}())
+		return
+	}
+
 	//Only pass if the error is 404
 	if c.Writer.Status() == http.StatusNotFound {
 		// Reloading list of proxies to make sure that the latest is used
@@ -150,18 +163,6 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 		}
 		req.Header.Set("X-Forwarded-Host", c.Request.Host)
 		req.Header.Set("X-Forwarded-For", host)
-
-		//Making sure https goies through the server's https
-		if c.Request.TLS == nil {
-			c.Redirect(http.StatusMovedPermanently, "https://"+c.Request.Host+c.Request.URL.Path+func() string {
-				if c.Request.URL.RawQuery == "" {
-					return ""
-				} else {
-					return "?" + c.Request.URL.RawQuery
-				}
-			}())
-			return
-		}
 
 		path := strings.Replace(c.Request.URL.Path, lookup.AccessPrefix, "", -1)
 		if path == lookup.AccessPrefix[:len(lookup.AccessPrefix)-1] {
