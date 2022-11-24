@@ -20,15 +20,15 @@ import (
 	cat "github.com/masong19hippows/go-website/catError"
 )
 
-//declare a proxy type that holds the prefix for the url to access it
-//as well as the url of the device being proxied to
+// declare a proxy type that holds the prefix for the url to access it
+// as well as the url of the device being proxied to
 type Proxy struct {
 	AccessPrefix  string `json:"accessPrefix"`
 	ProxyURL      string `json:"proxyURL"`
 	AccessPostfix string `json:"accessPostfix"`
 }
 
-//array of all proxies
+// array of all proxies
 var Proxies []Proxy
 
 // make sure Proxies is the latest
@@ -57,7 +57,7 @@ func reloadProxies() {
 
 }
 
-//This is the middleware that handles the dynamic selection of proxies
+// This is the middleware that handles the dynamic selection of proxies
 func Handler(c *gin.Context) {
 
 	log.Printf("Client requested %v", c.Request.URL)
@@ -161,8 +161,10 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 		if err != nil {
 			log.Println(err)
 		}
+		log.Println(lookup.AccessPrefix, c.Request.Host, host)
 		req.Header.Set("X-Forwarded-Host", c.Request.Host)
 		req.Header.Set("X-Forwarded-For", host)
+		log.Println("at least im here")
 
 		path := strings.Replace(c.Request.URL.Path, lookup.AccessPrefix, "", -1)
 		if path == lookup.AccessPrefix[:len(lookup.AccessPrefix)-1] {

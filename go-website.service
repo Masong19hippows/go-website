@@ -6,6 +6,6 @@ StartLimitIntervalSec=0
 Type=simple
 Restart=always
 RestartSec=1
-ExecStart=/home/pi/go-website/go-website -password urnjtnitmiqnsxjc
+ExecStart=/home/pi/go-website/go-website
 [Install]
 WantedBy=multi-user.target
