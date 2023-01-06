@@ -3,7 +3,6 @@ package proxy
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"net"
@@ -155,18 +154,17 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 	proxy.Director = func(req *http.Request) {
 
 		//Setting the connection up so it looks like its not form the Reverse Proxy Server
-		req.Header = c.Request.Header
-		req.Header.Set("X-Script-Name", lookup.AccessPrefix)
-		req.Host = remote.Host
 		host, _, err := net.SplitHostPort(req.RemoteAddr)
 		if err != nil {
 			log.Println(err)
 		}
-		req.Header.Set("X-Real-IP", c.Request.Host)
+		req.Header = c.Request.Header
+		req.Header.Set("X-Forwarded-For", host)
 		req.Header.Set("X-Forwarded-Host", c.Request.Host)
-		fmt.Println(host)
-		req.Header.Set("X-Forwarded-For", req.RemoteAddr)
-
+		req.Header.Set("X-Forwarded-Proto", c.Request.URL.Scheme)
+		req.Header.Set("X-Script-Name", lookup.AccessPrefix[:len(lookup.AccessPrefix)-1])
+		req.Host = remote.Host
+		req.Header.Set("X-Real-IP", c.Request.Host)
 		path := strings.Replace(c.Request.URL.Path, lookup.AccessPrefix, "", -1)
 		if path == lookup.AccessPrefix[:len(lookup.AccessPrefix)-1] {
 			path = ""
