@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"log"
-	"net"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
@@ -201,19 +200,19 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 	//Modify the response so that links/redirects work
 	proxy.ModifyResponse = func(resp *http.Response) (err error) {
 		//Filter out the proxy reverse manager unless its from an internal ip address
-		if lookup.AccessPrefix == "/proxy/" {
-			host, _, err := net.SplitHostPort(resp.Request.RemoteAddr)
-			if err != nil {
-				log.Println(err)
-			} else {
-				ip := net.ParseIP(host)
-				if !ip.IsPrivate() {
-					log.Printf("Denied Acces to Proxy from %v", ip)
-					cat.SendError(cat.Response{Status: http.StatusNotFound, Error: []string{"Not a Private IP Address"}}, c)
-					return nil
-				}
-			}
-		}
+		// if lookup.AccessPrefix == "/proxy/" {
+		// 	host, _, err := net.SplitHostPort(resp.Request.RemoteAddr)
+		// 	if err != nil {
+		// 		log.Println(err)
+		// 	} else {
+		// 		ip := net.ParseIP(host)
+		// 		if !ip.IsPrivate() {
+		// 			log.Printf("Denied Acces to Proxy from %v", ip)
+		// 			cat.SendError(cat.Response{Status: http.StatusNotFound, Error: []string{"Not a Private IP Address"}}, c)
+		// 			return nil
+		// 		}
+		// 	}
+		// }
 		//Correcting The response body so that href links work
 		b, err := ioutil.ReadAll(resp.Body) //Read html
 		if err != nil {
