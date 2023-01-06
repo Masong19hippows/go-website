@@ -161,6 +161,7 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 		req.Header = c.Request.Header
 		req.Header.Set("X-Forwarded-For", req.RemoteAddr)
 		req.Header.Set("X-Forwarded-Host", c.Request.Host)
+		req.Header.Set("X-Scheme", remote.Scheme)
 		req.Header.Set("X-Script-Name", lookup.AccessPrefix[:len(lookup.AccessPrefix)-1])
 		req.Host = remote.Host
 		req.Header.Set("X-Real-IP", c.Request.Host)
