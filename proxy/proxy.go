@@ -94,49 +94,19 @@ func Handler(c *gin.Context) {
 			}
 		}
 
-		//Only pass if there is no proxy associated with the fist directory.
-		//If this happens, the prefix for each proxy in the list is tested to see if it exists on the proxy
-		//If it exists on the proxy, then traffic is redirected to Proxy
-		//If it doesn't exist on the proxy, then a 404 is sent with a picture of a cat
+		//Only pass if there is no proxy associated with the directory.
+		//If the proxy doesn't exist, then a 404 is sent with a picture of a cat
 		if (Proxy{}) == final {
-			// Loop through proxies and find one that mjatches the prefix
-			for i, proxy := range Proxies {
-
-				requestURL := proxy.ProxyURL + func() string {
-					if proxy.AccessPostfix == "" {
-						return ""
-					} else {
-						return proxy.AccessPostfix[:len(proxy.AccessPostfix)-1]
-					}
-				}() + c.Request.URL.Path
-
-				resp, err := http.Get(requestURL)
-				if err != nil {
-					log.Println(err)
-					continue
-				} else if resp.StatusCode != 200 {
-					if i == len(Proxies)-1 {
-						cat.SendError(cat.Response{Status: http.StatusNotFound, Error: []string{"File Not Found on Server"}}, c)
-						return
-					}
-					continue
-				} else {
-					log.Printf("Request sent to proxy %v is redirecting traffic from %v to %v", proxy, c.Request.URL.Path, proxy.AccessPrefix[:len(proxy.AccessPrefix)-1]+c.Request.URL.Path)
-					c.Redirect(http.StatusMovedPermanently, proxy.AccessPrefix[:len(proxy.AccessPrefix)-1]+c.Request.URL.Path)
-				}
-
-			}
-
+			cat.SendError(cat.Response{Status: http.StatusNotFound, Error: []string{"File Not Found on Server"}}, c)
+			return
 		} else {
-
 			//Look up the directory in the proxy
 			lookProxy(final, c)
 		}
+
+		// move on to other handlers
+		c.Next()
 	}
-
-	// move on to other handlers
-	c.Next()
-
 }
 
 // look up the url on the proxy. Send a 404 cat if not found
