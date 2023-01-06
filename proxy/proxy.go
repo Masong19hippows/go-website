@@ -114,7 +114,7 @@ func Handler(c *gin.Context) {
 				if err != nil {
 					log.Println(err)
 					continue
-				} else if resp.StatusCode == 404 {
+				} else if resp.StatusCode == 404 || resp.StatusCode == 400 {
 					if i == len(Proxies)-1 {
 						cat.SendError(cat.Response{Status: http.StatusNotFound, Error: []string{"File Not Found on Server"}}, c)
 						return
