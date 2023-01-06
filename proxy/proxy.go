@@ -99,34 +99,35 @@ func Handler(c *gin.Context) {
 		//If it exists on the proxy, then traffic is redirected to Proxy
 		//If it doesn't exist on the proxy, then a 404 is sent with a picture of a cat
 		if (Proxy{}) == final {
-
+			cat.SendError(cat.Response{Status: http.StatusNotFound, Error: []string{"File Not Found on Server"}}, c)
+			return
 			// Loop through proxies and find one that mjatches the prefix
-			for i, proxy := range Proxies {
+			// for i, proxy := range Proxies {
 
-				requestURL := proxy.ProxyURL + func() string {
-					if proxy.AccessPostfix == "" {
-						return ""
-					} else {
-						return proxy.AccessPostfix[:len(proxy.AccessPostfix)-1]
-					}
-				}() + c.Request.URL.Path
+			// 	requestURL := proxy.ProxyURL + func() string {
+			// 		if proxy.AccessPostfix == "" {
+			// 			return ""
+			// 		} else {
+			// 			return proxy.AccessPostfix[:len(proxy.AccessPostfix)-1]
+			// 		}
+			// 	}() + c.Request.URL.Path
 
-				resp, err := http.Get(requestURL)
-				if err != nil {
-					log.Println(err)
-					continue
-				} else if resp.StatusCode == 404 {
-					if i == len(Proxies)-1 {
-						cat.SendError(cat.Response{Status: http.StatusNotFound, Error: []string{"File Not Found on Server"}}, c)
-						return
-					}
-					continue
-				} else {
-					log.Printf("Request sent to proxy %v is redirecting traffic from %v to %v", proxy, c.Request.URL.Path, proxy.AccessPrefix[:len(proxy.AccessPrefix)-1]+c.Request.URL.Path)
-					c.Redirect(http.StatusMovedPermanently, proxy.AccessPrefix[:len(proxy.AccessPrefix)-1]+c.Request.URL.Path)
-				}
+			// 	resp, err := http.Get(requestURL)
+			// 	if err != nil {
+			// 		log.Println(err)
+			// 		continue
+			// 	} else if resp.StatusCode == 404 {
+			// 		if i == len(Proxies)-1 {
+			// 			cat.SendError(cat.Response{Status: http.StatusNotFound, Error: []string{"File Not Found on Server"}}, c)
+			// 			return
+			// 		}
+			// 		continue
+			// 	} else {
+			// 		log.Printf("Request sent to proxy %v is redirecting traffic from %v to %v", proxy, c.Request.URL.Path, proxy.AccessPrefix[:len(proxy.AccessPrefix)-1]+c.Request.URL.Path)
+			// 		c.Redirect(http.StatusMovedPermanently, proxy.AccessPrefix[:len(proxy.AccessPrefix)-1]+c.Request.URL.Path)
+			// 	}
 
-			}
+			// }
 
 		} else {
 
@@ -154,10 +155,6 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 	proxy.Director = func(req *http.Request) {
 
 		//Setting the connection up so it looks like its not form the Reverse Proxy Server
-		// host, _, err := net.SplitHostPort(req.RemoteAddr)
-		// if err != nil {
-		// 	log.Println(err)
-		// }
 		req.Header = c.Request.Header
 		req.Header.Set("X-Forwarded-For", req.RemoteAddr)
 		req.Header.Set("X-Forwarded-Host", c.Request.Host)
