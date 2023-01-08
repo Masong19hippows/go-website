@@ -3,7 +3,8 @@ package proxy
 import (
 	"bytes"
 	"encoding/json"
-	"io/ioutil"
+	"fmt"
+	"io"
 	"log"
 	"net"
 	"net/http"
@@ -50,7 +51,7 @@ func reloadProxies() {
 	if err != nil {
 		log.Println(err)
 	}
-	byteValue, _ := ioutil.ReadAll(jsonFile)
+	byteValue, _ := io.ReadAll(jsonFile)
 	json.Unmarshal(byteValue, &Proxies)
 	Proxies = append(Proxies, Proxy{AccessPrefix: "/proxy/", ProxyURL: "http://localhost:6000", AccessPostfix: ""})
 	jsonFile.Close()
@@ -169,6 +170,12 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 
 	//Modify the response so that links/redirects work
 	proxy.ModifyResponse = func(resp *http.Response) (err error) {
+		// Returning 404 if getting a 404
+		if resp.StatusCode == 404 {
+			cat.SendError(cat.Response{Status: http.StatusNotFound, Error: []string{"File Not Found on Server"}}, c)
+			return nil
+
+		}
 		//Filter out the proxy reverse manager unless its from an internal ip address
 		if lookup.AccessPrefix == "/proxy/" {
 			host, _, err := net.SplitHostPort(resp.Request.RemoteAddr)
@@ -183,8 +190,12 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 				}
 			}
 		}
+
 		//Correcting The response body so that href links work
-		b, err := ioutil.ReadAll(resp.Body) //Read html
+		b, err := io.ReadAll(resp.Body) //Read html
+		defer resp.Body.Close()
+		fmt.Println(resp.Header.Get("Content-type"))
+
 		if err != nil {
 			log.Println(err)
 		}
@@ -196,7 +207,7 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 		b = bytes.Replace(b, []byte("href=\"/"), []byte("href=\""+lookup.AccessPrefix), -1)
 		b = bytes.Replace(b, []byte("href=\""+remote.String()), []byte("href=\""+c.Request.URL.Scheme+"://"+c.Request.URL.Host+lookup.AccessPrefix), -1) // replace html
 		b = bytes.Replace(b, []byte("bref=\""), []byte("href=\"https://"), -1)
-		body := ioutil.NopCloser(bytes.NewReader(b))
+		body := io.NopCloser(bytes.NewReader(b))
 		resp.Body = body
 
 		//Correcting The response location for redirects
@@ -218,11 +229,7 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 			resp.Header.Set("location", newLocation)
 			log.Printf("Response from proxy is redirecting from %v and now to %v", location, newLocation)
 		}
-		if resp.StatusCode == 404 {
-			cat.SendError(cat.Response{Status: http.StatusNotFound, Error: []string{"File Not Found on Server"}}, c)
-			return nil
 
-		}
 		resp.ContentLength = int64(len(b))
 		resp.Header.Set("Content-Length", strconv.Itoa(len(b)))
 		return nil

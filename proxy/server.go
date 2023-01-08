@@ -1,10 +1,10 @@
 package proxy
 
 import (
+	"crypto/tls"
 	"encoding/json"
 	"errors"
 	"io"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"net/url"
@@ -13,8 +13,6 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
-	"crypto/tls"
-
 
 	"github.com/gin-gonic/gin"
 	cat "github.com/masong19hippows/go-website/catError"
@@ -98,7 +96,7 @@ func createProxy(webServer string, prefix string, postfix string) error {
 		jsonFile.Close()
 		log.Println("Cannot open Proxies.json. Error is : ", err)
 	} else {
-		byteValue, _ := ioutil.ReadAll(jsonFile)
+		byteValue, _ := io.ReadAll(jsonFile)
 		json.Unmarshal(byteValue, &temp)
 		temp = append(temp, Proxy{AccessPrefix: prefix, ProxyURL: webServer, AccessPostfix: postfix})
 		jsonFile.Close()
@@ -170,19 +168,19 @@ func deleteProxy(index int) error {
 
 func server() {
 	ex, err := os.Executable()
-    if err != nil {
-        	panic(err)
-    }
-    exPath := filepath.Dir(ex)
+	if err != nil {
+		panic(err)
+	}
+	exPath := filepath.Dir(ex)
 	gin.SetMode(gin.ReleaseMode)
 	router := gin.New()
-	router.StaticFile("/", exPath + "/proxy/web/index.html")
-	router.StaticFile("/index.html", exPath + "/proxy/web/index.html")
-	router.StaticFile("/proxy", exPath + "/proxy/web/index.html")
-	router.StaticFile("/proxies.json", exPath + "/proxy/web/proxies.json")
-	router.StaticFile("/proxy/proxies.json", exPath + "/proxy/web/proxies.json")
-	router.StaticFile("/index.css", exPath + "/proxy/web/index.css")
-	router.StaticFile("/proxy/index.css", exPath + "/proxy/web/index.css")
+	router.StaticFile("/", exPath+"/proxy/web/index.html")
+	router.StaticFile("/index.html", exPath+"/proxy/web/index.html")
+	router.StaticFile("/proxy", exPath+"/proxy/web/index.html")
+	router.StaticFile("/proxies.json", exPath+"/proxy/web/proxies.json")
+	router.StaticFile("/proxy/proxies.json", exPath+"/proxy/web/proxies.json")
+	router.StaticFile("/index.css", exPath+"/proxy/web/index.css")
+	router.StaticFile("/proxy/index.css", exPath+"/proxy/web/index.css")
 	router.NoRoute(func(c *gin.Context) {
 		cat.SendError(cat.Response{Status: http.StatusNotFound, Error: []string{"File Not Found on Server"}}, c)
 	})
@@ -209,7 +207,7 @@ func server() {
 			}
 		}
 	})
-    http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
+	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 	err = router.Run("0.0.0.0:6000")
 	if err != nil {
 		panic(err)
