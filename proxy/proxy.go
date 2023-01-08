@@ -192,9 +192,9 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 		}
 
 		//Correcting The response body so that href links work
+		fmt.Println(resp.Header.Get("Content-type"))
 		b, err := io.ReadAll(resp.Body) //Read html
 		defer resp.Body.Close()
-		fmt.Println(resp.Header.Get("Content-type"))
 
 		if err != nil {
 			log.Println(err)
