@@ -2,11 +2,9 @@ package main
 
 import (
 	"flag"
-	"log"
 	"net/http"
 	"os"
 	"path/filepath"
-	"strconv"
 
 	"github.com/gin-gonic/autotls"
 	"github.com/gin-gonic/gin"
@@ -23,10 +21,7 @@ func main() {
 	exPath := filepath.Dir(ex)
 
 	//get port flag and password flag
-	portHTTP := flag.Int("portHTTP", 80, "Select the port that you wish the http server to run on")
 	password := flag.String("password", "", "Choose the app password obtained form no-reply email account")
-	flag.Parse()
-	log.Println("Using port", *portHTTP, "For http webserver and port 443 for https server")
 
 	// non-verbose
 	gin.SetMode(gin.ReleaseMode)
@@ -42,7 +37,7 @@ func main() {
 
 	ch := make(chan error)
 	go func(ch chan error) {
-		err := router.Run("0.0.0.0:" + strconv.Itoa(*portHTTP))
+		err := router.Run("0.0.0.0:80")
 		ch <- err
 	}(ch)
 	go func(ch chan error) {

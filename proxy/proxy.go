@@ -3,7 +3,6 @@ package proxy
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"io"
 	"log"
 	"net"
@@ -192,7 +191,16 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 		}
 
 		//Correcting The response body so that href links work
-		fmt.Println(resp.Header.Get("Content-type"))
+		// if strings.Contains(resp.Header.Get("Content-type"), "multipart/x-mixed-replace") {
+		// 	buf := make([]byte, 4)
+		// 	for {
+		// 		n, err := resp.Body.Read(buf)
+		// 		if err == io.EOF {
+		// 			break
+		// 		}
+		// 		c.Data(resp.StatusCode, resp.Header.Get("Content-type"), n)
+		// 	}
+		// }
 		b, err := io.ReadAll(resp.Body) //Read html
 		defer resp.Body.Close()
 
