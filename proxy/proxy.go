@@ -124,7 +124,15 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 
 		//Setting the connection up so it looks like its not form the Reverse Proxy Server
 		req.Header = c.Request.Header
-		req.Header.Set("X-Forwarded-For", req.RemoteAddr)
+		
+		ip, _, err := net.SplitHostPort(req.RemoteAddr)
+    		if err != nil {
+			log.Println(err)
+    		}
+		
+		req.Header.Set("X-Forwarded-For", ip)
+		log.Println(req.RemoteAddr)
+		log.Println(req.RemoteAddr)
 		req.Header.Set("X-Forwarded-Host", c.Request.Host)
 		req.Header.Set("X-Scheme", remote.Scheme)
 		req.Header.Set("X-Script-Name", lookup.AccessPrefix[:len(lookup.AccessPrefix)-1])
