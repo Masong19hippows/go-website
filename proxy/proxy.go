@@ -142,6 +142,8 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 		}
 		
 		req.Header.Set("X-Real-IP", ips[0].String())
+		req.Header.Set("Upgrade", req.Header.Get("Upgrade"))
+		req.Header.Set("Connection", "upgrade")
 
 		
 		path := strings.Replace(c.Request.URL.Path, lookup.AccessPrefix, "", -1)
