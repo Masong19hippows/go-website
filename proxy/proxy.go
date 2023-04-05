@@ -136,7 +136,7 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 		req.Header.Set("X-Forwarded-Proto", remote.Scheme)
 		req.Header.Set("X-Script-Name", lookup.AccessPrefix[:len(lookup.AccessPrefix)-1])
 		req.Host = remote.Host
-		ip, err := net.LookupIP(c.Request.Host)
+		ips, err := net.LookupIP(c.Request.Host)
 		if err != nil {
 			log.Fatal(err)
 		}
