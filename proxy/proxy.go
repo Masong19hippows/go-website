@@ -130,7 +130,7 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 			log.Println(err)
     		}
 		
-		req.Header.Set("X-Forwarded-For", ip + ", " + c.Request.Host)
+		req.Header.Set("X-Forwarded-For", ip)
 		req.Header.Set("X-Forwarded-Host", c.Request.Host)
 		req.Header.Set("X-Scheme", remote.Scheme)
 		req.Header.Set("X-Forwarded-Proto", remote.Scheme)
@@ -138,7 +138,7 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 		req.Host = remote.Host
 		req.Header.Set("X-Real-IP", c.Request.Host)
 
-		log.Println(ip + ", " + c.Request.Host)
+		log.Println(ip)
 		log.Println(c.Request.Host)
 		log.Println(remote.Scheme)
 		log.Println(remote.Scheme)
