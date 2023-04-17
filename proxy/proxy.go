@@ -132,6 +132,7 @@ func lookProxy(lookup Proxy, c *gin.Context) {
     		}
 		
 		req.Header.Set("X-Forwarded-For", ip)
+		req.Header.Set("X-Frame-Options", "SAMEORIGIN")
 		req.Header.Set("X-Forwarded-Host", c.Request.Host)
 		req.Header.Set("X-Scheme", remote.Scheme)
 		req.Header.Set("X-Forwarded-Proto", remote.Scheme)
