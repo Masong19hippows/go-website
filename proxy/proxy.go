@@ -60,7 +60,7 @@ func reloadProxies() {
 // This is the middleware that handles the dynamic selection of proxies
 func Handler(c *gin.Context) {
 
-	log.Printf("Client requested %v", c.Request)
+	log.Printf("Client requested %v", c.Request.URL)
 
 	//Redirecting http to https
 	if c.Request.TLS == nil {
@@ -124,6 +124,7 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 
 		//Setting the connection up so it looks like its not form the Reverse Proxy Server
 		req.Header = c.Request.Header
+		log.Println(req.Header)
 		
 		ip, _, err := net.SplitHostPort(req.RemoteAddr)
     		if err != nil {
@@ -204,25 +205,13 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 				}
 			}
 		}
-
-		//Correcting The response body so that href links work
-		// if strings.Contains(resp.Header.Get("Content-type"), "multipart/x-mixed-replace") {
-		// 	buf := make([]byte, 4)
-		// 	for {
-		// 		n, err := resp.Body.Read(buf)
-		// 		if err == io.EOF {
-		// 			break
-		// 		}
-		// 		c.Data(resp.StatusCode, resp.Header.Get("Content-type"), n)
-		// 	}
-		// }
+		
 		b, err := io.ReadAll(resp.Body) //Read html
 		defer resp.Body.Close()
 
 		if err != nil {
 			log.Println(err)
 		}
-		err = resp.Body.Close()
 		if err != nil {
 			log.Println(err)
 		}
@@ -260,6 +249,7 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 		}
 
 		resp.ContentLength = int64(len(b))
+		log.Println(resp.Header)
 		resp.Header.Set("Content-Length", strconv.Itoa(len(b)))
 		return nil
 	}
