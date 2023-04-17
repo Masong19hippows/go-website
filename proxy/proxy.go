@@ -124,7 +124,6 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 
 		//Setting the connection up so it looks like its not form the Reverse Proxy Server
 		req.Header = c.Request.Header
-		log.Println(req.Header)
 		
 		ip, _, err := net.SplitHostPort(req.RemoteAddr)
     		if err != nil {
@@ -250,7 +249,6 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 		}
 
 		resp.ContentLength = int64(len(b))
-		log.Println(resp.Header)
 		resp.Header.Set("Content-Length", strconv.Itoa(len(b)))
 		return nil
 	}
