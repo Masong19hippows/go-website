@@ -60,7 +60,7 @@ func reloadProxies() {
 // This is the middleware that handles the dynamic selection of proxies
 func Handler(c *gin.Context) {
 
-	log.Printf("Client requested %v", c.Request.URL)
+	log.Printf("Client requested %v", c.Request)
 
 	//Redirecting http to https
 	if c.Request.TLS == nil {
