@@ -185,7 +185,7 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 		if err != nil {
 			log.Println(err)
 		}
-		req.Header.Set("Content-Type", res.Header["Content-Type"])
+		req.Header.Set("Content-Type", res.Header["Content-Type"][0])
 
 	}
 
