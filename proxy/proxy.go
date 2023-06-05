@@ -268,7 +268,7 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 	}
 
 	//Serve content that was modified
-	proxy.ServeHTTP(c.Writer, c.Request)
+	proxy.ServeHTTP(nil, nil)
 
 	return
 
