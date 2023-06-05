@@ -253,6 +253,7 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 
 		resp.ContentLength = int64(len(b))
 		resp.Header.Set("Content-Length", strconv.Itoa(len(b)))
+		req.Header.Set("Content-Type", res.Header["Content-Type"][0])
 		return nil
 	}
 
