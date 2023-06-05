@@ -257,13 +257,11 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 
 		resp.ContentLength = int64(len(b))
 		resp.Header.Set("Content-Length", strconv.Itoa(len(b)))
-		log.Println(c.Writer.Header().Get("Content-Type"))
+		fmt.Println(resp)
 		return nil
 	}
 
 	//Serve content that was modified
-
-	fmt.Println(c.Writer)
 	proxy.ServeHTTP(c.Writer, c.Request)
 
 	return
