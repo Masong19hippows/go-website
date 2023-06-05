@@ -182,12 +182,7 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 		} else {
 			log.Printf("Trying to access %v with the proxy %v", req.URL, lookup)
 		}
-		res, err := http.Get(req.URL.String())
-		if err != nil {
-			log.Println(err)
-		}
-		// req.Header.Set("Content-Type", res.Header["Content-Type"][0])
-
+		
 	}
 
 	//Modify the response so that links/redirects work
