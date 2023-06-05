@@ -110,7 +110,7 @@ func Handler(c *gin.Context) {
 }
 
 // look up the url on the proxy. Send a 404 cat if not found
-func lookProxy(lookup Proxy, c *gin.Context) {
+func lookProxy(lookup, c *gin.Context) {
 
 	//Setting up a proxy connection
 	remote, err := url.Parse(lookup.ProxyURL)
