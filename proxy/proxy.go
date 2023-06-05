@@ -263,7 +263,7 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 
 	//Serve content that was modified
 
-	fmt.Println(c.writer)
+	fmt.Println(c.Writer)
 	proxy.ServeHTTP(c.Writer, c.Request)
 
 	return
