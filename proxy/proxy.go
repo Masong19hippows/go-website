@@ -208,6 +208,12 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 				}
 			}
 		}
+
+		res, err := http.Get(resp.Request.URL.String())
+		if err != nil {
+			log.Fatalln(err)
+		}
+		log.Println(resp.Request.URL.String())
 		resp.Header.Set("Content-Type", res.Header["Content-Type"])
 
 		b, err := io.ReadAll(resp.Body) //Read html
@@ -252,10 +258,7 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 			log.Printf("Response from proxy is redirecting from %v and now to %v", location, newLocation)
 		}
 
-		res, err := http.Get(resp.Request.URL.String())
-		if err != nil {
-			log.Fatalln(err)
-		}
+
 
 
 		resp.ContentLength = int64(len(b))
