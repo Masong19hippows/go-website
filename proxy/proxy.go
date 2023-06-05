@@ -15,6 +15,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"fmt"
 
 	"github.com/gin-gonic/gin"
 	cat "github.com/masong19hippows/go-website/catError"
@@ -261,6 +262,10 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 	}
 
 	//Serve content that was modified
+
+	fmt.Println(c.writer)
 	proxy.ServeHTTP(c.Writer, c.Request)
+
+	return
 
 }
