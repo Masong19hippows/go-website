@@ -189,7 +189,7 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 	proxy.ModifyResponse = func(resp *http.Response) (err error) {
 		// Returning 404 if getting a 404
 		if resp.StatusCode == 404 {
-			log.Println("got 404 with" + http.Response.Request.URL.String())
+			log.Println("got 404 with" + resp.Request.URL.String())
 			cat.SendError(cat.Response{Status: http.StatusNotFound, Error: []string{"File Not Found on Server"}}, c)
 			return nil
 
