@@ -251,7 +251,7 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 			log.Printf("Response from proxy is redirecting from %v and now to %v", location, newLocation)
 		}
 
-		resp, err := http.Get(resp.Request.URL)
+		res, err := http.Get(resp.Request.URL.String())
 		if err != nil {
 			log.Fatalln(err)
 		}
