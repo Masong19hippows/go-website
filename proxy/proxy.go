@@ -208,7 +208,8 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 				}
 			}
 		}
-		
+		resp.Header.Set("Content-Type", res.Header["Content-Type"])
+
 		b, err := io.ReadAll(resp.Body) //Read html
 		defer resp.Body.Close()
 
@@ -255,8 +256,7 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 		if err != nil {
 			log.Fatalln(err)
 		}
-		log.Println(res.Header["Content-Type"])
-		resp.Header.Set("Content-Type", res.Header["Content-Type"][0])
+
 
 		resp.ContentLength = int64(len(b))
 		resp.Header.Set("Content-Length", strconv.Itoa(len(b)))
