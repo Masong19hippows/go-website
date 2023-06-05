@@ -15,7 +15,6 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
-	"fmt"
 
 	"github.com/gin-gonic/gin"
 	cat "github.com/masong19hippows/go-website/catError"
@@ -121,7 +120,7 @@ func Handler(c *gin.Context) {
 					continue
 				} else {
 					log.Printf("Request sent to proxy %v is redirecting traffic from %v to %v", proxy, c.Request.URL.Path, proxy.AccessPrefix[:len(proxy.AccessPrefix)-1]+c.Request.URL.Path)
-					c.Redirect(http.StatusMovedTemporarily, proxy.AccessPrefix[:len(proxy.AccessPrefix)-1]+c.Request.URL.Path)
+					c.Redirect(307, proxy.AccessPrefix[:len(proxy.AccessPrefix)-1]+c.Request.URL.Path)
 				}
 
 			}
