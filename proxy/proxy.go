@@ -252,16 +252,16 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 				}
 			}()
 			resp.Header.Set("location", newLocation)
-			log.Printf("Response from proxy is redirecting from %v and now to %v", location, newLocation)
+			// log.Printf("Response from proxy is redirecting from %v and now to %v", location, newLocation)
 		}
 
 		resp.ContentLength = int64(len(b))
 		resp.Header.Set("Content-Length", strconv.Itoa(len(b)))
-		fmt.Println(resp)
 		return nil
 	}
 
 	//Serve content that was modified
+	log.Println(c.Request.URL + " is actually " + c.Writer.Status() + " on the backed")
 	proxy.ServeHTTP(c.Writer, c.Request)
 
 	return
