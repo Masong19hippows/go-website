@@ -261,7 +261,7 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 	}
 
 	//Serve content that was modified
-	log.Println(c.Request.URL.String() + " is actually " + c.Writer.Status() + " on the backed")
+	log.Println(c.Request.URL.String() + " is actually " + c.Writer.Status().String() + " on the backed")
 	proxy.ServeHTTP(c.Writer, c.Request)
 
 	return
