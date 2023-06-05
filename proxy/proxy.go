@@ -61,6 +61,7 @@ func reloadProxies() {
 func Handler(c *gin.Context) {
 
 	log.Printf("Client requested %v", c.Request.URL)
+	log.Println(c.Request.URL.Scheme)
 
 	//Redirecting http to https
 	if c.Request.TLS == nil {
