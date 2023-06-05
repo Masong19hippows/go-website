@@ -98,8 +98,33 @@ func Handler(c *gin.Context) {
 		//Only pass if there is no proxy associated with the directory.
 		//If the proxy doesn't exist, then a 404 is sent with a picture of a cat
 		if (Proxy{}) == final {
-			cat.SendError(cat.Response{Status: http.StatusNotFound, Error: []string{"File Not Found on Server"}}, c)
-			return
+			// Loop through proxies and find one that mjatches the prefix
+			for i, proxy := range Proxies {
+
+				requestURL := proxy.ProxyURL + func() string {
+					if proxy.AccessPostfix == "" {
+						return ""
+					} else {
+						return proxy.AccessPostfix[:len(proxy.AccessPostfix)-1]
+					}
+				}() + c.Request.URL.Path
+
+				resp, err := http.Get(requestURL)
+				if err != nil {
+					log.Println(err)
+					continue
+				} else if resp.StatusCode == 404 {
+					if i == len(Proxies)-1 {
+						cat.SendError(cat.Response{Status: http.StatusNotFound, Error: []string{"File Not Found on Server"}}, c)
+						return
+					}
+					continue
+				} else {
+					log.Printf("Request sent to proxy %v is redirecting traffic from %v to %v", proxy, c.Request.URL.Path, proxy.AccessPrefix[:len(proxy.AccessPrefix)-1]+c.Request.URL.Path)
+					c.Redirect(http.StatusMovedTemporarily, proxy.AccessPrefix[:len(proxy.AccessPrefix)-1]+c.Request.URL.Path)
+				}
+
+			}
 		} else {
 			//Look up the directory in the proxy
 			lookProxy(final, c)
@@ -248,7 +273,7 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 				}
 			}()
 			resp.Header.Set("location", newLocation)
-			// log.Printf("Response from proxy is redirecting from %v and now to %v", location, newLocation)
+			log.Printf("Response from proxy is redirecting from %v and now to %v", location, newLocation)
 		}
 
 		resp.ContentLength = int64(len(b))
@@ -257,7 +282,6 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 	}
 
 	//Serve content that was modified
-	fmt.Println(c.Request.URL.String() + " is actually " + strconv.Itoa(c.Writer.Status()) + " on the backed")
 	proxy.ServeHTTP(c.Writer, c.Request)
 
 	return
