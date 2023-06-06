@@ -3,6 +3,7 @@ package proxy
 import (
 	"bytes"
 	"encoding/json"
+	"io"
 	"io/ioutil"
 	"log"
 	"net"
@@ -221,8 +222,11 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 		if err != nil {
 			log.Println(err)
 		}
-		// resonceString := string(b)
-		fmt.Printf("b is %v and of type %t", resp.Body, resp.Body)
+
+		buf := new(strings.Builder)
+		n, err := io.Copy(buf, resp.Body)
+		// check errors
+		fmt.Println(buf.String())
 
 		b = bytes.Replace(b, []byte("href=\"https://"), []byte("bref=\""), -1)
 		b = bytes.Replace(b, []byte("href=\"/"), []byte("href=\""+lookup.AccessPrefix), -1)
