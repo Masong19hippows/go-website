@@ -215,7 +215,7 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 		}
 		resp.Header.Set("Content-Type", res.Header["Content-Type"][0])
 		buf := new(bytes.Buffer)
-		buf.ReadFrom(response.Body)
+		buf.ReadFrom(resp.Body)
 		newStr := buf.String()
 	
 		fmt.Printf(newStr)
@@ -224,8 +224,6 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 		if err != nil {
 			log.Fatalln(err)
 		}
-
-		fmt.Println([]byte())
 
 		b = bytes.Replace(b, []byte("href=\"https://"), []byte("bref=\""), -1)
 		b = bytes.Replace(b, []byte("href=\"/"), []byte("href=\""+lookup.AccessPrefix), -1)
