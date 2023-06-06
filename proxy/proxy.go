@@ -67,6 +67,7 @@ func Handler(c *gin.Context) {
 
 		host_parts := strings.Split(c.Request.URL.Host, ".")
 		subdomain := host_parts[0]
+		log.Println(subdomain)
 
 		reloadProxies()
 
