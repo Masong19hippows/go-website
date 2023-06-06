@@ -221,7 +221,7 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 		if err != nil {
 			log.Fatalln(err)
 		}
-		t, _ := hex.DecodeString(b)
+		t, _ := hex.DecodeString(string(b))
 		json := string(t)
 		fmt.Println(json)
 
