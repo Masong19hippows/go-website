@@ -191,7 +191,7 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 		// Returning 404 if getting a 404
 		if resp.StatusCode == 404 {
 			log.Println("got 404 with" + resp.Request.URL.String())
-			cat.SendError(cat.Response{Status: http.StatusNotFound, Error: []string{"File Not Found on Server"}}, c)
+			// cat.SendError(cat.Response{Status: http.StatusNotFound, Error: []string{"File Not Found on Server"}}, c)
 			return nil
 
 		}
@@ -221,9 +221,6 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 		if err != nil {
 			log.Fatalln(err)
 		}
-		t, _ := hex.DecodeString(string(b))
-		json := string(t)
-		fmt.Println(json)
 
 		b = bytes.Replace(b, []byte("href=\"https://"), []byte("bref=\""), -1)
 		b = bytes.Replace(b, []byte("href=\""), []byte("href=\""+lookup.AccessPrefix), -1)
