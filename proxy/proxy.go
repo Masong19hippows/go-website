@@ -61,8 +61,7 @@ func reloadProxies() {
 // This is the middleware that handles the dynamic selection of proxies
 func Handler(c *gin.Context) {
 
-	log.Printf("Client requested %v", c.Request.URL)
-	log.Println(c.Request.URL.Scheme)
+	// log.Printf("Client requested %v", c.Request.URL)
 
 	//Redirecting http to https
 	if c.Request.TLS == nil {
@@ -212,7 +211,7 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 
 		res, err := http.Get(resp.Request.URL.String())
 		if err != nil {
-			log.Fatalln(err)
+			log.Println(err)
 		}
 		resp.Header.Set("Content-Type", res.Header["Content-Type"][0])
 
@@ -254,7 +253,7 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 				}
 			}()
 			resp.Header.Set("location", newLocation)
-			log.Printf("Response from proxy is redirecting from %v and now to %v", location, newLocation)
+			// log.Printf("Response from proxy is redirecting from %v and now to %v", location, newLocation)
 		}
 
 
