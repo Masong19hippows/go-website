@@ -67,7 +67,6 @@ func Handler(c *gin.Context) {
 
 		host_parts := strings.Split(c.Request.Host, ".")
 		subdomain := host_parts[0]
-		log.Println(subdomain)
 
 		reloadProxies()
 
@@ -138,9 +137,6 @@ func Handler(c *gin.Context) {
 			//Look up the directory in the proxy
 			lookProxy(final, c)
 		}
-
-		// move on to other handlers
-		c.Next()
 	}
 }
 
@@ -248,7 +244,7 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 
 
 		b, err := io.ReadAll(resp.Body) //Read html
-		resp.Body.Close()
+		defer resp.Body.Close()
 		if err != nil {
 			log.Fatalln(err)
 		}
