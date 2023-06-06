@@ -52,7 +52,7 @@ func main() {
 		
 		m := autocert.Manager{
 			Prompt:     autocert.AcceptTOS,
-			HostPolicy: autocert.HostWhitelist(...list),
+			HostPolicy: autocert.HostWhitelist(list),
 			Cache:      autocert.DirCache(exPath + "/certs"),
 		}
 		err := autotls.RunWithManager(router, &m)
