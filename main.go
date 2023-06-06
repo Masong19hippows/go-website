@@ -44,7 +44,7 @@ func main() {
 
 		var list []string 
 		append(list, "masongarten.com")
-		for _, proxy := range Proxies {
+		for _, proxy := range proxy.Proxies {
 			if proxy.Hostname == true {
 				append(list, proxy.Hostname + ".masongarten.com")
 			}
@@ -52,7 +52,7 @@ func main() {
 		
 		m := autocert.Manager{
 			Prompt:     autocert.AcceptTOS,
-			HostPolicy: autocert.HostWhitelist(list),
+			HostPolicy: autocert.HostWhitelist(list...),
 			Cache:      autocert.DirCache(exPath + "/certs"),
 		}
 		err := autotls.RunWithManager(router, &m)
