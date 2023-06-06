@@ -42,7 +42,7 @@ func main() {
 	}(ch)
 	go func(ch chan error) {
 
-		list []string 
+		var list []string 
 		append(list, "masongarten.com")
 		for _, proxy := range Proxies {
 			if proxy.Hostname == true {
