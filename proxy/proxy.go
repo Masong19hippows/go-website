@@ -76,7 +76,7 @@ func Handler(c *gin.Context) {
 			if !proxy.Hostname {
 				continue
 			}
-			if proxy.AccessPrefix == prefix {
+			if proxy.AccessPrefix == subdomain {
 				final = proxy
 				break
 			}
@@ -182,13 +182,13 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 		req.Header.Set("Connection", "upgrade")
 		
 		
-		if !lookup.Hostname {
-			req.Header.Set("X-Script-Name", lookup.AccessPrefix[:len(lookup.AccessPrefix)-1])
-			path := strings.Replace(c.Request.URL.Path, lookup.AccessPrefix, "", -1)
-			if path == lookup.AccessPrefix[:len(lookup.AccessPrefix)-1] {
-				path = ""
-			}
+
+		req.Header.Set("X-Script-Name", lookup.AccessPrefix[:len(lookup.AccessPrefix)-1])
+		path := strings.Replace(c.Request.URL.Path, lookup.AccessPrefix, "", -1)
+		if path == lookup.AccessPrefix[:len(lookup.AccessPrefix)-1] {
+			path = ""
 		}
+
 
 
 		req.URL, err = url.Parse(remote.Scheme + "://" + remote.Host + func() string {
@@ -232,20 +232,20 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 			return nil
 
 		}
-		//Filter out the proxy reverse manager unless its from an internal ip address
-		if lookup.AccessPrefix == "/proxy/" {
-			host, _, err := net.SplitHostPort(resp.Request.RemoteAddr)
-			if err != nil {
-				log.Println(err)
-			} else {
-				ip := net.ParseIP(host)
-				if !ip.IsPrivate() {
-					log.Printf("Denied Acces to Proxy from %v", ip)
-					cat.SendError(cat.Response{Status: http.StatusNotFound, Error: []string{"Not a Private IP Address"}}, c)
-					return nil
-				}
-			}
-		}
+		// //Filter out the proxy reverse manager unless its from an internal ip address
+		// if lookup.AccessPrefix == "/proxy/" {
+		// 	host, _, err := net.SplitHostPort(resp.Request.RemoteAddr)
+		// 	if err != nil {
+		// 		log.Println(err)
+		// 	} else {
+		// 		ip := net.ParseIP(host)
+		// 		if !ip.IsPrivate() {
+		// 			log.Printf("Denied Acces to Proxy from %v", ip)
+		// 			cat.SendError(cat.Response{Status: http.StatusNotFound, Error: []string{"Not a Private IP Address"}}, c)
+		// 			return nil
+		// 		}
+		// 	}
+		// }
 
 
 		b, err := io.ReadAll(resp.Body) //Read html

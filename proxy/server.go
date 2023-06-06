@@ -74,18 +74,19 @@ func createProxy(webServer string, prefix string, postfix string, hostname bool)
 		} else if prefix == "" {
 			return errors.New("no selection made")
 		}
+
+		// Check if its the same as any other Proxy
+		for _, proxy := range Proxies {
+			if prefix == proxy.AccessPrefix {
+				return errors.New("prefix already exists: " + prefix)
+			}
+			if fixedURL == proxy.ProxyURL+proxy.AccessPostfix {
+				return errors.New("URL already exists: " + fixedURL)
+			}
+		}
 	}
 
 
-	// Check if its the same as any other Proxy
-	for _, proxy := range Proxies {
-		if prefix == proxy.AccessPrefix {
-			return errors.New("prefix already exists: " + prefix)
-		}
-		if fixedURL == proxy.ProxyURL+proxy.AccessPostfix {
-			return errors.New("URL already exists: " + fixedURL)
-		}
-	}
 
 	//Using the temporary
 	temp = nil
@@ -190,7 +191,7 @@ func server() {
 	})
 
 	router.POST("/create", func(c *gin.Context) {
-		err := createProxy(c.PostForm("url"), c.PostForm("prefix"), c.PostForm("postfix"))
+		err := createProxy(c.PostForm("url"), c.PostForm("prefix"), c.PostForm("postfix"), c.PostForm("hostname"))
 		if err != nil {
 			c.Data(http.StatusOK, "text/html; charset=utf-8", []byte("<html><script> window.alert('Failed to Create Proxy. Error: "+err.Error()+"'); window.location.href='/proxy'; </script> </html>"))
 		} else {

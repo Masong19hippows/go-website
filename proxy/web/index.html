@@ -66,6 +66,7 @@
                     <th>Access Prefix</th>
                     <th>Proxy URL</th>
                     <th>Access Postfix</th>
+                    <th>Hostname</th>
                     <th>Delete</th>
                 </thead>
                 
@@ -88,12 +89,12 @@
           <script> $(function() {
                 var people = [];
                 $.getJSON('/proxy/proxies.json?nocache=' + (new Date()).getTime(), function(data) {
-                  var first = "<tr>" + "<td>"+"/proxy/"+"</td>" + "<td>" + "http://localhost:6000" + "</td>" + "<td>" + "" + "</td>"+ "<td>"+"</td>" +"</tr>"
+                  var first = "<tr>" + "<td>"+"/proxy/"+"</td>" + "<td>" + "http://localhost:6000" + "</td>" + "<td>" + "" + "</td>" + "<td>" + "false" + "</td>" + "<td>"+"</td>" +"</tr>"
                   $(first).appendTo("#userdata tbody");
                 $.each(data, function(i, f) {
                   
                     var tblRow = "<tr>" + "<td>" +  "<a href="+f.accessPrefix.slice(0, -1)+">"+f.accessPrefix+"</a>" + "</td>" +
-                    "<td>" +"<a href="+f.proxyURL+">"+f.proxyURL+"</a>"+ "</td>" + "<td>" + "<a href="+f.proxyURL+f.accessPostfix.slice(0, -1)+">"+f.accessPostfix+"</a>" + "</td>" +"<td>" + 
+                    "<td>" +"<a href="+f.proxyURL+">"+f.proxyURL+"</a>"+ "</td>" + "<td>" + "<a href="+f.proxyURL+f.accessPostfix.slice(0, -1)+">"+f.accessPostfix+"</a>" + "</td>" + "<td>" + f.hostname + "</td>" + "<td>" + 
                     "<a href='/proxy/delete/" + i + "'> <i class='fa-solid fa-trash-can' title='Trash'></i></a>" + "</td>" +"</tr>"
                     
                     $(tblRow).appendTo("#userdata tbody");
