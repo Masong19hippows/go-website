@@ -15,8 +15,6 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
-	"fmt"
-	"encoding/hex"
 
 	"github.com/gin-gonic/gin"
 	cat "github.com/masong19hippows/go-website/catError"
