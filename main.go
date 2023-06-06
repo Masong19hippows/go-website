@@ -41,9 +41,18 @@ func main() {
 		ch <- err
 	}(ch)
 	go func(ch chan error) {
+
+		list []string 
+		append(list, "masongarten.com")
+		for _, proxy := range Proxies {
+			if proxy.Hostname == true {
+				append(list, proxy.Hostname + ".masongarten.com")
+			}
+		}
+		
 		m := autocert.Manager{
 			Prompt:     autocert.AcceptTOS,
-			HostPolicy: autocert.HostWhitelist("masongarten.com"),
+			HostPolicy: autocert.HostWhitelist(...list),
 			Cache:      autocert.DirCache(exPath + "/certs"),
 		}
 		err := autotls.RunWithManager(router, &m)
