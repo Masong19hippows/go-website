@@ -221,8 +221,8 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 		if err != nil {
 			log.Println(err)
 		}
-		resonceString := string(b)
-		fmt.Println(resonceString)
+		// resonceString := string(b)
+		fmt.Printf("b is %v and of type %t", resp.Body, resp.Body)
 
 		b = bytes.Replace(b, []byte("href=\"https://"), []byte("bref=\""), -1)
 		b = bytes.Replace(b, []byte("href=\"/"), []byte("href=\""+lookup.AccessPrefix), -1)
