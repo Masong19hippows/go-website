@@ -67,7 +67,7 @@ func Handler(c *gin.Context) {
 	if (c.Request.URL.Host != "masongarten.com"){
 
 		host_parts := strings.Split(c.Request.URL.Host, ".")
-		subdomain := []string{host_parts[0]}
+		subdomain := host_parts[0]
 
 		reloadProxies()
 

@@ -191,7 +191,11 @@ func server() {
 	})
 
 	router.POST("/create", func(c *gin.Context) {
-		err := createProxy(c.PostForm("url"), c.PostForm("prefix"), c.PostForm("postfix"), c.PostForm("hostname"))
+		hostname := false
+		if (c.PostForm("hostname") == "true"){
+			hostname = true
+		}
+		err := createProxy(c.PostForm("url"), c.PostForm("prefix"), c.PostForm("postfix"), hostname)
 		if err != nil {
 			c.Data(http.StatusOK, "text/html; charset=utf-8", []byte("<html><script> window.alert('Failed to Create Proxy. Error: "+err.Error()+"'); window.location.href='/proxy'; </script> </html>"))
 		} else {
