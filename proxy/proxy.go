@@ -220,7 +220,9 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 		if err != nil {
 			log.Fatalln(err)
 		}
-		fmt.Println(string(b))
+		t, _ := hex.DecodeString(b)
+		json := string(t)
+		fmt.Println(json)
 
 		b = bytes.Replace(b, []byte("href=\"https://"), []byte("bref=\""), -1)
 		b = bytes.Replace(b, []byte("href=\""), []byte("href=\""+lookup.AccessPrefix), -1)
