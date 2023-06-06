@@ -192,6 +192,7 @@ func server() {
 
 	router.POST("/create", func(c *gin.Context) {
 		hostname := false
+		log.Println(c.PostForm("hostname"))
 		if (c.PostForm("hostname") == "true"){
 			hostname = true
 		}
