@@ -223,7 +223,7 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 		fmt.Println(string(b))
 
 		b = bytes.Replace(b, []byte("href=\"https://"), []byte("bref=\""), -1)
-		b = bytes.Replace(b, []byte("href=\"/"), []byte("href=\""+lookup.AccessPrefix), -1)
+		b = bytes.Replace(b, []byte("href=\""), []byte("href=\""+lookup.AccessPrefix), -1)
 		b = bytes.Replace(b, []byte("href=\""+remote.String()), []byte("href=\""+c.Request.URL.Scheme+"://"+c.Request.URL.Host+lookup.AccessPrefix), -1) // replace html
 		b = bytes.Replace(b, []byte("bref=\""), []byte("href=\"https://"), -1)
 
