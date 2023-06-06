@@ -24,7 +24,7 @@ func init() {
 
 var temp []Proxy
 
-func createProxy(webServer string, prefix string, postfix string) error {
+func createProxy(webServer string, prefix string, postfix string, hostname bool) error {
 
 	// Sanitizing the postfux by checking for whitespaces and "/"
 	// at the end and beginning of string, if it exists
@@ -42,36 +42,40 @@ func createProxy(webServer string, prefix string, postfix string) error {
 	// Sanitizing the prefix by checking for whitespaces and "/"
 	// at the end and beginning of string
 	prefix = strings.ReplaceAll(prefix, " ", "")
-	if string(prefix[0]) != "/" {
-		prefix = "/" + prefix
-	}
-	if string(prefix[len(prefix)-1]) != "/" {
-		prefix = prefix + "/"
+
+	if !hostname {
+		if string(prefix[0]) != "/" {
+			prefix = "/" + prefix
+		}
+		if string(prefix[len(prefix)-1]) != "/"{
+			prefix = prefix + "/"
+		}	
+
+		// Sanitizing the url by checking for whitespaces
+		// and checking if web server is reachable
+		webServer = strings.ReplaceAll(webServer, " ", "")
+		t, err := url.Parse(webServer)
+		if err != nil {
+			return err
+		}
+		if t.Path != "/" && t.Path != "" {
+			return errors.New("use postfix for path")
+		}
+		if string(webServer[len(webServer)-1]) == "/" {
+			webServer = webServer[:len(webServer)-1]
+		}
+		fixedURL := webServer + postfix
+		resp, err := http.Get(fixedURL)
+		if err != nil {
+			log.Println(err)
+			return errors.New("cannot reach the URL: " + fixedURL)
+		} else if resp.StatusCode == 404 {
+			return errors.New("cannot reach url")
+		} else if prefix == "" {
+			return errors.New("no selection made")
+		}
 	}
 
-	// Sanitizing the url by checking for whitespaces
-	// and checking if web server is reachable
-	webServer = strings.ReplaceAll(webServer, " ", "")
-	t, err := url.Parse(webServer)
-	if err != nil {
-		return err
-	}
-	if t.Path != "/" && t.Path != "" {
-		return errors.New("use postfix for path")
-	}
-	if string(webServer[len(webServer)-1]) == "/" {
-		webServer = webServer[:len(webServer)-1]
-	}
-	fixedURL := webServer + postfix
-	resp, err := http.Get(fixedURL)
-	if err != nil {
-		log.Println(err)
-		return errors.New("cannot reach the URL: " + fixedURL)
-	} else if resp.StatusCode == 404 {
-		return errors.New("cannot reach url")
-	} else if prefix == "" {
-		return errors.New("no selection made")
-	}
 
 	// Check if its the same as any other Proxy
 	for _, proxy := range Proxies {
@@ -98,7 +102,7 @@ func createProxy(webServer string, prefix string, postfix string) error {
 	} else {
 		byteValue, _ := io.ReadAll(jsonFile)
 		json.Unmarshal(byteValue, &temp)
-		temp = append(temp, Proxy{AccessPrefix: prefix, ProxyURL: webServer, AccessPostfix: postfix})
+		temp = append(temp, Proxy{AccessPrefix: prefix, ProxyURL: webServer, AccessPostfix: postfix, Hostname: hostname})
 		jsonFile.Close()
 
 	}
