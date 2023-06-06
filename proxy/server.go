@@ -192,8 +192,7 @@ func server() {
 
 	router.POST("/create", func(c *gin.Context) {
 		hostname := false
-		log.Println(c.PostForm("hostname"))
-		if (c.PostForm("hostname") == "true"){
+		if (c.PostForm("hostname") == "on"){
 			hostname = true
 		}
 		err := createProxy(c.PostForm("url"), c.PostForm("prefix"), c.PostForm("postfix"), hostname)

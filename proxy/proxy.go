@@ -63,7 +63,6 @@ func Handler(c *gin.Context) {
 
 	log.Printf("Client requested %v", c.Request.URL)
 
-	log.Println(c.Request.Host)
 	if (c.Request.Host != "masongarten.com"){
 
 		host_parts := strings.Split(c.Request.URL.Host, ".")
