@@ -218,9 +218,9 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 
 
 
+		b, err := io.ReadAll(resp.Body) //Read html
+		defer resp.Body.Close()
 		if (strings.Contains(res.Header["Content-Type"][0], "html")) {
-			b, err := io.ReadAll(resp.Body) //Read html
-			defer resp.Body.Close()
 
 			if err != nil {
 				log.Println(err)
