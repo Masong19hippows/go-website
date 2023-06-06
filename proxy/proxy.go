@@ -246,6 +246,7 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 		b, err := io.ReadAll(resp.Body) //Read html
 		defer resp.Body.Close()
 		if err != nil {
+			log.Println("where is error ")
 			log.Fatalln(err)
 		}
 
