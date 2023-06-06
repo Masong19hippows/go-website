@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"io"
+	"io/ioutil"
 	"log"
 	"net"
 	"net/http"
@@ -217,7 +218,7 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 		resp.Header.Set("Content-Type", res.Header["Content-Type"][0])
 
 
-		b, err := io.ioutil.ReadAll(resp.Body) //Read html
+		b, err := ioutil.ReadAll(resp.Body) //Read html
 		defer resp.Body.Close()
 		if err != nil {
 			log.Println(err)
