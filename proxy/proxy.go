@@ -269,10 +269,16 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 		resp.Body = body
 
 		//Correcting The response location for redirects
+
+
 		location, err := resp.Location()
 		if err == nil && location.String() != "" {
 			newLocation := location.String()
-			newLocation = strings.Replace(newLocation, remote.String(), c.Request.URL.Scheme+c.Request.URL.Host+lookup.AccessPrefix[:len(lookup.AccessPrefix)-1], -1)
+			if !lookup.Hostname {
+				newLocation = strings.Replace(newLocation, remote.String(), c.Request.URL.Scheme+c.Request.URL.Host+lookup.AccessPrefix[:len(lookup.AccessPrefix)-1], -1)
+			} else {
+				newLocation = strings.Replace(newLocation, remote.String(), c.Request.URL.Scheme+c.Request.URL.Host, -1)
+			}
 			newLocation = func() string {
 				if lookup.AccessPostfix == "" {
 					return newLocation
@@ -286,7 +292,7 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 			}()
 			resp.Header.Set("location", newLocation)
 			log.Printf("Response from proxy is redirecting from %v and now to %v", location, newLocation)
-		}
+		}	
 
 		resp.ContentLength = int64(len(b))
 		resp.Header.Set("Content-Length", strconv.Itoa(len(b)))
