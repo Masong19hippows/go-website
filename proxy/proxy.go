@@ -227,8 +227,8 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 	proxy.ModifyResponse = func(resp *http.Response) (err error) {
 		// Returning 404 if getting a 404
 		if resp.StatusCode == 404 {
-			log.Println("got 404 with" + resp.Request.URL.String())
-			// cat.SendError(cat.Response{Status: http.StatusNotFound, Error: []string{"File Not Found on Server"}}, c)
+			log.Println("got 404 with " + resp.Request.URL.String())
+			cat.SendError(cat.Response{Status: http.StatusNotFound, Error: []string{"File Not Found on Server"}}, c)
 			return nil
 
 		}
@@ -257,12 +257,12 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 		if !lookup.Hostname{
 
 			b = bytes.Replace(b, []byte("href=\"https://"), []byte("bref=\""), -1)
-			b = bytes.Replace(b, []byte("href=\""), []byte("href=\""+lookup.AccessPrefix), -1)
+			b = bytes.Replace(b, []byte("href=\"/"), []byte("href=\""+lookup.AccessPrefix), -1)
 			b = bytes.Replace(b, []byte("href=\""+remote.String()), []byte("href=\""+c.Request.URL.Scheme+"://"+c.Request.URL.Host+lookup.AccessPrefix), -1) // replace html
 			b = bytes.Replace(b, []byte("bref=\""), []byte("href=\"https://"), -1)
 
 			b = bytes.Replace(b, []byte("src=\"https://"), []byte("bsrc=\""), -1)
-			b = bytes.Replace(b, []byte("src=\""), []byte("src=\""+lookup.AccessPrefix), -1)
+			b = bytes.Replace(b, []byte("src=\"/"), []byte("src=\""+lookup.AccessPrefix), -1)
 			b = bytes.Replace(b, []byte("src=\""+remote.String()), []byte("src=\""+c.Request.URL.Scheme+"://"+c.Request.URL.Host+lookup.AccessPrefix), -1) // replace html
 			b = bytes.Replace(b, []byte("bsrc=\""), []byte("src=\"https://"), -1)
 			body := io.NopCloser(bytes.NewReader(b))
