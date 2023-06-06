@@ -91,8 +91,16 @@
                   $(first).appendTo("#userdata tbody");
                 $.each(data, function(i, f) {
                   
-                    var tblRow = "<tr>" + "<td>" +  "<a href="+f.accessPrefix.slice(0, -1)+">"+f.accessPrefix+"</a>" + "</td>" +
-                    "<td>" +"<a href="+f.proxyURL+">"+f.proxyURL+"</a>"+ "</td>" + "<td>" + "<a href="+f.proxyURL+f.accessPostfix.slice(0, -1)+">"+f.accessPostfix+"</a>" + "</td>" + "<td>" + f.hostname + "</td>" + "<td>" + 
+                    var tblRow = "<tr>" + "<td>" +  "<a href="+                    
+                      function(){
+                        if (f.hostname){
+                          return "http://" + f.accessPrefix + ".masongarten.com"
+                        } else {
+                          return f.accessPrefix.slice(0, -1)
+                        }
+                      }()
+                      +">"+f.accessPrefix+"</a>" + "</td>" +
+                    "<td>" +"<a href="+f.proxyURL +">"+f.proxyURL+"</a>"+ "</td>" + "<td>" + "<a href="+f.proxyURL+f.accessPostfix.slice(0, -1)+">"+f.accessPostfix+"</a>" + "</td>" + "<td>" + f.hostname + "</td>" + "<td>" + 
                     "<a href='/proxy/delete/" + i + "'> <i class='fa-solid fa-trash-can' title='Trash'></i></a>" + "</td>" +"</tr>"
                     
                     $(tblRow).appendTo("#userdata tbody");
