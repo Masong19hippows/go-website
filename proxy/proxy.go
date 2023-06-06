@@ -214,16 +214,13 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 		// 	log.Println(err)
 		// }
 		// resp.Header.Set("Content-Type", res.Header["Content-Type"][0])
-		buf := new(bytes.Buffer)
-		buf.ReadFrom(resp.Body)
-		newStr := buf.String()
-	
-		fmt.Printf(newStr)
 
 		b, err := io.ReadAll(resp.Body) //Read html
+		resp.Body.Close()
 		if err != nil {
 			log.Fatalln(err)
 		}
+		fmt.Println(string(b))
 
 		b = bytes.Replace(b, []byte("href=\"https://"), []byte("bref=\""), -1)
 		b = bytes.Replace(b, []byte("href=\"/"), []byte("href=\""+lookup.AccessPrefix), -1)
