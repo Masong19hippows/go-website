@@ -246,7 +246,6 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 		b, err := io.ReadAll(resp.Body) //Read html
 		defer resp.Body.Close()
 		if err != nil {
-			log.Println("where is error ")
 			log.Fatalln(err)
 		}
 
@@ -288,8 +287,12 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 			resp.Header.Set("Content-Length", strconv.Itoa(len(b)))
 
 		}
+		log.Println("where is error ")
+
 		return nil
 	}
+	log.Println("where is error 2")
+
 
 	//Serve content that was modified
 	proxy.ServeHTTP(c.Writer, c.Request)
