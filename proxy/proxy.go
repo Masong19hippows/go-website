@@ -178,7 +178,7 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 		
 		
 
-		if lookup.Hostname! {
+		if !lookup.Hostname {
 			req.Header.Set("X-Script-Name", lookup.AccessPrefix[:len(lookup.AccessPrefix)-1])
 		}
 		path := strings.Replace(c.Request.URL.Path, lookup.AccessPrefix, "", -1)
