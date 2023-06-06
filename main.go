@@ -46,7 +46,7 @@ func main() {
 		append(list, "masongarten.com")
 		for _, proxy := range proxy.Proxies {
 			if proxy.Hostname == true {
-				append(list, proxy.Hostname + ".masongarten.com")
+				append(list, proxy.AccessPrefix + ".masongarten.com")
 			}
 		}
 		
