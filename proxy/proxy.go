@@ -3,7 +3,7 @@ package proxy
 import (
 	"bytes"
 	"encoding/json"
-	"io"
+	"io/ioutil"
 	"log"
 	"net"
 	"net/http"
@@ -51,7 +51,7 @@ func reloadProxies() {
 	if err != nil {
 		log.Println(err)
 	}
-	byteValue, _ := io.ReadAll(jsonFile)
+	byteValue, _ := ioutil.ReadAll(jsonFile)
 	json.Unmarshal(byteValue, &Proxies)
 	Proxies = append(Proxies, Proxy{AccessPrefix: "/proxy/", ProxyURL: "http://localhost:6000", AccessPostfix: ""})
 	jsonFile.Close()
@@ -217,7 +217,7 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 		resp.Header.Set("Content-Type", res.Header["Content-Type"][0])
 
 
-		b, err := io.ReadAll(resp.Body) //Read html
+		b, err := ioutil.ReadAll(resp.Body) //Read html
 		defer resp.Body.Close()
 		if err != nil {
 			log.Println(err)
@@ -233,7 +233,7 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 		b = bytes.Replace(b, []byte("src=\""), []byte("src=\""+lookup.AccessPrefix), -1)
 		b = bytes.Replace(b, []byte("src=\""+remote.String()), []byte("src=\""+c.Request.URL.Scheme+"://"+c.Request.URL.Host+lookup.AccessPrefix), -1) // replace html
 		b = bytes.Replace(b, []byte("bsrc=\""), []byte("src=\"https://"), -1)
-		body := io.NopCloser(bytes.NewReader(b))
+		body := ioutil.NopCloser(bytes.NewReader(b))
 		resp.Body = body
 
 		//Correcting The response location for redirects
