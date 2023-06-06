@@ -44,7 +44,6 @@ func createProxy(webServer string, prefix string, postfix string, hostname bool)
 	prefix = strings.ReplaceAll(prefix, " ", "")
 
 	if !hostname {
-		log.Println("amihere")
 		if string(prefix[0]) != "/" {
 			prefix = "/" + prefix
 		}
@@ -86,7 +85,6 @@ func createProxy(webServer string, prefix string, postfix string, hostname bool)
 			}
 		}
 	}
-
 
 
 	//Using the temporary
