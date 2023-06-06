@@ -15,6 +15,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"fmt"
 
 	"github.com/gin-gonic/gin"
 	cat "github.com/masong19hippows/go-website/catError"
@@ -238,6 +239,7 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 
 		body := io.NopCloser(bytes.NewReader(b))
 		resp.Body = body
+		fmt.Println(body)
 
 		//Correcting The response location for redirects
 		location, err := resp.Location()
