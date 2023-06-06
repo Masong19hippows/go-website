@@ -64,17 +64,6 @@ func Handler(c *gin.Context) {
 	log.Printf("Client requested %v", c.Request.URL)
 
 	if (c.Request.Host != "masongarten.com"){
-		if c.Request.TLS != nil{
-			c.Redirect(http.StatusMovedPermanently, "http://"+c.Request.Host+c.Request.URL.Path+func() string {
-				if c.Request.URL.RawQuery == "" {
-					return ""
-				} else {
-					return "?" + c.Request.URL.RawQuery
-				}
-			}())
-			return
-		}
-
 
 		host_parts := strings.Split(c.Request.URL.Host, ".")
 		subdomain := host_parts[0]
