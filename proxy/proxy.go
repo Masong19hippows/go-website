@@ -209,11 +209,11 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 			}
 		}
 
-		res, err := http.Get(resp.Request.URL.String())
-		if err != nil {
-			log.Println(err)
-		}
-		resp.Header.Set("Content-Type", res.Header["Content-Type"][0])
+		// res, err := http.Get(resp.Request.URL.String())
+		// if err != nil {
+		// 	log.Println(err)
+		// }
+		// resp.Header.Set("Content-Type", res.Header["Content-Type"][0])
 		buf := new(bytes.Buffer)
 		buf.ReadFrom(resp.Body)
 		newStr := buf.String()
