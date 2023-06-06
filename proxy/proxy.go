@@ -208,11 +208,6 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 			}
 		}
 
-		// res, err := http.Get(resp.Request.URL.String())
-		// if err != nil {
-		// 	log.Println(err)
-		// }
-		// resp.Header.Set("Content-Type", res.Header["Content-Type"][0])
 
 		b, err := io.ReadAll(resp.Body) //Read html
 		resp.Body.Close()
@@ -249,7 +244,7 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 				}
 			}()
 			resp.Header.Set("location", newLocation)
-			// log.Printf("Response from proxy is redirecting from %v and now to %v", location, newLocation)
+			log.Printf("Response from proxy is redirecting from %v and now to %v", location, newLocation)
 		}
 
 
@@ -257,6 +252,10 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 
 		resp.ContentLength = int64(len(b))
 		resp.Header.Set("Content-Length", strconv.Itoa(len(b)))
+
+		resp.Header.Set("Access-Control-Allow-Origin", "*")
+		resp.Header.Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+		resp.Header.Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 		return nil
 	}
 
