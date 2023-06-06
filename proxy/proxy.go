@@ -65,7 +65,7 @@ func Handler(c *gin.Context) {
 
 	if (c.Request.Host != "masongarten.com"){
 
-		host_parts := strings.Split(c.Request.URL.Host, ".")
+		host_parts := strings.Split(c.Request.Host, ".")
 		subdomain := host_parts[0]
 		log.Println(subdomain)
 
