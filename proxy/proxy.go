@@ -249,49 +249,44 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 			log.Fatalln(err)
 		}
 
-		if !lookup.Hostname{
+		b = bytes.Replace(b, []byte("href=\"https://"), []byte("bref=\""), -1)
+		b = bytes.Replace(b, []byte("href=\"/"), []byte("href=\""+lookup.AccessPrefix), -1)
+		b = bytes.Replace(b, []byte("href=\""+remote.String()), []byte("href=\""+c.Request.URL.Scheme+"://"+c.Request.URL.Host+lookup.AccessPrefix), -1) // replace html
+		b = bytes.Replace(b, []byte("bref=\""), []byte("href=\"https://"), -1)
 
-			b = bytes.Replace(b, []byte("href=\"https://"), []byte("bref=\""), -1)
-			b = bytes.Replace(b, []byte("href=\"/"), []byte("href=\""+lookup.AccessPrefix), -1)
-			b = bytes.Replace(b, []byte("href=\""+remote.String()), []byte("href=\""+c.Request.URL.Scheme+"://"+c.Request.URL.Host+lookup.AccessPrefix), -1) // replace html
-			b = bytes.Replace(b, []byte("bref=\""), []byte("href=\"https://"), -1)
+		b = bytes.Replace(b, []byte("src=\"https://"), []byte("bsrc=\""), -1)
+		b = bytes.Replace(b, []byte("src=\"/"), []byte("src=\""+lookup.AccessPrefix), -1)
+		b = bytes.Replace(b, []byte("src=\""+remote.String()), []byte("src=\""+c.Request.URL.Scheme+"://"+c.Request.URL.Host+lookup.AccessPrefix), -1) // replace html
+		b = bytes.Replace(b, []byte("bsrc=\""), []byte("src=\"https://"), -1)
+		body := io.NopCloser(bytes.NewReader(b))
+		resp.Body = body
 
-			b = bytes.Replace(b, []byte("src=\"https://"), []byte("bsrc=\""), -1)
-			b = bytes.Replace(b, []byte("src=\"/"), []byte("src=\""+lookup.AccessPrefix), -1)
-			b = bytes.Replace(b, []byte("src=\""+remote.String()), []byte("src=\""+c.Request.URL.Scheme+"://"+c.Request.URL.Host+lookup.AccessPrefix), -1) // replace html
-			b = bytes.Replace(b, []byte("bsrc=\""), []byte("src=\"https://"), -1)
-			body := io.NopCloser(bytes.NewReader(b))
-			resp.Body = body
-
-			//Correcting The response location for redirects
-			location, err := resp.Location()
-			if err == nil && location.String() != "" {
-				newLocation := location.String()
-				newLocation = strings.Replace(newLocation, remote.String(), c.Request.URL.Scheme+c.Request.URL.Host+lookup.AccessPrefix[:len(lookup.AccessPrefix)-1], -1)
-				newLocation = func() string {
-					if lookup.AccessPostfix == "" {
-						return newLocation
-					}
-					idx := strings.Index(newLocation, lookup.AccessPostfix)
-					if newLocation[idx-1] == '/' {
-						return strings.Replace(newLocation, lookup.AccessPostfix, "", -1)
-					} else {
-						return strings.Replace(newLocation, lookup.AccessPostfix, "/", -1)
-					}
-				}()
-				resp.Header.Set("location", newLocation)
-				log.Printf("Response from proxy is redirecting from %v and now to %v", location, newLocation)
-			}
-
-			resp.ContentLength = int64(len(b))
-			resp.Header.Set("Content-Length", strconv.Itoa(len(b)))
-
+		//Correcting The response location for redirects
+		location, err := resp.Location()
+		if err == nil && location.String() != "" {
+			newLocation := location.String()
+			newLocation = strings.Replace(newLocation, remote.String(), c.Request.URL.Scheme+c.Request.URL.Host+lookup.AccessPrefix[:len(lookup.AccessPrefix)-1], -1)
+			newLocation = func() string {
+				if lookup.AccessPostfix == "" {
+					return newLocation
+				}
+				idx := strings.Index(newLocation, lookup.AccessPostfix)
+				if newLocation[idx-1] == '/' {
+					return strings.Replace(newLocation, lookup.AccessPostfix, "", -1)
+				} else {
+					return strings.Replace(newLocation, lookup.AccessPostfix, "/", -1)
+				}
+			}()
+			resp.Header.Set("location", newLocation)
+			log.Printf("Response from proxy is redirecting from %v and now to %v", location, newLocation)
 		}
-		log.Println("where is error ")
+
+		resp.ContentLength = int64(len(b))
+		resp.Header.Set("Content-Length", strconv.Itoa(len(b)))
+
 
 		return nil
 	}
-	log.Println("where is error 2")
 
 
 	//Serve content that was modified
