@@ -27,7 +27,7 @@ func main() {
 	gin.SetMode(gin.ReleaseMode)
 
 	//default routes + the proxy handler
-	router := gin.New()
+	gin.Default()
 	router.Use(proxy.Handler)
 	router.StaticFile("/", exPath+"/assets/index.html")
 	router.POST("/send_email", email.SendEmail(*password))
