@@ -65,7 +65,6 @@ func Handler(c *gin.Context) {
 	log.Printf("Client requested %v", c.Request.URL)
 
 	if (c.Request.Host != "masongarten.com"){
-		fmt.Println(c.Request.Host)
 		host_parts := strings.Split(c.Request.Host, ".")
 		subdomain := host_parts[0]
 
@@ -83,7 +82,6 @@ func Handler(c *gin.Context) {
 		}
 
 		if (Proxy{}) == final {
-			fmt.Println("isthishappeneing")
 			cat.SendError(cat.Response{Status: http.StatusNotFound, Error: []string{"File Not Found on Server"}}, c)
 			return
 		} else {
