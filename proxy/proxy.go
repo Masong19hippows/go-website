@@ -83,6 +83,7 @@ func Handler(c *gin.Context) {
 		}
 
 		if (Proxy{}) == final {
+			fmt.Println("isthishappeneing")
 			cat.SendError(cat.Response{Status: http.StatusNotFound, Error: []string{"File Not Found on Server"}}, c)
 			return
 		} else {
@@ -305,7 +306,5 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 
 	//Serve content that was modified
 	proxy.ServeHTTP(c.Writer, c.Request)
-
-	return
 
 }
