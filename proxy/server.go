@@ -178,6 +178,7 @@ func server() {
 	exPath := filepath.Dir(ex)
 	gin.SetMode(gin.ReleaseMode)
 	router := gin.New()
+	router.StaticFile("/", exPath+"/assets/index.html")
 	router.StaticFile("/index.html", exPath+"/proxy/web/index.html")
 	router.StaticFile("/proxy", exPath+"/proxy/web/index.html")
 	router.StaticFile("/proxies.json", exPath+"/proxy/web/proxies.json")
