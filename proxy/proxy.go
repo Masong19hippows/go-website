@@ -12,7 +12,6 @@ import (
 	"os"
 	"path"
 	"path/filepath"
-	"fmt"
 	"regexp"
 	"strconv"
 	"strings"
