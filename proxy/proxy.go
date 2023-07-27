@@ -12,6 +12,7 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+	"fmt"
 	"regexp"
 	"strconv"
 	"strings"
@@ -64,7 +65,7 @@ func Handler(c *gin.Context) {
 	log.Printf("Client requested %v", c.Request.URL)
 
 	if (c.Request.Host != "masongarten.com"){
-
+		fmt.Println(c.Request.Host)
 		host_parts := strings.Split(c.Request.Host, ".")
 		subdomain := host_parts[0]
 
@@ -92,7 +93,7 @@ func Handler(c *gin.Context) {
 		
 
 	}
-
+	
 	//Redirecting http to https
 	if c.Request.TLS == nil {
 		c.Redirect(http.StatusMovedPermanently, "https://"+c.Request.Host+c.Request.URL.Path+func() string {
