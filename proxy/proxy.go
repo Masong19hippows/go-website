@@ -1,7 +1,6 @@
 package proxy
 
 import (
-	"bytes"
 	"encoding/json"
 	"io"
 	"log"
@@ -13,7 +12,6 @@ import (
 	"path"
 	"path/filepath"
 	"regexp"
-	"strconv"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -278,7 +276,6 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 			return nil
 		}	
 
-		resp.ContentLength = int64(len(b))
 		resp.Header.Set("Content-Type", resp.Header.Get("Content-Type"))
 
 
