@@ -254,7 +254,14 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 		if err == nil && location.String() != "" {
 			newLocation := location.String()
 			if !lookup.Hostname {
-				newLocation = strings.Replace(newLocation, remote.String(), c.Request.URL.Scheme+c.Request.URL.Host+lookup.AccessPrefix[:len(lookup.AccessPrefix)-1], -1)
+				newLocation =  func() string {
+					if strings.Contains(newLocation, lookup.AccessPrefix){
+						return strings.Replace(newLocation, remote.String(), c.Request.URL.Scheme+c.Request.URL.Host+lookup.AccessPrefix[:len(lookup.AccessPrefix)-1], -1)
+					} else {
+						return strings.Replace(newLocation, remote.String(), c.Request.URL.Scheme+c.Request.URL.Host, -1)
+					}
+					
+				}()
 			} else {
 				newLocation = strings.Replace(newLocation, remote.String(), c.Request.URL.Scheme+c.Request.URL.Host, -1)
 				newLocation = "https://" + lookup.AccessPrefix + ".masongarten.com" + newLocation
