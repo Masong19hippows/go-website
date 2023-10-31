@@ -2,6 +2,7 @@ package proxy
 
 import (
 	"encoding/json"
+	"time"
 	"io"
 	"log"
 	"net"
@@ -140,7 +141,7 @@ func Handler(c *gin.Context) {
 
 // look up the url on the proxy. Send a 404 cat if not found
 func lookProxy(lookup Proxy, c *gin.Context) {
-
+	time.Sleep(1 * time.Second)
 	//Setting up a proxy connection
 	remote, err := url.Parse(lookup.ProxyURL)
 	if err != nil {
@@ -171,8 +172,7 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 		}
 		
 		req.Header.Set("X-Real-IP", ips[0].String())
-		// req.Header.Set("Upgrade", req.Header.Get("Upgrade"))
-		// req.Header.Set("Connection", "upgrade")
+		req.Header.Set("Connection", "upgrade")
 		
 		
 
