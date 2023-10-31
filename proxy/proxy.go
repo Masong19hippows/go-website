@@ -86,7 +86,6 @@ func Handler(c *gin.Context) {
 		} else {
 			//Look up the directory in the proxy
 			lookProxy(final, c)
-			c.Next()
 			return
 		}
 		
