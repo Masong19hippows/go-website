@@ -293,6 +293,7 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 			}()
 			resp.Header.Set("location", newLocation)
 			log.Printf("Response from proxy is redirecting from %v and now to %v", location, newLocation)
+			return nil
 		}	
 
 		resp.ContentLength = int64(len(b))
