@@ -297,7 +297,7 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 		}	
 
 		resp.ContentLength = int64(len(b))
-		resp.Header.Set("Content-Type", resp.Header["Content-Type"])
+		resp.Header.Set("Content-Type", resp.Header.Get("Content-Type"))
 		resp.Header.Set("Content-Length", strconv.Itoa(len(b)))
 
 
