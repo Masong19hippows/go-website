@@ -182,7 +182,7 @@ func server() {
 	router.StaticFile("/proxy/index.html", exPath+"/proxy/web/index.html")
 	router.StaticFile("/proxy", exPath+"/proxy/web/index.html")
 	router.StaticFile("/proxy/proxies.json", exPath+"/proxy/web/proxies.json")
-\	router.StaticFile("/proxy/index.css", exPath+"/proxy/web/index.css")
+	router.StaticFile("/proxy/index.css", exPath+"/proxy/web/index.css")
 	router.NoRoute(func(c *gin.Context) {
 		cat.SendError(cat.Response{Status: http.StatusNotFound, Error: []string{"File Not Found on Server"}}, c)
 	})
