@@ -289,6 +289,9 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 				} else {
 					return strings.Replace(newLocation, lookup.AccessPostfix, "/", -1)
 				}
+				if lookup.Hostname {
+					newLocation = "https://" + AccessPrefixlookup + "masongarten.com" + newLocation
+				}
 			}()
 			resp.Header.Set("location", newLocation)
 			log.Printf("Response from proxy is redirecting from %v and now to %v", location, newLocation)
