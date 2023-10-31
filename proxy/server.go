@@ -179,17 +179,17 @@ func server() {
 	gin.SetMode(gin.ReleaseMode)
 	router := gin.New()
 	router.StaticFile("/", exPath+"/proxy/web/index.html")
-	router.StaticFile("/index.html", exPath+"/proxy/web/index.html")
+	router.StaticFile("/proxy/index.html", exPath+"/proxy/web/index.html")
 	router.StaticFile("/proxy", exPath+"/proxy/web/index.html")
-	router.StaticFile("/proxies.json", exPath+"/proxy/web/proxies.json")
 	router.StaticFile("/proxy/proxies.json", exPath+"/proxy/web/proxies.json")
-	router.StaticFile("/index.css", exPath+"/proxy/web/index.css")
+	router.StaticFile("/proxy/proxies.json", exPath+"/proxy/web/proxies.json")
+	router.StaticFile("/proxy/index.css", exPath+"/proxy/web/index.css")
 	router.StaticFile("/proxy/index.css", exPath+"/proxy/web/index.css")
 	router.NoRoute(func(c *gin.Context) {
 		cat.SendError(cat.Response{Status: http.StatusNotFound, Error: []string{"File Not Found on Server"}}, c)
 	})
 
-	router.POST("/create", func(c *gin.Context) {
+	router.POST("/proxy/create", func(c *gin.Context) {
 		hostname := false
 		if (c.PostForm("hostname") == "on"){
 			hostname = true
@@ -202,7 +202,7 @@ func server() {
 		}
 	})
 
-	router.GET("/delete/:index", func(c *gin.Context) {
+	router.GET("/proxy/delete/:index", func(c *gin.Context) {
 		index, err := strconv.Atoi(c.Param("index"))
 		if err != nil {
 			c.Data(http.StatusOK, "text/html; charset=utf-8", []byte("<html><script> window.alert('Failed to Delete Proxy. Error: "+err.Error()+"'); window.location.href='/proxy'; </script> </html>"))
