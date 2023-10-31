@@ -182,13 +182,6 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 
 		path := c.Request.URL.Path
 		
-		if !lookup.Hostname {
-			if path == lookup.AccessPrefix[:len(lookup.AccessPrefix)-1] {
-				path = ""
-			}
-		}
-
-
 
 		req.URL, err = url.Parse(remote.Scheme + "://" + remote.Host + func() string {
 			if len(path) > 0 {
