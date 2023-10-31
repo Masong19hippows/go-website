@@ -255,12 +255,10 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 			newLocation := location.String()
 			if !lookup.Hostname {
 				newLocation =  func() string {
-					if strings.Contains(newLocation, lookup.AccessPrefix){
-						log.Println("1st condit")
+					if !strings.Contains(newLocation, lookup.AccessPrefix){
 						return strings.Replace(newLocation, remote.String(), c.Request.URL.Scheme+c.Request.URL.Host+lookup.AccessPrefix[:len(lookup.AccessPrefix)-1], -1)
 			
 					} else {
-						log.Println("2nd condit")
 						return strings.Replace(newLocation, remote.String(), c.Request.URL.Scheme+c.Request.URL.Host, -1)
 					}
 					
