@@ -26,7 +26,7 @@ var temp []Proxy
 
 func createProxy(webServer string, prefix string, postfix string, hostname bool) error {
 
-	// Sanitizing the postfux by checking for whitespaces and "/"
+	// Sanitizing the postfix by checking for whitespaces and "/"
 	// at the end and beginning of string, if it exists
 	postfix = strings.ReplaceAll(postfix, " ", "")
 	if postfix != "" {
@@ -57,9 +57,6 @@ func createProxy(webServer string, prefix string, postfix string, hostname bool)
 		t, err := url.Parse(webServer)
 		if err != nil {
 			return err
-		}
-		if t.Path != "/" && t.Path != "" {
-			return errors.New("use postfix for path")
 		}
 		if string(webServer[len(webServer)-1]) == "/" {
 			webServer = webServer[:len(webServer)-1]
