@@ -54,7 +54,6 @@ func createProxy(webServer string, prefix string, postfix string, hostname bool)
 		// Sanitizing the url by checking for whitespaces
 		// and checking if web server is reachable
 		webServer = strings.ReplaceAll(webServer, " ", "")
-		t, err := url.Parse(webServer)
 		if err != nil {
 			return err
 		}
