@@ -184,7 +184,7 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 
 
 		if !lookup.Hostname {
-			if proxy.ForcePaths {
+			if lookup.ForcePaths {
 				if path == lookup.AccessPrefix[:len(lookup.AccessPrefix)-1] {
 					path += remote.Path
 				}
