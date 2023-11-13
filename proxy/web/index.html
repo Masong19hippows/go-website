@@ -88,7 +88,7 @@
           <script> $(function() {
                 var people = [];
                 $.getJSON('/proxy/proxies.json?nocache=' + (new Date()).getTime(), function(data) {
-                  var first = "<tr>" + "<td>"+"/proxy/"+"</td>" + "<td>" + "http://localhost:6000" + "</td>" + "<td>" + "" + "</td>" + "<td>" + "false" + "</td>" + "<td>"+"</td>" +"</tr>"
+                  var first = "<tr>" + "<td>"+"/proxy/"+"</td>" + "<td>" + "http://localhost:6000" + "</td>" + "<td>" + "" + "</td>" + "<td>" + "false" + "</td>" + "<td>" + "true" + "</td>"+ "<td>"+"</td>" +"</tr>"
                   $(first).appendTo("#userdata tbody");
                 $.each(data, function(i, f) {
                   
