@@ -100,7 +100,7 @@
                         }
                       }()
                       +">"+f.accessPrefix+"</a>" + "</td>" +
-                    "<td>" +"<a href="+f.proxyURL +">"+f.proxyURL+"</a>"+ "</td>" + "<td>" + "<a href="+f.proxyURL+f.accessPostfix.slice(0, -1)+">"+f.accessPostfix+"</a>" + "</td>" + "<td>" + f.hostname + "</td>" + "<td>" + 
+                    "<td>" +"<a href="+f.proxyURL +">"+f.proxyURL+"</a>"+ "</td>" + "<td>" + "<a href="+f.proxyURL+f.accessPostfix.slice(0, -1)+">"+f.accessPostfix+"</a>" + "</td>" + "<td>" + f.hostname + "</td>" + "<td>" + f.forcepaths + "</td>" + "<td>" + 
                     "<a href='/proxy/delete/" + i + "'> <i class='fa-solid fa-trash-can' title='Trash'></i></a>" + "</td>" +"</tr>"
                     
                     $(tblRow).appendTo("#userdata tbody");
@@ -130,6 +130,9 @@ td:hover {
 
     <label for="hostname">Hostname:</label><br>
     <input type="checkbox" id="hostname" name="hostname">
+
+    <label for="forcepaths">Force Paths:</label><br>
+    <input type="checkbox" id="forcepaths" name="forcepaths">
 
     <div class="container">  
       <br>

@@ -25,6 +25,7 @@ type Proxy struct {
 	ProxyURL      string `json:"proxyURL"`
 	AccessPostfix string `json:"accessPostfix"`
 	Hostname	  bool   `json:"hostname"`
+	ForcePaths	  bool   `json:"forcepaths"`
 }
 
 // array of all proxies
@@ -51,7 +52,7 @@ func reloadProxies() {
 	}
 	byteValue, _ := io.ReadAll(jsonFile)
 	json.Unmarshal(byteValue, &Proxies)
-	Proxies = append(Proxies, Proxy{AccessPrefix: "/proxy/", ProxyURL: "http://localhost:6000", AccessPostfix: "", Hostname: false})
+	Proxies = append(Proxies, Proxy{AccessPrefix: "/proxy/", ProxyURL: "http://localhost:6000", AccessPostfix: "", Hostname: false, ForcePaths: true})
 	jsonFile.Close()
 
 }
@@ -180,12 +181,21 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 		}
 
 		path := c.Request.URL.Path
+
+
 		if !lookup.Hostname {
-			path = strings.Replace(c.Request.URL.Path, lookup.AccessPrefix, "", -1)
-			if path == lookup.AccessPrefix[:len(lookup.AccessPrefix)-1] {
-				path = ""
+			if proxy.ForcePaths {
+				if path == lookup.AccessPrefix[:len(lookup.AccessPrefix)-1] {
+					path += remote.Path
+				}
+			} else {
+				path = strings.Replace(c.Request.URL.Path, lookup.AccessPrefix, "", -1)
+				if path == lookup.AccessPrefix[:len(lookup.AccessPrefix)-1] {
+					path = ""
+				}
 			}
 		}
+
 		
 
 		req.URL, err = url.Parse(remote.Scheme + "://" + remote.Host + func() string {
