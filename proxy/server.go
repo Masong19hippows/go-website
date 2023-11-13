@@ -186,7 +186,7 @@ func server() {
 			hostname = true
 		}
 		forcepaths := false
-		if (c.PostForm("hostname") == "on"){
+		if (c.PostForm("forcepaths") == "on"){
 			forcepaths = true
 		}
 		err := createProxy(c.PostForm("url"), c.PostForm("prefix"), c.PostForm("postfix"), hostname, forcepaths)
