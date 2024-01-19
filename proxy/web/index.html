@@ -65,7 +65,8 @@
                     <th>Proxy URL</th>
                     <th>Access Postfix</th>
                     <th>Hostname</th>
-                    <th>ForcePaths</th>
+                    <th>Force Paths</th>
+                    <th>Read HTML</th>
                     <th>Delete</th>
                 </thead>
                 
@@ -88,7 +89,7 @@
           <script> $(function() {
                 var people = [];
                 $.getJSON('/proxy/proxies.json?nocache=' + (new Date()).getTime(), function(data) {
-                  var first = "<tr>" + "<td>"+"/proxy/"+"</td>" + "<td>" + "http://localhost:6000" + "</td>" + "<td>" + "" + "</td>" + "<td>" + "false" + "</td>" + "<td>" + "true" + "</td>"+ "<td>"+"</td>" +"</tr>"
+                  var first = "<tr>" + "<td>"+"/proxy/"+"</td>" + "<td>" + "http://localhost:6000" + "</td>" + "<td>" + "" + "</td>" + "<td>" + "false" + "</td>" + "<td>" + "true" + "</td>"+  "<td>" + "true" + "</td>" + "<td>"+"</td>" +"</tr>"
                   $(first).appendTo("#userdata tbody");
                 $.each(data, function(i, f) {
                   
@@ -101,7 +102,7 @@
                         }
                       }()
                       +">"+f.accessPrefix+"</a>" + "</td>" +
-                    "<td>" +"<a href="+f.proxyURL +">"+f.proxyURL+"</a>"+ "</td>" + "<td>" + "<a href="+f.proxyURL+f.accessPostfix.slice(0, -1)+">"+f.accessPostfix+"</a>" + "</td>" + "<td>" + f.hostname + "</td>" + "<td>" + f.forcepaths + "</td>" + "<td>" + 
+                    "<td>" +"<a href="+f.proxyURL +">"+f.proxyURL+"</a>"+ "</td>" + "<td>" + "<a href="+f.proxyURL+f.accessPostfix.slice(0, -1)+">"+f.accessPostfix+"</a>" + "</td>" + "<td>" + f.hostname + "</td>" + "<td>" + f.forcepaths + "</td>" + "<td>" + f.readhtml + "</td>" + "<td>" + 
                     "<a href='/proxy/delete/" + i + "'> <i class='fa-solid fa-trash-can' title='Trash'></i></a>" + "</td>" +"</tr>"
                     
                     $(tblRow).appendTo("#userdata tbody");
@@ -134,6 +135,9 @@ td:hover {
 
     <label for="forcepaths">Force Paths:</label>
     <input type="checkbox" id="forcepaths" name="forcepaths"><br>
+
+    <label for="readhtml">Read HTML:</label>
+    <input type="checkbox" id="readhtml" name="readhtml"><br>
 
     <div class="container">  
       <br>

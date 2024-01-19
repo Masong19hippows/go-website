@@ -23,7 +23,7 @@ func init() {
 
 var temp []Proxy
 
-func createProxy(webServer string, prefix string, postfix string, hostname bool, forcepaths bool) error {
+func createProxy(webServer string, prefix string, postfix string, hostname bool, forcepaths bool, readhtml bool) error {
 
 	// Sanitizing the postfix by checking for whitespaces and "/"
 	// at the end and beginning of string, if it exists
@@ -95,7 +95,7 @@ func createProxy(webServer string, prefix string, postfix string, hostname bool,
 	} else {
 		byteValue, _ := io.ReadAll(jsonFile)
 		json.Unmarshal(byteValue, &temp)
-		temp = append(temp, Proxy{AccessPrefix: prefix, ProxyURL: webServer, AccessPostfix: postfix, Hostname: hostname, ForcePaths: forcepaths})
+		temp = append(temp, Proxy{AccessPrefix: prefix, ProxyURL: webServer, AccessPostfix: postfix, Hostname: hostname, ForcePaths: forcepaths, ReadHTML: readhtml})
 		jsonFile.Close()
 
 	}
@@ -189,7 +189,11 @@ func server() {
 		if (c.PostForm("forcepaths") == "on"){
 			forcepaths = true
 		}
-		err := createProxy(c.PostForm("url"), c.PostForm("prefix"), c.PostForm("postfix"), hostname, forcepaths)
+		readhtml = false
+		if (c.PostForm("readhtml") == "on"){
+			readhtml = true
+		}
+		err := createProxy(c.PostForm("url"), c.PostForm("prefix"), c.PostForm("postfix"), hostname, forcepaths, readhtml)
 		if err != nil {
 			c.Data(http.StatusOK, "text/html; charset=utf-8", []byte("<html><script> window.alert('Failed to Create Proxy. Error: "+err.Error()+"'); window.location.href='/proxy'; </script> </html>"))
 		} else {

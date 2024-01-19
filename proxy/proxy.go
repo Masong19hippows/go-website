@@ -26,6 +26,7 @@ type Proxy struct {
 	AccessPostfix string `json:"accessPostfix"`
 	Hostname	  bool   `json:"hostname"`
 	ForcePaths	  bool   `json:"forcepaths"`
+	ReadHTML	  bool   `json:"readhtml"`
 }
 
 // array of all proxies
@@ -52,7 +53,7 @@ func reloadProxies() {
 	}
 	byteValue, _ := io.ReadAll(jsonFile)
 	json.Unmarshal(byteValue, &Proxies)
-	Proxies = append(Proxies, Proxy{AccessPrefix: "/proxy/", ProxyURL: "http://localhost:6000", AccessPostfix: "", Hostname: false, ForcePaths: true})
+	Proxies = append(Proxies, Proxy{AccessPrefix: "/proxy/", ProxyURL: "http://localhost:6000", AccessPostfix: "", Hostname: false, ForcePaths: true, ReadHTML: false})
 	jsonFile.Close()
 
 }
@@ -256,7 +257,6 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 
 		//Correcting The response location for redirects
 
-
 		location, err := resp.Location()
 		if err == nil && location.String() != "" {
 			newLocation := location.String()
@@ -283,6 +283,26 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 			log.Printf("Response from proxy is redirecting from %v and now to %v", location, newLocation)
 			return nil
 		}	
+
+		if lookup.ReadHTML {
+			b, err := io.ReadAll(resp.Body) //Read html
+			defer resp.Body.Close()
+			if err != nil {
+				log.Fatalln(err)
+			}
+
+			b = bytes.Replace(b, []byte("href=\"https://"), []byte("bref=\""), -1)
+			b = bytes.Replace(b, []byte("href=\"/"), []byte("href=\""+lookup.AccessPrefix), -1)
+			b = bytes.Replace(b, []byte("href=\""+remote.String()), []byte("href=\""+c.Request.URL.Scheme+"://"+c.Request.URL.Host+lookup.AccessPrefix), -1) // replace html
+			b = bytes.Replace(b, []byte("bref=\""), []byte("href=\"https://"), -1)
+
+			b = bytes.Replace(b, []byte("src=\"https://"), []byte("bsrc=\""), -1)
+			b = bytes.Replace(b, []byte("src=\"/"), []byte("src=\""+lookup.AccessPrefix), -1)
+			b = bytes.Replace(b, []byte("src=\""+remote.String()), []byte("src=\""+c.Request.URL.Scheme+"://"+c.Request.URL.Host+lookup.AccessPrefix), -1) // replace html
+			b = bytes.Replace(b, []byte("bsrc=\""), []byte("src=\"https://"), -1)
+			body := io.NopCloser(bytes.NewReader(b))
+			resp.Body = body
+		}
 
 		resp.Header.Set("Content-Type", resp.Header.Get("Content-Type"))
 
