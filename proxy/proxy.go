@@ -13,6 +13,7 @@ import (
 	"path/filepath"
 	"regexp"
 	"strings"
+	"bytes"
 
 	"github.com/gin-gonic/gin"
 	cat "github.com/masong19hippows/go-website/catError"

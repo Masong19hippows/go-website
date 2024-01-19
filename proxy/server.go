@@ -189,7 +189,7 @@ func server() {
 		if (c.PostForm("forcepaths") == "on"){
 			forcepaths = true
 		}
-		readhtml = false
+		readhtml := false
 		if (c.PostForm("readhtml") == "on"){
 			readhtml = true
 		}
