@@ -4,6 +4,21 @@
  * Copyright 2014-2021 Froala Labs
  */
 
+  #hostname{
+    width: 300px;
+    height: 40px;
+  }
+  #forcepaths{
+    width: 300px;
+    height: 40px;
+  }
+
+  #readhtml{
+    width: 300px;
+    height: 40px;
+  }
+
+
  .fr-clearfix::after {
     clear: both;
     display: block;
