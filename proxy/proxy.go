@@ -150,6 +150,9 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 		panic(err)
 	}
 	proxy := httputil.NewSingleHostReverseProxy(remote)
+	proxy.Transport = &http.Transport{
+        TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+	}
 
 	//Modifying the request sent to the Proxy
 	proxy.Director = func(req *http.Request) {
