@@ -2,6 +2,7 @@ package proxy
 
 import (
 	"encoding/json"
+	"crypto/tls"
 	"io"
 	"log"
 	"net"
