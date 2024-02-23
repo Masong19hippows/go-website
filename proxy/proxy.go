@@ -46,6 +46,7 @@ type responseBuffer struct {
 	status   int                 // the HTTP response code from WriteHeader
 	Body     *bytes.Buffer       // the response content body
 	Flushed  bool
+	http.CloseNotifier
 }
 
 
