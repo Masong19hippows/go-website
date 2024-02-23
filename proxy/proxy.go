@@ -31,6 +31,7 @@ type Proxy struct {
 	ReadHTML	  bool   `json:"readhtml"`
 }
 
+
 // array of all proxies
 var Proxies []Proxy
 
@@ -38,6 +39,20 @@ var Proxies []Proxy
 func init() {
 	reloadProxies()
 
+}
+
+type responseBuffer struct {
+	Response gin.ResponseWriter // the actual ResponseWriter to flush to
+	status   int                 // the HTTP response code from WriteHeader
+	Body     *bytes.Buffer       // the response content body
+	Flushed  bool
+}
+
+
+func NewResponseBuffer(w gin.ResponseWriter) *responseBuffer {
+	return &responseBuffer{
+		Response: w, status: 200, Body: &bytes.Buffer{},
+	}
 }
 
 // refreshes Proxies with proxies.json
@@ -68,6 +83,12 @@ func Handler(c *gin.Context) {
 	if (c.Request.Host != "masongarten.com"){
 		host_parts := strings.Split(c.Request.Host, ".")
 		subdomain := host_parts[0]
+
+		// Create new responce and discard original.
+		var wb *responseBuffer
+        	w, _ := c.Writer.(gin.ResponseWriter);
+            	wb = NewResponseBuffer(w)
+            	c.Writer = wb
 
 		reloadProxies()
 
