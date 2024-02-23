@@ -41,21 +41,6 @@ func init() {
 
 }
 
-type responseBuffer struct {
-	Response gin.ResponseWriter // the actual ResponseWriter to flush to
-	status   int                 // the HTTP response code from WriteHeader
-	Body     *bytes.Buffer       // the response content body
-	Flushed  bool
-	http.CloseNotifier
-}
-
-
-func NewResponseBuffer(w gin.ResponseWriter) *responseBuffer {
-	return &responseBuffer{
-		Response: w, status: 200, Body: &bytes.Buffer{},
-	}
-}
-
 // refreshes Proxies with proxies.json
 func reloadProxies() {
 	Proxies = nil
@@ -84,13 +69,10 @@ func Handler(c *gin.Context) {
 	if (c.Request.Host != "masongarten.com"){
 		host_parts := strings.Split(c.Request.Host, ".")
 		subdomain := host_parts[0]
+		
+		c.Abort()
 
-		// Create new responce and discard original.
-		var wb *responseBuffer
-        	w, _ := c.Writer.(gin.ResponseWriter);
-            	wb = NewResponseBuffer(w)
-            	c.Writer = wb
-
+		
 		reloadProxies()
 
 		var final Proxy
