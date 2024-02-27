@@ -112,6 +112,7 @@ func Handler(c *gin.Context) {
 
 	//Only pass if the error is 404
 	if c.Writer.Status() == http.StatusNotFound {
+		c.Abort()
 		// Reloading list of proxies to make sure that the latest is used
 
 		reloadProxies()
