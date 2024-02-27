@@ -257,7 +257,7 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 				log.Println(err)
 			} else {
 				ip := net.ParseIP(host)
-				if !ip.IsPrivate() {
+				if !ip.IsPrivate() && ip.String() != "127.0.0.1" {
 					log.Printf("Denied Acces to Proxy from %v", ip)
 					cat.SendError(cat.Response{Status: http.StatusNotFound, Error: []string{"Not a Private IP Address"}}, c)
 					return nil
