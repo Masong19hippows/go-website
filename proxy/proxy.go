@@ -70,6 +70,7 @@ func Handler(c *gin.Context) {
 		host_parts := strings.Split(c.Request.Host, ".")
 		subdomain := host_parts[0]
 		
+		c.Abort()
 		
 		reloadProxies()
 
