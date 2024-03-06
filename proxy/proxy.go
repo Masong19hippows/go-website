@@ -55,7 +55,6 @@ func reloadProxies() {
 		log.Println(err)
 	}
 	byteValue, _ := io.ReadAll(jsonFile)
-	log.Println(string(byteValue))
 	json.Unmarshal(byteValue, &Proxies)
 	Proxies = append(Proxies, Proxy{AccessPrefix: "/proxy/", ProxyURL: "http://localhost:6000", AccessPostfix: "", Hostname: false, ForcePaths: true, ReadHTML: false})
 	jsonFile.Close()
