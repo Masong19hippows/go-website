@@ -315,8 +315,7 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 		}
 		resp.Header.Set("Connection", "Upgrade")
 		resp.Header.Set("Upgrade", "Upgrade")
-
-		resp.Header.Set("Content-Type", resp.Header.Get("Content-Type"))
+		resp.Header.Set("X-Frame-Options", "SAMEORIGIN")
 
 
 		return nil
