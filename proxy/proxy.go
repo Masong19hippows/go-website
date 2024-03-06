@@ -71,7 +71,8 @@ func Handler(c *gin.Context) {
 		subdomain := host_parts[0]
 		
 		c.Abort()
-		log.Println(*c)
+
+		reloadProxies()
 		
 		var final Proxy
 		for _, proxy := range Proxies {
