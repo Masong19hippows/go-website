@@ -28,6 +28,9 @@ func main() {
 
 	//default routes + the proxy handler
 	router := gin.Default()
+	router.NoRoute(func(c *gin.Context) {
+        c.JSON(200, gin.H{"code": "PAGE_NOT_FOUND", "message": "404 page not found"})
+    })
 	router.Use(proxy.Handler)
 	router.StaticFile("/", exPath+"/assets/index.html")
 	router.POST("/send_email", email.SendEmail(*password))
