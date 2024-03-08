@@ -41,6 +41,11 @@ func init() {
 
 }
 
+type toolBodyWriter struct {
+    gin.ResponseWriter
+    body *bytes.Buffer
+}
+
 // refreshes Proxies with proxies.json
 func reloadProxies() {
 	Proxies = nil
