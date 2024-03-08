@@ -169,8 +169,8 @@ func server() {
 		panic(err)
 	}
 	exPath := filepath.Dir(ex)
-	gin.SetMode(gin.ReleaseMode)
-	router := gin.New()
+	//gin.SetMode(gin.ReleaseMode)
+	router := gin.Default()
 	router.StaticFile("/", exPath+"/proxy/web/index.html")
 	router.StaticFile("/proxy/index.html", exPath+"/proxy/web/index.html")
 	router.StaticFile("/proxy", exPath+"/proxy/web/index.html")
