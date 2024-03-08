@@ -170,10 +170,7 @@ func server() {
 	}
 	exPath := filepath.Dir(ex)
 	//gin.SetMode(gin.ReleaseMode)
-	router := gin.Default()
-	router.NoRoute(func(c *gin.Context) {
-        c.JSON(200, gin.H{"code": "PAGE_NOT_FOUND", "message": "404 page not found"})
-    })
+	router := gin.New()
 	router.StaticFile("/", exPath+"/proxy/web/index.html")
 	router.StaticFile("/proxy/index.html", exPath+"/proxy/web/index.html")
 	router.StaticFile("/proxy", exPath+"/proxy/web/index.html")
