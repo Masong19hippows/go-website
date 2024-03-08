@@ -63,13 +63,13 @@ func reloadProxies() {
 
 // This is the middleware that handles the dynamic selection of proxies
 func Handler(c *gin.Context) {
+	c.Next()
 	
 	log.Printf("Client requested %v", c.Request.URL)
 
 	if (c.Request.Host != "masongarten.com"){
 		host_parts := strings.Split(c.Request.Host, ".")
 		subdomain := host_parts[0]
-		c.Abort()
 
 		reloadProxies()
 		
@@ -146,7 +146,6 @@ func Handler(c *gin.Context) {
 
 // look up the url on the proxy. Send a 404 cat if not found
 func lookProxy(lookup Proxy, c *gin.Context) {
-	
 	//Setting up a proxy connection
 	remote, err := url.Parse(lookup.ProxyURL)
 	if err != nil {
