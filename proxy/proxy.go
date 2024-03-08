@@ -179,8 +179,6 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 		}
 		
 		req.Header.Set("X-Real-IP", ips[0].String())
-		req.Header.Set("Connection", "Upgrade")
-		req.Header.Set("Upgrade", "Upgrade")
 		
 		
 
@@ -310,8 +308,6 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 			body := io.NopCloser(bytes.NewReader(b))
 			resp.Body = body
 		}
-		resp.Header.Set("Connection", "Upgrade")
-		resp.Header.Set("Upgrade", "Upgrade")
 		resp.Header.Set("X-Frame-Options", "SAMEORIGIN")
 
 
