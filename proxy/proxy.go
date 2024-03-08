@@ -72,7 +72,7 @@ func Handler(c *gin.Context) {
         originBytes := wb.body
 		log.Printf("%s", originBytes)
         // clear Origin Buffer
-		wb.body = &bytes.Buffer{})
+		wb.body = &bytes.Buffer{}
 
 	log.Printf("Client requested %v", c.Request.URL)
 
