@@ -69,8 +69,6 @@ func Handler(c *gin.Context) {
 	if (c.Request.Host != "masongarten.com"){
 		host_parts := strings.Split(c.Request.Host, ".")
 		subdomain := host_parts[0]
-		
-		c.Abort()
 
 		reloadProxies()
 		
@@ -111,7 +109,6 @@ func Handler(c *gin.Context) {
 
 	//Only pass if the error is 404
 	if c.Writer.Status() == http.StatusNotFound {
-		c.Abort()
 		// Reloading list of proxies to make sure that the latest is used
 
 		reloadProxies()
@@ -320,6 +317,7 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 
 		return nil
 	}
+	c.Next()
 
 
 	//Serve content that was modified
