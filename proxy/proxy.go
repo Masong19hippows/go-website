@@ -63,7 +63,7 @@ func reloadProxies() {
 
 // This is the middleware that handles the dynamic selection of proxies
 func Handler(c *gin.Context) {
-	c.Abort()
+	log.Println(c.Writer.Written())
 
 	log.Printf("Client requested %v", c.Request.URL)
 
