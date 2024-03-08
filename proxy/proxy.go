@@ -41,11 +41,6 @@ func init() {
 
 }
 
-type toolBodyWriter struct {
-    gin.ResponseWriter
-    body *bytes.Buffer
-}
-
 // refreshes Proxies with proxies.json
 func reloadProxies() {
 	Proxies = nil
@@ -68,17 +63,7 @@ func reloadProxies() {
 
 // This is the middleware that handles the dynamic selection of proxies
 func Handler(c *gin.Context) {
-	 wb := &toolBodyWriter{
-            body:           &bytes.Buffer{},
-            ResponseWriter: c.Writer,
-        }
-        c.Writer = wb
-
-        originBytes := wb.body
-		log.Printf("%s", originBytes)
-        // clear Origin Buffer
-		wb.body = &bytes.Buffer{}
-
+	c.Writer.Flush()
 	log.Printf("Client requested %v", c.Request.URL)
 
 	if (c.Request.Host != "masongarten.com"){
