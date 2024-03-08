@@ -24,7 +24,7 @@ func main() {
 	password := flag.String("password", "", "Choose the app password obtained form no-reply email account")
 
 	// non-verbose
-	gin.SetMode(gin.ReleaseMode)
+	//gin.SetMode(gin.ReleaseMode)
 
 	//default routes + the proxy handler
 	router := gin.New()
