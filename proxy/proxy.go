@@ -168,7 +168,7 @@ func lookProxy(lookup Proxy, c *gin.Context) {
     		}
 		
 		req.Header.Set("X-Forwarded-For", ip)
-		//req.Header.Set("X-Frame-Options", "SAMEORIGIN")
+		req.Header.Set("X-Frame-Options", "SAMEORIGIN")
 		req.Header.Set("X-Forwarded-Host", c.Request.Host)
 		req.Header.Set("X-Scheme", remote.Scheme)
 		req.Header.Set("X-Forwarded-Proto", remote.Scheme)
@@ -179,8 +179,8 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 		}
 		
 		req.Header.Set("X-Real-IP", ips[0].String())
-		//req.Header.Set("Connection", "Upgrade")
-		//req.Header.Set("Upgrade", "Upgrade")
+		req.Header.Set("Connection", "Upgrade")
+		req.Header.Set("Upgrade", "Upgrade")
 		
 		
 
@@ -313,6 +313,7 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 		resp.Header.Set("Connection", "Upgrade")
 		resp.Header.Set("Upgrade", "Upgrade")
 		resp.Header.Set("X-Frame-Options", "SAMEORIGIN")
+		log.Println(http.Response)
 
 
 		return nil
@@ -321,5 +322,6 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 
 	//Serve content that was modified
 	proxy.ServeHTTP(c.Writer, c.Request)
+	c.Abort()
 
 }
