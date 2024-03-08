@@ -63,7 +63,7 @@ func reloadProxies() {
 
 // This is the middleware that handles the dynamic selection of proxies
 func Handler(c *gin.Context) {
-	c.Next()
+	c.Abort()
 	
 	log.Printf("Client requested %v", c.Request.URL)
 
@@ -238,7 +238,6 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 
 	//Modify the response so that links/redirects work
 	proxy.ModifyResponse = func(resp *http.Response) (err error) {
-		c.Status(resp.StatusCode)
 		// Returning 404 if getting a 404
 		if resp.StatusCode == 404 {
 			log.Println("got 404 with " + resp.Request.URL.String())
