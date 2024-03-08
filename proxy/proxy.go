@@ -69,6 +69,7 @@ func Handler(c *gin.Context) {
 	if (c.Request.Host != "masongarten.com"){
 		host_parts := strings.Split(c.Request.Host, ".")
 		subdomain := host_parts[0]
+		c.Abort()
 
 		reloadProxies()
 		
@@ -314,7 +315,7 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 		return nil
 	}
 
-
+	log.Println(c.writer.Written())
 	//Serve content that was modified
 	proxy.ServeHTTP(c.Writer, c.Request)
 
