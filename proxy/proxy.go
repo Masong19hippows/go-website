@@ -146,6 +146,9 @@ func Handler(c *gin.Context) {
 
 // look up the url on the proxy. Send a 404 cat if not found
 func lookProxy(lookup Proxy, c *gin.Context) {
+	if f, ok := c.Writer.(http.Flusher); ok {
+        f.Flush()
+    	}
 	
 	//Setting up a proxy connection
 	remote, err := url.Parse(lookup.ProxyURL)
@@ -315,8 +318,9 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 		return nil
 	}
 
-	log.Println(c.Writer.Written())
+	
 	//Serve content that was modified
 	proxy.ServeHTTP(c.Writer, c.Request)
+	log.Println(c.Writer.Written())
 
 }
