@@ -63,6 +63,7 @@ func reloadProxies() {
 
 // This is the middleware that handles the dynamic selection of proxies
 func Handler(c *gin.Context) {
+	c.Abort()
 
 	log.Printf("Client requested %v", c.Request.URL)
 
@@ -317,6 +318,5 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 
 	//Serve content that was modified
 	proxy.ServeHTTP(c.Writer, c.Request)
-	c.Abort()
 
 }
