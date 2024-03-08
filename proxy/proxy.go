@@ -63,9 +63,16 @@ func reloadProxies() {
 
 // This is the middleware that handles the dynamic selection of proxies
 func Handler(c *gin.Context) {
-	if f, ok := c.Writer.(http.Flusher); ok {
-        	f.Flush()
-    	}
+	 wb := &toolBodyWriter{
+            body:           &bytes.Buffer{},
+            ResponseWriter: c.Writer,
+        }
+        c.Writer = wb
+
+        originBytes := wb.body
+		log.Printf("%s", originBytes)
+        // clear Origin Buffer
+		wb.body = &bytes.Buffer{})
 
 	log.Printf("Client requested %v", c.Request.URL)
 
