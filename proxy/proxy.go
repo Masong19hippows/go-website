@@ -310,6 +310,7 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 			resp.Body = body
 		}
 		resp.Header.Set("X-Frame-Options", "SAMEORIGIN")
+		log.Println(c.Writer.Status())
 
 
 		return nil
@@ -318,6 +319,5 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 	
 	//Serve content that was modified
 	proxy.ServeHTTP(c.Writer, c.Request)
-	c.Writer.Flush()
 
 }
