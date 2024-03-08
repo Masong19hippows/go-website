@@ -63,7 +63,6 @@ func reloadProxies() {
 
 // This is the middleware that handles the dynamic selection of proxies
 func Handler(c *gin.Context) {
-	log.Println(c.Writer.Written())
 
 	log.Printf("Client requested %v", c.Request.URL)
 
@@ -146,6 +145,7 @@ func Handler(c *gin.Context) {
 
 // look up the url on the proxy. Send a 404 cat if not found
 func lookProxy(lookup Proxy, c *gin.Context) {
+	c.Next()
 
 	//Setting up a proxy connection
 	remote, err := url.Parse(lookup.ProxyURL)
