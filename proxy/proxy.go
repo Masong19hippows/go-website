@@ -313,7 +313,7 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 		resp.Header.Set("Connection", "Upgrade")
 		resp.Header.Set("Upgrade", "Upgrade")
 		resp.Header.Set("X-Frame-Options", "SAMEORIGIN")
-		log.Println(http.Response)
+		log.Println(resp)
 
 
 		return nil
