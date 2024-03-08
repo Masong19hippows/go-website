@@ -239,7 +239,6 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 
 	//Modify the response so that links/redirects work
 	proxy.ModifyResponse = func(resp *http.Response) (err error) {
-		log.Println(c.Writer.Status())
 		// Returning 404 if getting a 404
 		if resp.StatusCode == 404 {
 			log.Println("got 404 with " + resp.Request.URL.String())
@@ -316,7 +315,7 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 		return nil
 	}
 
-	
+	log.Println(c.Writer.Status())
 	//Serve content that was modified
 	proxy.ServeHTTP(c.Writer, c.Request)
 
