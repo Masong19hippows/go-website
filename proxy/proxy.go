@@ -84,7 +84,7 @@ func Handler(c *gin.Context) {
 		}
 
 		if (Proxy{}) == final {
-			cat.SendError(cat.Response{Status: http.StatusNotFound, Error: []string{"File Not Found on Server"}}, c)
+			//cat.SendError(cat.Response{Status: http.StatusNotFound, Error: []string{"File Not Found on Server"}}, c)
 			return
 		} else {
 			//Look up the directory in the proxy
@@ -133,7 +133,7 @@ func Handler(c *gin.Context) {
 		//Only pass if there is no proxy associated with the directory.
 		//If the proxy doesn't exist, then a 404 is sent with a picture of a cat
 		if (Proxy{}) == final {
-			cat.SendError(cat.Response{Status: http.StatusNotFound, Error: []string{"File Not Found on Server"}}, c)
+			//cat.SendError(cat.Response{Status: http.StatusNotFound, Error: []string{"File Not Found on Server"}}, c)
 			return
 		} else {
 			//Look up the directory in the proxy
@@ -145,6 +145,7 @@ func Handler(c *gin.Context) {
 
 // look up the url on the proxy. Send a 404 cat if not found
 func lookProxy(lookup Proxy, c *gin.Context) {
+	c.Abort()
 
 	//Setting up a proxy connection
 	remote, err := url.Parse(lookup.ProxyURL)
@@ -317,7 +318,6 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 
 		return nil
 	}
-	c.Next()
 
 
 	//Serve content that was modified
