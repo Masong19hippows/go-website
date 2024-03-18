@@ -165,8 +165,8 @@ func lookProxy(lookup Proxy, c *gin.Context) {
         TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 	}
 
-	cw := &copyWriter{buf: &bytes.Buffer{}, ResponseWriter: c.Writer}
-	c.Writer = cw
+	//cw := &copyWriter{buf: &bytes.Buffer{}, ResponseWriter: c.Writer}
+	//c.Writer = cw
 
 	c.Next()
 	
