@@ -166,8 +166,8 @@ func lookProxy(lookup Proxy, c *gin.Context) {
         TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 	}
 
-	//cw := &copyWriter{buf: &bytes.Buffer{}, ResponseWriter: c.Writer}
-	//c.Writer = cw
+	cw := &copyWriter{buf: &bytes.Buffer{}, ResponseWriter: c.Writer}
+	c.Writer = cw
 	
 
 	//Modifying the request sent to the Proxy
@@ -328,6 +328,6 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 		return nil
 	}
 	//Serve content that was modified
-	proxy.ServeHTTP(c.Writer, c.Request)
+	proxy.ServeHTTP(c.ResponseWriter, c.Request)
 
 }
