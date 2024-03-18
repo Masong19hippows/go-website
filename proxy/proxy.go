@@ -63,7 +63,6 @@ func reloadProxies() {
 
 // This is the middleware that handles the dynamic selection of proxies
 func Handler(c *gin.Context) {
-	c.Abort()
 	
 	log.Printf("Client requested %v", c.Request.URL)
 
@@ -85,7 +84,7 @@ func Handler(c *gin.Context) {
 		}
 
 		if (Proxy{}) == final {
-			//cat.SendError(cat.Response{Status: http.StatusNotFound, Error: []string{"File Not Found on Server"}}, c)
+			cat.SendError(cat.Response{Status: http.StatusNotFound, Error: []string{"File Not Found on Server"}}, c)
 			return
 		} else {
 			//Look up the directory in the proxy
@@ -134,7 +133,7 @@ func Handler(c *gin.Context) {
 		//Only pass if there is no proxy associated with the directory.
 		//If the proxy doesn't exist, then a 404 is sent with a picture of a cat
 		if (Proxy{}) == final {
-			//cat.SendError(cat.Response{Status: http.StatusNotFound, Error: []string{"File Not Found on Server"}}, c)
+			cat.SendError(cat.Response{Status: http.StatusNotFound, Error: []string{"File Not Found on Server"}}, c)
 			return
 		} else {
 			//Look up the directory in the proxy
@@ -144,8 +143,20 @@ func Handler(c *gin.Context) {
 	}
 }
 
+type copyWriter struct {
+	gin.ResponseWriter
+	buf *bytes.Buffer
+}
+
+func (cw copyWriter) Write(b []byte) (int, error) {
+	return cw.buf.Write(b)
+}
+
 // look up the url on the proxy. Send a 404 cat if not found
 func lookProxy(lookup Proxy, c *gin.Context) {
+	
+	c.Abort()
+	
 	//Setting up a proxy connection
 	remote, err := url.Parse(lookup.ProxyURL)
 	if err != nil {
@@ -155,6 +166,10 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 	proxy.Transport = &http.Transport{
         TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 	}
+
+	cw := &copyWriter{buf: &bytes.Buffer{}, ResponseWriter: c.Writer}
+	c.Writer = cw
+	
 
 	//Modifying the request sent to the Proxy
 	proxy.Director = func(req *http.Request) {
