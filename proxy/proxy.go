@@ -154,6 +154,7 @@ func (cw copyWriter) Write(b []byte) (int, error) {
 
 // look up the url on the proxy. Send a 404 cat if not found
 func lookProxy(lookup Proxy, c *gin.Context) {
+	c.Abort()
 	
 	//Setting up a proxy connection
 	remote, err := url.Parse(lookup.ProxyURL)
@@ -167,8 +168,6 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 
 	//cw := &copyWriter{buf: &bytes.Buffer{}, ResponseWriter: c.Writer}
 	//c.Writer = cw
-
-	c.Next()
 	
 
 	//Modifying the request sent to the Proxy
