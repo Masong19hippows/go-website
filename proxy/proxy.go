@@ -2,7 +2,7 @@ package proxy
 
 import (
 	"encoding/json"
-//	"crypto/tls"
+	"crypto/tls"
 	"io"
 	"log"
 	"net"
@@ -152,13 +152,13 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 	if err != nil {
 		panic(err)
 	}
-	//proxy := httputil.NewSingleHostReverseProxy(remote)
-	//proxy.Transport = &http.Transport{
-        //TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
-	//}
+	proxy := httputil.NewSingleHostReverseProxy(remote)
+	proxy.Transport = &http.Transport{
+        TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+	}
 
 	//Modifying the request sent to the Proxy
-	director := func(req *http.Request) {
+	proxy.Director = func(req *http.Request) {
 
 		//Setting the connection up so it looks like its not form the Reverse Proxy Server
 		req.Header = c.Request.Header
@@ -238,7 +238,7 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 	}
 
 	//Modify the response so that links/redirects work
-	modifyResponse := func(resp *http.Response) (err error) {
+	proxy.ModifyResponse = func(resp *http.Response) (err error) {
 		
 		// Returning 404 if getting a 404
 		if resp.StatusCode == 404 {
@@ -317,7 +317,6 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 		return nil
 	}
 	//Serve content that was modified
-	proxy := &httputil.ReverseProxy{Director: director, ModifyResponse: modifyResponse}
 	proxy.ServeHTTP(c.Writer, c.Request)
 
 }
