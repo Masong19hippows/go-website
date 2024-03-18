@@ -3,6 +3,7 @@ package proxy
 import (
 	"encoding/json"
 	"crypto/tls"
+	"fmt"
 	"io"
 	"log"
 	"net"
@@ -171,7 +172,7 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 
 	//Modifying the request sent to the Proxy
 	proxy.Director = func(req *http.Request) {
-		b, _ := ioutil.ReadAll(req.Body)
+		b, _ := io.ReadAll(req.Body)
 		fmt.Println(string(b))
 		//Setting the connection up so it looks like its not form the Reverse Proxy Server
 		req.Header = c.Request.Header
