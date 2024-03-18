@@ -172,8 +172,7 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 
 	//Modifying the request sent to the Proxy
 	proxy.Director = func(req *http.Request) {
-		b, _ := io.ReadAll(req.Body)
-		fmt.Println(string(b))
+
 		//Setting the connection up so it looks like its not form the Reverse Proxy Server
 		req.Header = c.Request.Header
 		
@@ -254,12 +253,14 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 	//Modify the response so that links/redirects work
 	proxy.ModifyResponse = func(resp *http.Response) (err error) {
 		// Returning 404 if getting a 404
-		if resp.StatusCode == 404 {
-			log.Println("got 404 with " + resp.Request.URL.String())
-			cat.SendError(cat.Response{Status: http.StatusNotFound, Error: []string{"File Not Found on Server"}}, c)
-			return nil
-
-		}
+		//if resp.StatusCode == 404 {
+		//	log.Println("got 404 with " + resp.Request.URL.String())
+		//	cat.SendError(cat.Response{Status: http.StatusNotFound, Error: []string{"File Not Found on Server"}}, c)
+		//	return nil
+//
+//		}
+		b, _ := io.ReadAll(resp.Body)
+		fmt.Println(string(b))
 		//Filter out the proxy reverse manager unless its from an internal ip address
 		if lookup.AccessPrefix == "/proxy/" {
 			host, _, err := net.SplitHostPort(resp.Request.RemoteAddr)
