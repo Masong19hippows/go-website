@@ -144,15 +144,6 @@ func Handler(c *gin.Context) {
 	}
 }
 
-type copyWriter struct {
-	gin.ResponseWriter
-	buf *bytes.Buffer
-}
-
-func (cw copyWriter) Write(b []byte) (int, error) {
-	return cw.buf.Write(b)
-}
-
 // look up the url on the proxy. Send a 404 cat if not found
 func lookProxy(lookup Proxy, c *gin.Context) {
 	c.Abort()
@@ -162,16 +153,13 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 	if err != nil {
 		panic(err)
 	}
-	proxy := httputil.NewSingleHostReverseProxy(remote)
-	proxy.Transport = &http.Transport{
-        TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
-	}
-
-	//cw := &copyWriter{buf: &bytes.Buffer{}, ResponseWriter: c.Writer}
-	//c.Writer = cw
+	//proxy := httputil.NewSingleHostReverseProxy(remote)
+	//proxy.Transport = &http.Transport{
+        //TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+	//}
 
 	//Modifying the request sent to the Proxy
-	proxy.Director = func(req *http.Request) {
+	director = func(req *http.Request) {
 
 		//Setting the connection up so it looks like its not form the Reverse Proxy Server
 		req.Header = c.Request.Header
@@ -251,16 +239,16 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 	}
 
 	//Modify the response so that links/redirects work
-	proxy.ModifyResponse = func(resp *http.Response) (err error) {
-		// Returning 404 if getting a 404
-		//if resp.StatusCode == 404 {
-		//	log.Println("got 404 with " + resp.Request.URL.String())
-		//	cat.SendError(cat.Response{Status: http.StatusNotFound, Error: []string{"File Not Found on Server"}}, c)
-		//	return nil
-//
-//		}
-		b, _ := io.ReadAll(resp.Body)
-		fmt.Println(string(b))
+	modifyResponse = func(resp *http.Response) (err error) {
+		
+		 Returning 404 if getting a 404
+		if resp.StatusCode == 404 {
+			log.Println("got 404 with " + resp.Request.URL.String())
+			cat.SendError(cat.Response{Status: http.StatusNotFound, Error: []string{"File Not Found on Server"}}, c)
+			return nil
+
+		}
+
 		//Filter out the proxy reverse manager unless its from an internal ip address
 		if lookup.AccessPrefix == "/proxy/" {
 			host, _, err := net.SplitHostPort(resp.Request.RemoteAddr)
@@ -330,6 +318,7 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 		return nil
 	}
 	//Serve content that was modified
+	proxy := &httputil.ReverseProxy{Director: director, ModifyResponse: modifyResponse}
 	proxy.ServeHTTP(c.Writer, c.Request)
 
 }
