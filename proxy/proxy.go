@@ -162,13 +162,12 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 		panic(err)
 	}
 	proxy := httputil.NewSingleHostReverseProxy(remote)
-	proxy.Transport = &http.Transport{
-        TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
-	}
+	//proxy.Transport = &http.Transport{
+       // TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+	//}
 
-	cw := &copyWriter{buf: &bytes.Buffer{}, ResponseWriter: c.Writer}
-	c.Writer = cw
-	
+	//cw := &copyWriter{buf: &bytes.Buffer{}, ResponseWriter: c.Writer}
+	//c.Writer = cw
 
 	//Modifying the request sent to the Proxy
 	proxy.Director = func(req *http.Request) {
@@ -328,6 +327,6 @@ func lookProxy(lookup Proxy, c *gin.Context) {
 		return nil
 	}
 	//Serve content that was modified
-	proxy.ServeHTTP(cw.ResponseWriter, c.Request)
+	proxy.ServeHTTP(c.Writer, c.Request)
 
 }
