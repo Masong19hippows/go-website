@@ -70,7 +70,7 @@ func createProxy(webServer string, prefix string, postfix string, hostname bool,
 
 	//Using the temporary
 	var proxies []Proxy
-	GetProxies(proxies)
+	GetProxies(&proxies)
 	ex, err := os.Executable()
 	if err != nil {
 		panic(err)
