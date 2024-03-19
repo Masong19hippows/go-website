@@ -21,8 +21,6 @@ func init() {
 	go server()
 }
 
-var temp []Proxy
-
 func createProxy(webServer string, prefix string, postfix string, hostname bool, forcepaths bool, readhtml bool) error {
 
 	// Sanitizing the postfix by checking for whitespaces and "/"
@@ -67,21 +65,11 @@ func createProxy(webServer string, prefix string, postfix string, hostname bool,
 		} else if prefix == "" {
 			return errors.New("no selection made")
 		}
-
-		// Check if its the same as any other Proxy
-		for _, proxy := range Proxies {
-			if prefix == proxy.AccessPrefix {
-				return errors.New("prefix already exists: " + prefix)
-			}
-			if fixedURL == proxy.ProxyURL+proxy.AccessPostfix {
-				return errors.New("URL already exists: " + fixedURL)
-			}
-		}
 	}
 
 
 	//Using the temporary
-	temp = nil
+	var proxies []Proxy
 	ex, err := os.Executable()
 	if err != nil {
 		panic(err)
@@ -95,13 +83,13 @@ func createProxy(webServer string, prefix string, postfix string, hostname bool,
 	} else {
 		byteValue, _ := io.ReadAll(jsonFile)
 		json.Unmarshal(byteValue, &temp)
-		temp = append(temp, Proxy{AccessPrefix: prefix, ProxyURL: webServer, AccessPostfix: postfix, Hostname: hostname, ForcePaths: forcepaths, ReadHTML: readhtml})
+		proxies = append(temp, Proxy{AccessPrefix: prefix, ProxyURL: webServer, AccessPostfix: postfix, Hostname: hostname, ForcePaths: forcepaths, ReadHTML: readhtml})
 		jsonFile.Close()
 
 	}
 
 	//Append Changes to File
-	result, err := json.Marshal(temp)
+	result, err := json.Marshal(proxies)
 	if err != nil {
 		return err
 	}
@@ -114,8 +102,7 @@ func createProxy(webServer string, prefix string, postfix string, hostname bool,
 	if err != nil {
 		return err
 	}
-	reloadProxies()
-	log.Println("Proxies now contains: ", Proxies)
+	log.Println("Proxies now contains: ", proxies)
 
 	return nil
 
