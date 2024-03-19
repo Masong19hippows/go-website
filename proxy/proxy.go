@@ -103,7 +103,6 @@ func Handler(c *gin.Context) {
 		// Reloading list of proxies to make sure that the latest is used
 		var proxies []Proxy
 		GetProxies(&proxies)
-		log.Println(proxies)
 		
 		//Getting the first directory in the url and matching it with prefixes in Proxies
 		allSlash := regexp.MustCompile(`/(.*?)/`)
