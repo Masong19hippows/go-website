@@ -61,6 +61,7 @@ func Handler(c *gin.Context) {
 		
 		var proxies []Proxy
 		GetProxies(proxies)
+		log.Println(proxies)
 		
 		var final Proxy
 		for _, proxy := range proxies {
