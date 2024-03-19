@@ -32,7 +32,7 @@ type Proxy struct {
 }
 
 // refreshes Proxies with proxies.json
-func getProxies(proxies []Proxy) {
+func GetProxies(proxies []Proxy) {
 	ex, err := os.Executable()
 	if err != nil {
 		panic(err)
@@ -60,7 +60,7 @@ func Handler(c *gin.Context) {
 		subdomain := host_parts[0]
 		
 		var proxies []Proxy
-		getProxies(proxies)
+		GetProxies(proxies)
 		
 		var final Proxy
 		for _, proxy := range proxies {
@@ -101,7 +101,7 @@ func Handler(c *gin.Context) {
 	if c.Writer.Status() == http.StatusNotFound {
 		// Reloading list of proxies to make sure that the latest is used
 		var proxies []Proxy
-		getProxies(proxies)
+		GetProxies(proxies)
 		
 		//Getting the first directory in the url and matching it with prefixes in Proxies
 		allSlash := regexp.MustCompile(`/(.*?)/`)
