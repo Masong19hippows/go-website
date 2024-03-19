@@ -44,7 +44,7 @@ func getProxies(proxies []Proxy) {
 		log.Println(err)
 	}
 	byteValue, _ := io.ReadAll(jsonFile)
-	json.Unmarshal(byteValue, &Proxies)
+	json.Unmarshal(byteValue, proxies)
 	proxies = append(proxies, Proxy{AccessPrefix: "/proxy/", ProxyURL: "http://localhost:6000", AccessPostfix: "", Hostname: false, ForcePaths: true, ReadHTML: false})
 	jsonFile.Close()
 
@@ -58,8 +58,9 @@ func Handler(c *gin.Context) {
 	if (c.Request.Host != "masongarten.com"){
 		host_parts := strings.Split(c.Request.Host, ".")
 		subdomain := host_parts[0]
-
-		proxies := getProxies([]Proxy)
+		
+		var proxies []Proxy
+		proxies := getProxies(proxies)
 		
 		var final Proxy
 		for _, proxy := range proxies {
@@ -99,8 +100,9 @@ func Handler(c *gin.Context) {
 	//Only pass if the error is 404
 	if c.Writer.Status() == http.StatusNotFound {
 		// Reloading list of proxies to make sure that the latest is used
-
-		proxies := getProxies([]Proxy)
+		var proxies []Proxy
+		proxies := getProxies(proxies)
+		
 		//Getting the first directory in the url and matching it with prefixes in Proxies
 		allSlash := regexp.MustCompile(`/(.*?)/`)
 
