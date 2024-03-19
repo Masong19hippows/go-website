@@ -42,9 +42,11 @@ func main() {
 	}(ch)
 	go func(ch chan error) {
 
-		var list []string 
+		var list []string
+		var proxies []Proxy
+		GetProxies(proxies)
 		list = append(list, "masongarten.com")
-		for _, proxy := range proxy.Proxies {
+		for _, proxy := range proxies {
 			if proxy.Hostname == true {
 				list = append(list, proxy.AccessPrefix + ".masongarten.com")
 			}
