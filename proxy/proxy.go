@@ -44,10 +44,9 @@ func GetProxies(proxies []Proxy) {
 		log.Println(err)
 	}
 	byteValue, _ := io.ReadAll(jsonFile)
-	json.Unmarshal(byteValue, proxies)
+	json.Unmarshal(byteValue, &proxies)
 	log.Println(proxies)
 	proxies = append(proxies, Proxy{AccessPrefix: "/proxy/", ProxyURL: "http://localhost:6000", AccessPostfix: "", Hostname: false, ForcePaths: true, ReadHTML: false})
-	log.Println(proxies)
 	jsonFile.Close()
 
 }
