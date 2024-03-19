@@ -111,10 +111,10 @@ func createProxy(webServer string, prefix string, postfix string, hostname bool,
 func deleteProxy(index int) error {
 
 	//Get new Slice to be ready to replace Proxies file with
-	proxies := []Proxy
-	temp := []Proxy
+	var proxies []Proxy
+	var temp []Proxy
 	getProxies(proxies)
-	temp = append(proxies[:index], Proxies[index+1:]...)
+	temp = append(proxies[:index], proxies[index+1:]...)
 	if len(temp) < 1 {
 		log.Println("New Proxies is now", temp)
 	} else {
