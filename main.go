@@ -43,7 +43,7 @@ func main() {
 	go func(ch chan error) {
 
 		var list []string
-		var proxies []Proxy
+		var proxies []proxy.Proxy
 		GetProxies(proxies)
 		list = append(list, "masongarten.com")
 		for _, proxy := range proxies {
