@@ -82,8 +82,8 @@ func createProxy(webServer string, prefix string, postfix string, hostname bool,
 		log.Println("Cannot open Proxies.json. Error is : ", err)
 	} else {
 		byteValue, _ := io.ReadAll(jsonFile)
-		json.Unmarshal(byteValue, &temp)
-		proxies = append(temp, Proxy{AccessPrefix: prefix, ProxyURL: webServer, AccessPostfix: postfix, Hostname: hostname, ForcePaths: forcepaths, ReadHTML: readhtml})
+		json.Unmarshal(byteValue, proxies)
+		proxies = append(proxies, Proxy{AccessPrefix: prefix, ProxyURL: webServer, AccessPostfix: postfix, Hostname: hostname, ForcePaths: forcepaths, ReadHTML: readhtml})
 		jsonFile.Close()
 
 	}
@@ -111,8 +111,10 @@ func createProxy(webServer string, prefix string, postfix string, hostname bool,
 func deleteProxy(index int) error {
 
 	//Get new Slice to be ready to replace Proxies file with
-	temp = nil
-	temp = append(Proxies[:index], Proxies[index+1:]...)
+	proxies := []Proxy
+	temp := []Proxy
+	getProxies(proxies)
+	temp = append(proxies[:index], Proxies[index+1:]...)
 	if len(temp) < 1 {
 		log.Println("New Proxies is now", temp)
 	} else {
@@ -143,8 +145,7 @@ func deleteProxy(index int) error {
 	}
 
 	//Reload Proxies and Return with no error
-	reloadProxies()
-	log.Println("Proxies now contains: ", Proxies)
+	log.Println("Proxies now contains: ", temp)
 
 	return nil
 
