@@ -32,7 +32,7 @@ type Proxy struct {
 }
 
 // refreshes Proxies with proxies.json
-func GetProxies(proxies []Proxy) {
+func GetProxies(proxies *[]Proxy) {
 	ex, err := os.Executable()
 	if err != nil {
 		panic(err)
@@ -44,10 +44,8 @@ func GetProxies(proxies []Proxy) {
 		log.Println(err)
 	}
 	byteValue, _ := io.ReadAll(jsonFile)
-	json.Unmarshal(byteValue, &proxies)
-	log.Println(proxies)
-	proxies = append(proxies, Proxy{AccessPrefix: "/proxy/", ProxyURL: "http://localhost:6000", AccessPostfix: "", Hostname: false, ForcePaths: true, ReadHTML: false})
-	log.Println(proxies)
+	json.Unmarshal(byteValue, proxies)
+	*proxies = append(*proxies, Proxy{AccessPrefix: "/proxy/", ProxyURL: "http://localhost:6000", AccessPostfix: "", Hostname: false, ForcePaths: true, ReadHTML: false})
 	jsonFile.Close()
 
 }
@@ -62,7 +60,7 @@ func Handler(c *gin.Context) {
 		subdomain := host_parts[0]
 		
 		var proxies []Proxy
-		GetProxies(proxies)
+		GetProxies(*proxies)
 		
 		
 		var final Proxy
@@ -104,8 +102,8 @@ func Handler(c *gin.Context) {
 	if c.Writer.Status() == http.StatusNotFound {
 		// Reloading list of proxies to make sure that the latest is used
 		var proxies []Proxy
-		GetProxies(proxies)
-		//log.Println(proxies)
+		GetProxies(*proxies)
+		log.Println(proxies)
 		
 		//Getting the first directory in the url and matching it with prefixes in Proxies
 		allSlash := regexp.MustCompile(`/(.*?)/`)
