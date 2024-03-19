@@ -31,19 +31,8 @@ type Proxy struct {
 	ReadHTML	  bool   `json:"readhtml"`
 }
 
-
-// array of all proxies
-var Proxies []Proxy
-
-// make sure Proxies is the latest
-func init() {
-	reloadProxies()
-
-}
-
 // refreshes Proxies with proxies.json
-func reloadProxies() {
-	Proxies = nil
+func getProxies(proxies []Proxy) {
 	ex, err := os.Executable()
 	if err != nil {
 		panic(err)
@@ -56,7 +45,7 @@ func reloadProxies() {
 	}
 	byteValue, _ := io.ReadAll(jsonFile)
 	json.Unmarshal(byteValue, &Proxies)
-	Proxies = append(Proxies, Proxy{AccessPrefix: "/proxy/", ProxyURL: "http://localhost:6000", AccessPostfix: "", Hostname: false, ForcePaths: true, ReadHTML: false})
+	proxies = append(proxies, Proxy{AccessPrefix: "/proxy/", ProxyURL: "http://localhost:6000", AccessPostfix: "", Hostname: false, ForcePaths: true, ReadHTML: false})
 	jsonFile.Close()
 
 }
@@ -70,10 +59,10 @@ func Handler(c *gin.Context) {
 		host_parts := strings.Split(c.Request.Host, ".")
 		subdomain := host_parts[0]
 
-		reloadProxies()
+		proxies := getProxies([]Proxy)
 		
 		var final Proxy
-		for _, proxy := range Proxies {
+		for _, proxy := range proxies {
 			if !proxy.Hostname {
 				continue
 			}
@@ -111,7 +100,7 @@ func Handler(c *gin.Context) {
 	if c.Writer.Status() == http.StatusNotFound {
 		// Reloading list of proxies to make sure that the latest is used
 
-		reloadProxies()
+		proxies := getProxies([]Proxy)
 		//Getting the first directory in the url and matching it with prefixes in Proxies
 		allSlash := regexp.MustCompile(`/(.*?)/`)
 
@@ -120,7 +109,7 @@ func Handler(c *gin.Context) {
 			prefix = c.Request.URL.Path + "/"
 		}
 		var final Proxy
-		for _, proxy := range Proxies {
+		for _, proxy := range proxies {
 			if proxy.Hostname == true {
 				continue
 			}
