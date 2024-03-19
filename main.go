@@ -44,7 +44,7 @@ func main() {
 
 		var list []string
 		var proxies []proxy.Proxy
-		GetProxies(proxies)
+		proxy.GetProxies(proxies)
 		list = append(list, "masongarten.com")
 		for _, proxy := range proxies {
 			if proxy.Hostname == true {
