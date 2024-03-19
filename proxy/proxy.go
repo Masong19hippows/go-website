@@ -60,7 +60,7 @@ func Handler(c *gin.Context) {
 		subdomain := host_parts[0]
 		
 		var proxies []Proxy
-		GetProxies(*proxies)
+		GetProxies(&proxies)
 		
 		
 		var final Proxy
@@ -102,7 +102,7 @@ func Handler(c *gin.Context) {
 	if c.Writer.Status() == http.StatusNotFound {
 		// Reloading list of proxies to make sure that the latest is used
 		var proxies []Proxy
-		GetProxies(*proxies)
+		GetProxies(&proxies)
 		log.Println(proxies)
 		
 		//Getting the first directory in the url and matching it with prefixes in Proxies
