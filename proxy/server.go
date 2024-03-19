@@ -113,7 +113,7 @@ func deleteProxy(index int) error {
 	//Get new Slice to be ready to replace Proxies file with
 	var proxies []Proxy
 	var temp []Proxy
-	GetProxies(*proxies)
+	GetProxies(&proxies)
 	temp = append(proxies[:index], proxies[index+1:]...)
 	if len(temp) < 1 {
 		log.Println("New Proxies is now", temp)
