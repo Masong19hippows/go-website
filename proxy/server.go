@@ -70,6 +70,7 @@ func createProxy(webServer string, prefix string, postfix string, hostname bool,
 
 	//Using the temporary
 	var proxies []Proxy
+	GetProxies(proxies)
 	ex, err := os.Executable()
 	if err != nil {
 		panic(err)
@@ -82,7 +83,7 @@ func createProxy(webServer string, prefix string, postfix string, hostname bool,
 		log.Println("Cannot open Proxies.json. Error is : ", err)
 	} else {
 		byteValue, _ := io.ReadAll(jsonFile)
-		json.Unmarshal(byteValue, proxies)
+		json.Unmarshal(byteValue, &proxies)
 		proxies = append(proxies, Proxy{AccessPrefix: prefix, ProxyURL: webServer, AccessPostfix: postfix, Hostname: hostname, ForcePaths: forcepaths, ReadHTML: readhtml})
 		jsonFile.Close()
 
