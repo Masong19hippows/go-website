@@ -32,6 +32,7 @@ func main() {
 	//default routes + the proxy handler
 	router := gin.New()
 	if *proxyEnable {
+		proxy.Init()
 		router.Use(proxy.Handler)
 	}
 	router.StaticFile("/", exPath+"/assets/index.html")

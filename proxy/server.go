@@ -17,7 +17,7 @@ import (
 	cat "github.com/masong19hippows/go-website/catError"
 )
 
-func init() {
+func Init() {
 	go server()
 }
 
