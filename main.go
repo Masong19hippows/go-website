@@ -22,8 +22,8 @@ func main() {
 
 	//get port flag and password flag
 	password := flag.String("password", "", "Choose the app password obtained form no-reply email account.")
-	httpPort := flag.String("HTTPPort", "80", "Choose the HTTP Port. Default is 80.")
-	proxyEnable := flag.Bool("proxy", true, "Enable to disable proxy. Enabled by Defauly.")
+	httpPort := flag.String("HTTPPort", "80", "Choose the HTTP Port.")
+	proxyEnable := flag.Bool("proxy", true, "Enable to disable proxy.")
 	flag.Parse() 
 
 	// non-verbose
